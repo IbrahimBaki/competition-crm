@@ -1,0 +1,24 @@
+APP_NAME="Support CRM"
+APP_ENV=local
+APP_TIMEZONE=UTC
+APP_URL=http://competition-crm.azmsquad.localhost
+
+DB_CONNECTION=mysql
+DB_HOST=database
+DB_PORT=3306
+DB_DATABASE=support_crm_competition
+DB_USERNAME=root
+DB_PASSWORD=root
+# ملاحظة بيئة azm-mysql8 الفعلية: require_secure_transport=OFF ومفيش /etc/mysql/certs/ca.pem
+# جوه كونتينر azm-php82 — سيبها من غير أي متغير MYSQL_ATTR_SSL_CA/DB_SSL_* عشان PDO
+# مايحاولش TLS handshake أصلاً (array_filter في config/database.php بيشيلهم لو فاضيين).
+
+MAIL_MAILER=smtp
+MAIL_HOST=mailpit
+MAIL_PORT=1025
+MAIL_ENCRYPTION=null
+
+# يتفعّل عند R3 فقط (اقرأ docker/environment-setup.md)
+# QUEUE_CONNECTION=redis
+# BROADCAST_CONNECTION=reverb
+# SCOUT_DRIVER=meilisearch

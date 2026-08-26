@@ -1,0 +1,36 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/guard_dangerous_bash.sh" }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/guard_protected_paths.sh" },
+          { "type": "command", "command": "bash .claude/hooks/guard_secrets.sh" },
+          { "type": "command", "command": "bash .claude/hooks/enforce_code_conventions.sh" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/lint_and_format.sh" },
+          { "type": "command", "command": "bash .claude/hooks/run_related_tests.sh" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/session_verify.sh" }
+        ]
+      }
+    ]
+  }
+}
