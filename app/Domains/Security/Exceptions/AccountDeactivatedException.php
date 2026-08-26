@@ -2,8 +2,8 @@
 
 namespace App\Domains\Security\Exceptions;
 
-use App\Support\Http\Errors\HasApiErrorCode;
 use App\Support\Http\Errors\ErrorCode;
+use App\Support\Http\Errors\HasApiErrorCode;
 
 class AccountDeactivatedException extends \DomainException implements HasApiErrorCode
 {

@@ -39,6 +39,12 @@ enum ErrorCode: string
     case CannotAnonymiseLastAdmin = 'cannot_anonymise_last_administrator';
     case AuditRetentionWindowTooShort = 'audit_retention_window_too_short';
 
+    case CustomerBlocked = 'customer.blocked';
+    case CustomerAlreadyBlocked = 'customer.already_blocked';
+    case CustomerNotBlocked = 'customer.not_blocked';
+    case DuplicateContactIdentity = 'customer.duplicate_contact_identity';
+    case CustomerMustHaveContact = 'customer.must_have_contact';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -55,9 +61,11 @@ enum ErrorCode: string
             self::AttachmentScanFailed,
             self::AttachmentTooLarge,
             self::AttachmentTypeNotAllowed,
-            self::BotProtectionFailed => 422,
+            self::BotProtectionFailed,
+            self::CustomerMustHaveContact => 422,
 
-            self::Unauthorized => 403,
+            self::Unauthorized,
+            self::CustomerBlocked => 403,
             self::Unauthenticated,
             self::AccountDeactivated => 401,
             self::NotFound => 404,
@@ -71,7 +79,10 @@ enum ErrorCode: string
             self::BranchHasActiveDepartments,
             self::AuditLogImmutable,
             self::AuditRetentionWindowTooShort,
-            self::AttachmentScanPending => 409,
+            self::AttachmentScanPending,
+            self::CustomerAlreadyBlocked,
+            self::CustomerNotBlocked,
+            self::DuplicateContactIdentity => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

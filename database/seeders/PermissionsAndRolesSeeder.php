@@ -55,6 +55,17 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::ORG_TEAMS_MANAGE_ANY,
             // tickets.*
             PermissionKey::TICKETS_VIEW_ANY,
+            // customers.*
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_CREATE,
+            PermissionKey::CUSTOMERS_UPDATE,
+            PermissionKey::CUSTOMERS_BLOCK,
+            PermissionKey::CUSTOMERS_CONTACT_MANAGE,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_NOTE_DELETE,
+            PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $role = Role::firstOrCreate(
@@ -82,6 +93,17 @@ class PermissionsAndRolesSeeder extends Seeder
             // tickets.*
             PermissionKey::TICKETS_VIEW_DEPARTMENT,
             PermissionKey::TICKETS_VIEW_TEAM,
+            // customers.*
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_CREATE,
+            PermissionKey::CUSTOMERS_UPDATE,
+            PermissionKey::CUSTOMERS_BLOCK,
+            PermissionKey::CUSTOMERS_CONTACT_MANAGE,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_NOTE_DELETE,
+            PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $role = Role::firstOrCreate(
@@ -104,6 +126,11 @@ class PermissionsAndRolesSeeder extends Seeder
         $permissions = [
             PermissionKey::TICKETS_VIEW_TEAM,
             PermissionKey::TICKETS_VIEW_OWN,
+            // customers.*
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $role = Role::firstOrCreate(

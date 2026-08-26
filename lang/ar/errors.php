@@ -15,6 +15,13 @@ return [
         'department_has_open_tickets' => 'القسم يحتوي على :count تذاكر مفتوحة',
         'user_branch_not_attached' => 'المستخدم غير مرتبط بهذا الفرع',
     ],
+    'customers' => [
+        'blocked' => 'العميل محظور: :reason',
+        'already_blocked' => 'العميل محظور بالفعل',
+        'not_blocked' => 'العميل ليس محظوراً',
+        'duplicate_contact_identity' => 'بيانات الاتصال هذه قيد الاستخدام بالفعل',
+        'must_have_contact' => 'يجب أن يكون لدى العميل بيانات اتصال واحدة على الأقل',
+    ],
     'security' => [
         'account_deactivated' => 'تم إلغاء تنشيط الحساب',
         'account_locked' => 'الحساب مقفول',

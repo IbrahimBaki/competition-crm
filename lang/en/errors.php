@@ -15,6 +15,13 @@ return [
         'department_has_open_tickets' => 'Department has :count open tickets',
         'user_branch_not_attached' => 'User is not attached to this branch',
     ],
+    'customers' => [
+        'blocked' => 'Customer is blocked: :reason',
+        'already_blocked' => 'Customer is already blocked',
+        'not_blocked' => 'Customer is not blocked',
+        'duplicate_contact_identity' => 'This contact identity is already in use',
+        'must_have_contact' => 'Customer must have at least one contact',
+    ],
     'security' => [
         'account_deactivated' => 'Account has been deactivated',
         'account_locked' => 'Account is locked',

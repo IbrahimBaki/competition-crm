@@ -57,6 +57,27 @@ final class PermissionKey
 
     public const DATAPROTECTION_BACKUP_VIEW = 'dataprotection.backup.view';
 
+    // ---- customers (module: customers) -----------------------------------
+    public const CUSTOMERS_VIEW = 'customers.view';
+
+    public const CUSTOMERS_CREATE = 'customers.create';
+
+    public const CUSTOMERS_UPDATE = 'customers.update';
+
+    public const CUSTOMERS_BLOCK = 'customers.block';
+
+    public const CUSTOMERS_CONTACT_MANAGE = 'customers.contact.manage';
+
+    public const CUSTOMERS_NOTE_VIEW = 'customers.note.view';
+
+    public const CUSTOMERS_NOTE_CREATE = 'customers.note.create';
+
+    public const CUSTOMERS_NOTE_DELETE = 'customers.note.delete';
+
+    public const CUSTOMERS_ATTACHMENT_MANAGE = 'customers.attachment.manage';
+
+    public const CUSTOMERS_TIMELINE_VIEW = 'customers.timeline.view';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

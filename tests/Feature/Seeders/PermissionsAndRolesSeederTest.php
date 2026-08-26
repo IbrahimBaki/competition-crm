@@ -46,6 +46,16 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ORG_TEAMS_VIEW_ANY,
             PermissionKey::ORG_TEAMS_MANAGE_ANY,
             PermissionKey::TICKETS_VIEW_ANY,
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_CREATE,
+            PermissionKey::CUSTOMERS_UPDATE,
+            PermissionKey::CUSTOMERS_BLOCK,
+            PermissionKey::CUSTOMERS_CONTACT_MANAGE,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_NOTE_DELETE,
+            PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $managerPermissions);
@@ -64,6 +74,16 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ORG_TEAMS_VIEW_ANY,
             PermissionKey::TICKETS_VIEW_DEPARTMENT,
             PermissionKey::TICKETS_VIEW_TEAM,
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_CREATE,
+            PermissionKey::CUSTOMERS_UPDATE,
+            PermissionKey::CUSTOMERS_BLOCK,
+            PermissionKey::CUSTOMERS_CONTACT_MANAGE,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_NOTE_DELETE,
+            PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $supervisorPermissions);
@@ -79,6 +99,10 @@ class PermissionsAndRolesSeederTest extends TestCase
         $expectedPermissions = [
             PermissionKey::TICKETS_VIEW_TEAM,
             PermissionKey::TICKETS_VIEW_OWN,
+            PermissionKey::CUSTOMERS_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_VIEW,
+            PermissionKey::CUSTOMERS_NOTE_CREATE,
+            PermissionKey::CUSTOMERS_TIMELINE_VIEW,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $agentPermissions);

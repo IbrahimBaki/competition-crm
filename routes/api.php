@@ -91,4 +91,23 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::get('auth/policy', [AuthPolicyController::class, 'show']);
     Route::put('auth/policy', [AuthPolicyController::class, 'update']);
+
+    Route::apiResource('customers', CustomerController::class)->except(['destroy']);
+    Route::post('customers/{customer}/block', [CustomerBlockController::class, 'block']);
+    Route::post('customers/{customer}/unblock', [CustomerBlockController::class, 'unblock']);
+
+    Route::get('customers/{customer}/contacts', [CustomerContactController::class, 'index']);
+    Route::post('customers/{customer}/contacts', [CustomerContactController::class, 'store']);
+    Route::put('customers/{customer}/contacts/{contact}', [CustomerContactController::class, 'update']);
+    Route::delete('customers/{customer}/contacts/{contact}', [CustomerContactController::class, 'destroy']);
+
+    Route::get('customers/{customer}/notes', [CustomerNoteController::class, 'index']);
+    Route::post('customers/{customer}/notes', [CustomerNoteController::class, 'store']);
+    Route::delete('customers/{customer}/notes/{note}', [CustomerNoteController::class, 'destroy']);
+
+    Route::get('customers/{customer}/attachments', [CustomerAttachmentController::class, 'index']);
+    Route::post('customers/{customer}/attachments', [CustomerAttachmentController::class, 'store']);
+    Route::delete('customers/{customer}/attachments/{attachment}', [CustomerAttachmentController::class, 'destroy']);
+
+    Route::get('customers/{customer}/timeline', [CustomerTimelineController::class, 'index']);
 });

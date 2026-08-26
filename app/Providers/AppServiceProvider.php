@@ -2,6 +2,18 @@
 
 namespace App\Providers;
 
+use App\Domains\Customers\Models\Customer;
+use App\Domains\Customers\Models\CustomerContact;
+use App\Domains\Customers\Models\CustomerNote;
+use App\Domains\Customers\Policies\CustomerContactPolicy;
+use App\Domains\Customers\Policies\CustomerNotePolicy;
+use App\Domains\Customers\Policies\CustomerPolicy;
+use App\Domains\Customers\Services\ArabicTextNormaliser;
+use App\Domains\Customers\Services\Retention\CustomerNotePurgeHandler;
+use App\Domains\Customers\Services\TextNormaliser;
+use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
+use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
+use App\Domains\Customers\Services\Timeline\TimelineRegistry;
 use App\Domains\Organisation\Models\Branch;
 use App\Domains\Organisation\Models\Department;
 use App\Domains\Organisation\Models\Team;
@@ -73,10 +85,22 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LocalizationSettings::class);
         $this->app->singleton(LocaleResolver::class);
 
+        $this->app->bind(TextNormaliser::class, ArabicTextNormaliser::class);
+
+        $this->app->singleton(TimelineRegistry::class, function ($app) {
+            $registry = new TimelineRegistry;
+            $registry->register($app->make(CustomerEventSource::class));
+            $registry->register($app->make(NoteTimelineSource::class));
+            // Ticket and channel-message sources register here once BE-Ticketing lands.
+
+            return $registry;
+        });
+
         $this->app->singleton(RetentionRegistry::class, function ($app) {
             $registry = new RetentionRegistry;
             $registry->register($app->make(AttachmentPurgeHandler::class));
             $registry->register($app->make(AuditPurgeHandler::class));
+            $registry->register($app->make(CustomerNotePurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('messages'));
             $registry->register(new NullPurgeHandler('logs'));
@@ -97,6 +121,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Team::class, TeamPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Customer::class, CustomerPolicy::class);
+        Gate::policy(CustomerContact::class, CustomerContactPolicy::class);
+        Gate::policy(CustomerNote::class, CustomerNotePolicy::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));
