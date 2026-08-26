@@ -33,4 +33,8 @@ enum TicketEventType: string
     case SlaResumed = 'sla_resumed';
     case SlaRetargeted = 'sla_retargeted';
     case SlaReset = 'sla_reset';
+    case AutomationRuleApplied = 'automation_rule_applied';
+    case Escalated = 'escalated';
+    case AutoAssigned = 'auto_assigned';
+    case AutoClosed = 'auto_closed';
 }

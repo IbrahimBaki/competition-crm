@@ -171,4 +171,16 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('ticket-categories', [TicketCategoryController::class, 'store'])->middleware('idempotency');
     Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update'])->middleware('idempotency');
     Route::delete('ticket-categories/{category}', [TicketCategoryController::class, 'destroy']);
+
+    Route::get('automation/rules', [AutomationRuleController::class, 'index']);
+    Route::get('automation/rules/{rule}', [AutomationRuleController::class, 'show']);
+    Route::get('automation/executions', [AutomationRuleExecutionController::class, 'index']);
+    Route::post('tickets/{ticket}/escalate', [TicketEscalationController::class, 'store'])->middleware('idempotency');
+
+    Route::get('notifications', [NotificationController::class, 'index']);
+    Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead']);
+    Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
+    Route::get('notifications/preferences', [NotificationPreferenceController::class, 'index']);
+    Route::put('notifications/preferences', [NotificationPreferenceController::class, 'update']);
+    Route::get('notifications/deliveries/failed', [NotificationDeliveryController::class, 'index']);
 });

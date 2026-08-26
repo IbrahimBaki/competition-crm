@@ -29,6 +29,7 @@ class CreateTicket
         private readonly RecordTicketEvent $recordEvent,
         private readonly SyncTicketTags $syncTags,
         private readonly SlaClockHooks $slaHooks,
+        private readonly TicketAutomationHooks $automationHooks,
     ) {}
 
     public function handle(
@@ -84,6 +85,7 @@ class CreateTicket
 
             $this->recordEvent->handle($ticket, TicketEventType::Created, $actor);
             $this->slaHooks->ticketCreated($ticket);
+            $this->automationHooks->ticketCreated($ticket);
 
             return $ticket;
         });

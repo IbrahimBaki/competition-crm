@@ -96,6 +96,11 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::SLA_POLICIES_VIEW,
             PermissionKey::SLA_POLICIES_MANAGE,
             PermissionKey::SLA_RESET,
+            // automation.*
+            PermissionKey::AUTOMATION_RULES_VIEW,
+            PermissionKey::AUTOMATION_RULES_MANAGE,
+            PermissionKey::AUTOMATION_EXECUTIONS_VIEW,
+            PermissionKey::TICKETS_ESCALATE,
         ];
 
         $role = Role::firstOrCreate(
@@ -157,6 +162,10 @@ class PermissionsAndRolesSeeder extends Seeder
             // sla.*
             PermissionKey::SLA_POLICIES_VIEW,
             PermissionKey::SLA_RESET,
+            // automation.*
+            PermissionKey::AUTOMATION_RULES_VIEW,
+            PermissionKey::AUTOMATION_EXECUTIONS_VIEW,
+            PermissionKey::TICKETS_ESCALATE,
         ];
 
         $role = Role::firstOrCreate(
@@ -205,6 +214,8 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
             // sla.*
             PermissionKey::SLA_POLICIES_VIEW,
+            // automation.*
+            PermissionKey::TICKETS_ESCALATE,
         ];
 
         $role = Role::firstOrCreate(

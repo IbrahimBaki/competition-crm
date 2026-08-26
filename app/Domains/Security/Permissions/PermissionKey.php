@@ -139,6 +139,22 @@ final class PermissionKey
 
     public const SLA_RESET = 'sla.reset';
 
+    // ---- automation (module: automation) --------------------------------
+    public const AUTOMATION_RULES_VIEW = 'automation.rules.view';
+
+    public const AUTOMATION_RULES_MANAGE = 'automation.rules.manage';
+
+    public const AUTOMATION_EXECUTIONS_VIEW = 'automation.executions.view';
+
+    public const TICKETS_ESCALATE = 'tickets.escalate';
+
+    // ---- notifications (module: notifications) ---------------------------
+    public const NOTIFICATIONS_VIEW_OWN = 'notifications.view.own';
+
+    public const NOTIFICATIONS_MANAGE_PREFERENCES = 'notifications.manage_preferences';
+
+    public const NOTIFICATIONS_VIEW_DELIVERY_LOG = 'notifications.view_delivery_log';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

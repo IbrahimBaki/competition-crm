@@ -21,6 +21,21 @@ use App\Domains\Customers\Services\TextNormaliser;
 use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
 use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
 use App\Domains\Customers\Services\Timeline\TimelineRegistry;
+use App\Domains\Notifications\Enums\NotificationChannel;
+use App\Domains\Notifications\Events\NotifiableEvent;
+use App\Domains\Notifications\Listeners\DispatchNotificationsListener;
+use App\Domains\Notifications\Models\Notification;
+use App\Domains\Notifications\Models\NotificationPreference;
+use App\Domains\Notifications\Policies\NotificationPolicy;
+use App\Domains\Notifications\Policies\NotificationPreferencePolicy;
+use App\Domains\Notifications\Services\Channels\InAppChannel;
+use App\Domains\Notifications\Services\Channels\MailChannel;
+use App\Domains\Notifications\Services\Channels\NotificationChannelRegistry;
+use App\Domains\Notifications\Services\NotificationDispatcher;
+use App\Domains\Notifications\Services\NotificationPayloadAuthoriser;
+use App\Domains\Notifications\Services\NotificationPreferenceResolver;
+use App\Domains\Notifications\Services\Retention\NotificationPurgeHandler;
+use App\Domains\Notifications\Services\TemplateRenderer;
 use App\Domains\Organisation\Models\Branch;
 use App\Domains\Organisation\Models\Department;
 use App\Domains\Organisation\Models\Team;
@@ -54,6 +69,7 @@ use App\Domains\Ticketing\Services\Merge\Relations\MessageMergeRelation;
 use App\Domains\Ticketing\Services\Merge\Relations\TagMergeRelation;
 use App\Domains\Ticketing\Services\Merge\TicketMergeRelationRegistry;
 use App\Domains\Ticketing\Services\Retention\TicketMessagePurgeHandler;
+use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
 use App\Domains\Ticketing\Services\Sla\NullSlaClockHooks;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
@@ -71,6 +87,7 @@ use App\Support\Retention\Handlers\AuditPurgeHandler;
 use App\Support\Retention\Handlers\NullPurgeHandler;
 use App\Support\Retention\RetentionRegistry;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
@@ -94,10 +111,9 @@ class AppServiceProvider extends ServiceProvider
             DefaultBranchUsageChecker::class
         );
 
-        // TODO(story: routing engine) - replace NullDepartmentTransferEvaluator with a real routing/SLA engine
         $this->app->bind(
             DepartmentTransferEvaluator::class,
-            NullDepartmentTransferEvaluator::class
+            AutomationBackedTransferEvaluator::class
         );
 
         $driver = config('security.scanning.driver');
@@ -138,6 +154,35 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(SlaClockHooks::class, NullSlaClockHooks::class);
 
+        $this->app->bind(TicketAutomationHooks::class, TicketAutomationBridge::class);
+
+        $this->app->singleton(ConditionEvaluator::class);
+        $this->app->singleton(TicketFactProvider::class);
+        $this->app->singleton(RuleEngine::class);
+
+        $this->app->singleton(RuleActionRegistry::class, function ($app) {
+            $registry = new RuleActionRegistry;
+            $registry->register($app->make(AssignAction::class));
+            $registry->register($app->make(ReassignAction::class));
+            $registry->register($app->make(TransferDepartmentAction::class));
+            $registry->register($app->make(RaisePriorityAction::class));
+            $registry->register($app->make(ChangeStatusAction::class));
+            $registry->register($app->make(AddTagAction::class));
+            $registry->register($app->make(NotifyAction::class));
+            $registry->register($app->make(EscalateAction::class));
+
+            return $registry;
+        });
+
+        $this->app->singleton('automation.strategies', function ($app) {
+            return [
+                'manual' => $app->make(ManualStrategy::class),
+                'round_robin' => $app->make(RoundRobinStrategy::class),
+                'least_busy' => $app->make(LeastBusyStrategy::class),
+                'skill_based' => $app->make(SkillBasedStrategy::class),
+            ];
+        });
+
         $this->app->singleton(TicketMergeRelationRegistry::class, function ($app) {
             $registry = new TicketMergeRelationRegistry;
             $registry->register($app->make(TagMergeRelation::class));
@@ -164,11 +209,25 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(AuditPurgeHandler::class));
             $registry->register($app->make(CustomerNotePurgeHandler::class));
             $registry->register($app->make(TicketMessagePurgeHandler::class));
+            $registry->register($app->make(NotificationPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
             return $registry;
         });
+
+        $this->app->singleton(NotificationChannelRegistry::class, function ($app) {
+            $registry = new NotificationChannelRegistry;
+            $registry->register(NotificationChannel::InApp, $app->make(InAppChannel::class));
+            $registry->register(NotificationChannel::Mail, $app->make(MailChannel::class));
+
+            return $registry;
+        });
+
+        $this->app->singleton(NotificationPreferenceResolver::class);
+        $this->app->singleton(TemplateRenderer::class);
+        $this->app->singleton(NotificationPayloadAuthoriser::class);
+        $this->app->singleton(NotificationDispatcher::class);
     }
 
     /**
@@ -191,6 +250,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(TicketCategory::class, TicketCategoryPolicy::class);
         Gate::policy(TicketMessage::class, TicketMessagePolicy::class);
         Gate::policy(TicketStatusDefinition::class, TicketStatusDefinitionPolicy::class);
+        Gate::policy(Notification::class, NotificationPolicy::class);
+        Gate::policy(NotificationPreference::class, NotificationPreferencePolicy::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));
@@ -248,6 +309,11 @@ class AppServiceProvider extends ServiceProvider
         Queue::failing(function ($event) {
             RequestId::set('');
         });
+
+        Event::listen(
+            NotifiableEvent::class,
+            DispatchNotificationsListener::class,
+        );
     }
 
     private function slaTablesExist(): bool

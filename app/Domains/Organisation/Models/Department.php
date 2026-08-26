@@ -21,11 +21,13 @@ class Department extends Model
     /** @use HasFactory<DepartmentFactory> */
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['id', 'branch_id', 'name', 'code', 'is_active'];
+    protected $fillable = ['id', 'branch_id', 'name', 'code', 'is_active', 'routing_strategy', 'no_agent_fallback'];
 
     protected $casts = [
         'name' => BilingualStringCast::class,
         'is_active' => 'boolean',
+        'routing_strategy' => RoutingStrategy::class,
+        'no_agent_fallback' => NoAgentFallback::class,
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',

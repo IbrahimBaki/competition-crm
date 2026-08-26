@@ -54,6 +54,20 @@ return [
         'policy_in_use' => 'سياسة SLA قيد الاستخدام ولا يمكن حذفها',
         'target_already_exhausted' => 'هدف SLA استُنفذ بالفعل',
     ],
+    'automation' => [
+        'unsupported_condition_operator' => 'عامل الشرط غير مدعوم',
+        'unsupported_action_type' => 'نوع الإجراء غير مدعوم',
+        'rule_key_taken' => 'مفتاح قاعدة الأتمتة قيد الاستخدام بالفعل',
+        'execution_immutable' => 'عمليات تنفيذ قواعد الأتمتة غير قابلة للتعديل',
+        'escalation_reason_required' => 'سبب الترقية مطلوب',
+        'escalation_target_unavailable' => 'هدف الترقية غير متاح',
+    ],
+    'notification' => [
+        'template_missing' => 'قالب التنبيه غير موجود',
+        'channel_unsupported' => 'قناة التنبيه غير مدعومة',
+        'not_authorised' => 'لا توجد صلاحيات كافية لعرض هذا التنبيه',
+        'preference_invalid' => 'تفضيل التنبيه غير صحيح',
+    ],
     'security' => [
         'account_deactivated' => 'تم إلغاء تنشيط الحساب',
         'account_locked' => 'الحساب مقفول',

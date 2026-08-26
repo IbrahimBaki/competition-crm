@@ -54,6 +54,20 @@ return [
         'policy_in_use' => 'SLA policy is in use and cannot be deleted',
         'target_already_exhausted' => 'SLA target has already been exhausted',
     ],
+    'automation' => [
+        'unsupported_condition_operator' => 'Unsupported condition operator',
+        'unsupported_action_type' => 'Unsupported action type',
+        'rule_key_taken' => 'Automation rule key is already in use',
+        'execution_immutable' => 'Automation rule executions are immutable',
+        'escalation_reason_required' => 'Escalation reason is required',
+        'escalation_target_unavailable' => 'Escalation target is not available',
+    ],
+    'notification' => [
+        'template_missing' => 'Notification template not found',
+        'channel_unsupported' => 'Notification channel is not supported',
+        'not_authorised' => 'You are not authorised to view this notification',
+        'preference_invalid' => 'Invalid notification preference',
+    ],
     'security' => [
         'account_deactivated' => 'Account has been deactivated',
         'account_locked' => 'Account is locked',

@@ -76,6 +76,18 @@ enum ErrorCode: string
     case SlaPolicyInUse = 'sla.policy_in_use';
     case TargetAlreadyExhausted = 'sla.target_already_exhausted';
 
+    case AutomationUnsupportedCondition = 'automation.unsupported_condition_operator';
+    case AutomationUnsupportedAction = 'automation.unsupported_action_type';
+    case AutomationRuleKeyTaken = 'automation.rule_key_taken';
+    case AutomationExecutionImmutable = 'automation.execution_immutable';
+    case AutomationEscalationReasonRequired = 'automation.escalation_reason_required';
+    case AutomationEscalationTargetUnavailable = 'automation.escalation_target_unavailable';
+
+    case NotificationTemplateMissing = 'notification.template_missing';
+    case NotificationChannelUnsupported = 'notification.channel_unsupported';
+    case NotificationNotAuthorised = 'notification.not_authorised';
+    case NotificationPreferenceInvalid = 'notification.preference_invalid';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -104,7 +116,13 @@ enum ErrorCode: string
             self::TicketNotAssigned,
             self::IllegalDeliveryTransition,
             self::InternalNoteNotSendable,
-            self::SlaClockNotRunning => 422,
+            self::SlaClockNotRunning,
+            self::AutomationUnsupportedCondition,
+            self::AutomationUnsupportedAction,
+            self::AutomationEscalationReasonRequired,
+            self::NotificationTemplateMissing,
+            self::NotificationChannelUnsupported,
+            self::NotificationPreferenceInvalid => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -141,7 +159,10 @@ enum ErrorCode: string
             self::TicketConversationReadOnly,
             self::SlaClockAlreadyPaused,
             self::SlaPolicyInUse,
-            self::TargetAlreadyExhausted => 409,
+            self::TargetAlreadyExhausted,
+            self::AutomationRuleKeyTaken,
+            self::AutomationExecutionImmutable,
+            self::AutomationEscalationTargetUnavailable => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,
