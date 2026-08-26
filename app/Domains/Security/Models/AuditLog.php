@@ -2,6 +2,7 @@
 
 namespace App\Domains\Security\Models;
 
+use App\Domains\Security\Exceptions\AuditLogImmutableException;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditLog extends Model
@@ -24,5 +25,11 @@ class AuditLog extends Model
     public function getKeyType(): string
     {
         return 'string';
+    }
+
+    protected static function booted(): void
+    {
+        static::updating(fn () => throw new AuditLogImmutableException);
+        static::deleting(fn () => throw new AuditLogImmutableException);
     }
 }

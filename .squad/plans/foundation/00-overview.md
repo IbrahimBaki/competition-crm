@@ -14,6 +14,7 @@ Entry point for the **foundation** feature. Stories execute in order by their `N
 | 05 | `05-story-452.md` | BE-05 - API Foundation: Envelope, Error Catalogue, Pagination, Filtering, Idempotency and Rate Limits | 452 | — |
 | 06 | `06-story-453.md` | BE-06 - Localization Architecture: Bilingual Content, Locale Negotiation and Zero Hardcoded Strings | 453 | — |
 | 07 | `07-story-454.md` | BE-07 - Day-One Seed Data and Environment Bootstrap | 454 | — |
+| 08 | `08-story-455.md` | BE-08 - Business Audit Trail and Operational Observability | 455 | — |
 
 ## Dependency notes
 

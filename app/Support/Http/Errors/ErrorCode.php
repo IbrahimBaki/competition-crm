@@ -27,6 +27,7 @@ enum ErrorCode: string
     case InvalidTwoFactorCode = 'invalid_two_factor_code';
     case TwoFactorRequired = 'two_factor_required';
     case TwoFactorAlreadyEnabled = 'two_factor_already_enabled';
+    case AuditLogImmutable = 'audit_log_immutable';
 
     public function httpStatus(): int
     {
@@ -51,7 +52,8 @@ enum ErrorCode: string
             self::CannotDeactivateSelf,
             self::CannotDeactivateLastAdmin,
             self::DepartmentHasOpenTickets,
-            self::BranchHasActiveDepartments => 409,
+            self::BranchHasActiveDepartments,
+            self::AuditLogImmutable => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

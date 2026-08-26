@@ -13,14 +13,17 @@ use App\Domains\Organisation\Services\DefaultBranchUsageChecker;
 use App\Domains\Organisation\Services\DepartmentUsageChecker;
 use App\Domains\Organisation\Services\NullDepartmentUsageChecker;
 use App\Domains\Organisation\Services\WorkingTimeService;
+use App\Domains\Security\Models\AuditLog;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
+use App\Domains\Security\Policies\AuditLogPolicy;
 use App\Domains\Security\Policies\RolePolicy;
 use App\Domains\Security\Policies\UserPolicy;
 use App\Models\User;
 use App\Support\Http\RequestId;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
@@ -52,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(AuditLog::class, AuditLogPolicy::class);
         Gate::policy(Branch::class, BranchPolicy::class);
         Gate::policy(Department::class, DepartmentPolicy::class);
         Gate::policy(Team::class, TeamPolicy::class);
@@ -81,6 +85,27 @@ class AppServiceProvider extends ServiceProvider
             $key = $request->user()?->getAuthIdentifier() ?? $request->ip();
 
             return Limit::perMinute(30)->by((string) $key);
+        });
+
+        Queue::createPayloadUsing(function () {
+            $currentId = RequestId::current();
+
+            return ! empty($currentId) ? ['request_id' => $currentId] : [];
+        });
+
+        Queue::before(function ($event) {
+            $requestId = $event->job->payload()['request_id'] ?? null;
+            if ($requestId) {
+                RequestId::set($requestId);
+            }
+        });
+
+        Queue::after(function ($event) {
+            RequestId::set('');
+        });
+
+        Queue::failing(function ($event) {
+            RequestId::set('');
         });
     }
 }

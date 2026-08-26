@@ -4,10 +4,14 @@ namespace App\Domains\Security\Actions;
 
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
+use App\Domains\Security\Services\AuditLogger;
+use App\Models\User;
 
 class CreateRole
 {
-    public function execute(array $data): Role
+    public function __construct(private AuditLogger $auditLogger) {}
+
+    public function execute(User $actor, array $data): Role
     {
         $keys = $data['permission_keys'] ?? [];
 
@@ -27,6 +31,10 @@ class CreateRole
             $role->permissions()->createMany($permissions);
         }
 
-        return $role->load('permissions');
+        $role->load('permissions');
+
+        $this->auditLogger->record($actor, 'security.role.created', $role, null, $role->toArray());
+
+        return $role;
     }
 }

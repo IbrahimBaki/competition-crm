@@ -1,5 +1,6 @@
 <?php
 
+use App\Support\Logging\ConfigureRequestId;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
@@ -56,6 +57,7 @@ return [
             'driver' => 'stack',
             'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
+            'tap' => [ConfigureRequestId::class],
         ],
 
         'single' => [
@@ -63,6 +65,7 @@ return [
             'path' => storage_path('logs/laravel.log'),
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
+            'tap' => [ConfigureRequestId::class],
         ],
 
         'daily' => [

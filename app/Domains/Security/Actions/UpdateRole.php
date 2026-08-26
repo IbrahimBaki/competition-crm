@@ -5,11 +5,17 @@ namespace App\Domains\Security\Actions;
 use App\Domains\Security\Exceptions\AdministratorRoleLockedException;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
+use App\Domains\Security\Services\AuditLogger;
+use App\Models\User;
 
 class UpdateRole
 {
-    public function execute(Role $role, array $data): Role
+    public function __construct(private AuditLogger $auditLogger) {}
+
+    public function execute(User $actor, Role $role, array $data): Role
     {
+        $before = $role->toArray();
+
         $keys = $data['permission_keys'] ?? [];
 
         $invalidKeys = array_diff($keys, PermissionKey::all());
@@ -35,6 +41,10 @@ class UpdateRole
             $role->permissions()->createMany($permissions);
         }
 
-        return $role->fresh('permissions');
+        $role = $role->fresh('permissions');
+
+        $this->auditLogger->record($actor, 'security.role.updated', $role, $before, $role->toArray());
+
+        return $role;
     }
 }

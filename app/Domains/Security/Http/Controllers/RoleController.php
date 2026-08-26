@@ -51,22 +51,20 @@ class RoleController extends Controller
         return ApiResponse::item(new RoleResource($role->load('permissions')));
     }
 
-    public function store(StoreRoleRequest $request)
+    public function store(StoreRoleRequest $request, CreateRole $action)
     {
         $this->authorize('create', Role::class);
 
-        $action = new CreateRole;
-        $role = $action->execute($request->validated());
+        $role = $action->execute($request->user(), $request->validated());
 
         return ApiResponse::item(new RoleResource($role), 201);
     }
 
-    public function update(UpdateRoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role, UpdateRole $action)
     {
         $this->authorize('update', $role);
 
-        $action = new UpdateRole;
-        $updated = $action->execute($role, $request->validated());
+        $updated = $action->execute($request->user(), $role, $request->validated());
 
         return ApiResponse::item(new RoleResource($updated));
     }

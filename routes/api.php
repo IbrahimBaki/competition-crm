@@ -26,12 +26,15 @@ Route::prefix('v1')->group(function () {
     Route::post('auth/password/forgot', [PasswordResetController::class, 'forgot']);
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
+    Route::get('health/live', [HealthController::class, 'live']);
+    Route::get('health/ready', [HealthController::class, 'ready']);
 });
 
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthMeController::class, 'show']);
     Route::get('/permissions/catalogue', [PermissionCatalogueController::class, 'show']);
+    Route::get('audit-logs', [AuditLogController::class, 'index']);
 
     Route::apiResource('roles', RoleController::class);
     Route::post('roles/{role}/users/{user}', [RoleController::class, 'attachUser']);

@@ -21,6 +21,8 @@ final class PermissionKey
 
     public const ADMIN_STRUCTURE_MANAGE = 'admin.structure.manage';
 
+    public const ADMIN_AUDIT_VIEW = 'admin.audit.view';
+
     // ---- organisation (module: org) ------------------------------------
     public const ORG_BRANCHES_VIEW_ANY = 'org.branches.view.any';
 
