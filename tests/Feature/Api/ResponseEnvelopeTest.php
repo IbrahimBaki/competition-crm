@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,7 +12,9 @@ class ResponseEnvelopeTest extends TestCase
 
     public function test_get_list_returns_success_envelope(): void
     {
-        $response = $this->getJson('/api/v1/branches');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->getJson('/api/v1/branches');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -35,9 +38,10 @@ class ResponseEnvelopeTest extends TestCase
 
     public function test_get_single_item_returns_success_envelope(): void
     {
+        $user = User::factory()->create();
         $branch = $this->seed()->factory('branch')->create();
 
-        $response = $this->getJson('/api/v1/branches/'.$branch->id);
+        $response = $this->actingAs($user)->getJson('/api/v1/branches/'.$branch->id);
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -49,9 +53,10 @@ class ResponseEnvelopeTest extends TestCase
 
     public function test_x_request_id_header_echoed_when_provided(): void
     {
+        $user = User::factory()->create();
         $requestId = 'test-request-id-12345';
 
-        $response = $this->getJson('/api/v1/branches', [
+        $response = $this->actingAs($user)->getJson('/api/v1/branches', [
             'X-Request-Id' => $requestId,
         ]);
 
@@ -61,7 +66,9 @@ class ResponseEnvelopeTest extends TestCase
 
     public function test_x_request_id_header_generated_when_missing(): void
     {
-        $response = $this->getJson('/api/v1/branches');
+        $user = User::factory()->create();
+
+        $response = $this->actingAs($user)->getJson('/api/v1/branches');
 
         $responseId = $response->header('X-Request-Id');
         $this->assertNotNull($responseId);
@@ -71,10 +78,12 @@ class ResponseEnvelopeTest extends TestCase
 
     public function test_every_json_response_has_request_id(): void
     {
+        $user = User::factory()->create();
+
         $responses = [
-            $this->getJson('/api/v1/branches'),
-            $this->getJson('/api/v1/departments'),
-            $this->getJson('/api/v1/teams'),
+            $this->actingAs($user)->getJson('/api/v1/branches'),
+            $this->actingAs($user)->getJson('/api/v1/departments'),
+            $this->actingAs($user)->getJson('/api/v1/teams'),
         ];
 
         foreach ($responses as $response) {
