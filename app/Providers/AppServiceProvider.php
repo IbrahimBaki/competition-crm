@@ -12,12 +12,16 @@ use App\Domains\Organisation\Services\BranchUsageChecker;
 use App\Domains\Organisation\Services\DefaultBranchUsageChecker;
 use App\Domains\Organisation\Services\DepartmentUsageChecker;
 use App\Domains\Organisation\Services\NullDepartmentUsageChecker;
+use App\Domains\Organisation\Services\WorkingTimeService;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
 use App\Domains\Security\Policies\RolePolicy;
 use App\Domains\Security\Policies\UserPolicy;
 use App\Models\User;
+use App\Support\Http\RequestId;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +42,9 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(WorkingTimeService::class);
+        $this->app->singleton(RequestId::class);
+        $this->app->singleton(LocalizationSettings::class);
+        $this->app->singleton(LocaleResolver::class);
     }
 
     /**
@@ -62,6 +69,18 @@ class AppServiceProvider extends ServiceProvider
             }
 
             return null;
+        });
+
+        RateLimiter::for('api', function ($request) {
+            $key = $request->user()?->getAuthIdentifier() ?? $request->ip();
+
+            return Limit::perMinute(120)->by((string) $key);
+        });
+
+        RateLimiter::for('api-writes', function ($request) {
+            $key = $request->user()?->getAuthIdentifier() ?? $request->ip();
+
+            return Limit::perMinute(30)->by((string) $key);
         });
     }
 }

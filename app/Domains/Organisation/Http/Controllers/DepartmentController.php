@@ -10,6 +10,9 @@ use App\Domains\Organisation\Http\Requests\StoreDepartmentRequest;
 use App\Domains\Organisation\Http\Requests\UpdateDepartmentRequest;
 use App\Domains\Organisation\Http\Resources\DepartmentResource;
 use App\Domains\Organisation\Models\Department;
+use App\Support\Http\ApiResponse;
+use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -21,29 +24,28 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         $this->authorize('viewAny', Department::class);
-        $departments = Department::paginate($request->input('per_page', 25));
 
-        return response()->json([
-            'data' => DepartmentResource::collection($departments),
-            'meta' => [
-                'page' => $departments->currentPage(),
-                'per_page' => $departments->perPage(),
-                'total' => $departments->total(),
-            ],
-            'links' => [
-                'first' => $departments->url(1),
-                'last' => $departments->url($departments->lastPage()),
-                'prev' => $departments->previousPageUrl(),
-                'next' => $departments->nextPageUrl(),
-            ],
-        ]);
+        $spec = CollectionQuerySpec::create()
+            ->withSorts(['id', 'name', 'created_at', '-id', '-name', '-created_at'])
+            ->withFilters(['is_active' => ['eq', 'neq']])
+            ->withSearchableColumns(['name']);
+
+        $query = new CollectionQuery($request, $spec);
+        $departments = $query->paginate(Department::query());
+
+        return ApiResponse::collection(
+            $departments,
+            $query->meta(),
+            $query->meta()['filters'] ?? [],
+            $request->input('sort'),
+        );
     }
 
     public function show(Department $department)
     {
         $this->authorize('view', $department);
 
-        return response()->json(['data' => new DepartmentResource($department)]);
+        return ApiResponse::item(new DepartmentResource($department));
     }
 
     public function store(StoreDepartmentRequest $request, CreateDepartment $action)
@@ -51,7 +53,7 @@ class DepartmentController extends Controller
         $this->authorize('create', Department::class);
         $department = $action->execute($request->validated(), $request->user());
 
-        return response()->json(['data' => new DepartmentResource($department)], 201);
+        return ApiResponse::item(new DepartmentResource($department), 201);
     }
 
     public function update(UpdateDepartmentRequest $request, Department $department, UpdateDepartment $action)
@@ -59,7 +61,7 @@ class DepartmentController extends Controller
         $this->authorize('update', $department);
         $department = $action->execute($department, $request->validated(), $request->user());
 
-        return response()->json(['data' => new DepartmentResource($department)]);
+        return ApiResponse::item(new DepartmentResource($department));
     }
 
     public function activate(Department $department, ActivateDepartment $action)
@@ -67,7 +69,7 @@ class DepartmentController extends Controller
         $this->authorize('update', $department);
         $department = $action->execute($department, auth()->user());
 
-        return response()->json(['data' => new DepartmentResource($department)]);
+        return ApiResponse::item(new DepartmentResource($department));
     }
 
     public function deactivate(Department $department, DeactivateDepartment $action, Request $request)
@@ -75,6 +77,6 @@ class DepartmentController extends Controller
         $this->authorize('delete', $department);
         $department = $action->execute($department, $request->all(), auth()->user());
 
-        return response()->json(['data' => new DepartmentResource($department)]);
+        return ApiResponse::item(new DepartmentResource($department));
     }
 }

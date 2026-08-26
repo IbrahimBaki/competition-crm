@@ -13,54 +13,65 @@ use App\Domains\Security\Http\Resources\RoleResource;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Services\AuditLogger;
 use App\Models\User;
+use App\Support\Http\ApiResponse;
+use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Routing\Controller;
 
 class RoleController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request)
     {
         $this->authorize('viewAny', Role::class);
 
-        $roles = Role::with('permissions')
-            ->paginate($request->query('per_page', 25));
+        $spec = CollectionQuerySpec::create()
+            ->withSorts(['id', 'name', 'created_at', '-id', '-name', '-created_at'])
+            ->withFilters(['is_system' => ['eq', 'neq']])
+            ->withSearchableColumns(['name']);
 
-        return RoleResource::collection($roles);
+        $query = new CollectionQuery($request, $spec);
+        $data = $query->paginate(Role::query());
+
+        return ApiResponse::collection(
+            $data,
+            $query->meta(),
+            $query->meta()['filters'] ?? [],
+            $request->input('sort'),
+        );
     }
 
-    public function show(Role $role): RoleResource
+    public function show(Role $role)
     {
         $this->authorize('view', $role);
 
-        return new RoleResource($role->load('permissions'));
+        return ApiResponse::item(new RoleResource($role->load('permissions')));
     }
 
-    public function store(StoreRoleRequest $request): RoleResource
+    public function store(StoreRoleRequest $request)
     {
         $this->authorize('create', Role::class);
 
         $action = new CreateRole;
         $role = $action->execute($request->validated());
 
-        return new RoleResource($role);
+        return ApiResponse::item(new RoleResource($role), 201);
     }
 
-    public function update(UpdateRoleRequest $request, Role $role): RoleResource
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         $this->authorize('update', $role);
 
         $action = new UpdateRole;
         $updated = $action->execute($role, $request->validated());
 
-        return new RoleResource($updated);
+        return ApiResponse::item(new RoleResource($updated));
     }
 
-    public function destroy(Role $role): JsonResponse
+    public function destroy(Role $role)
     {
         $this->authorize('delete', $role);
 
@@ -70,26 +81,26 @@ class RoleController extends Controller
 
         $role->delete();
 
-        return response()->json(status: 204);
+        return ApiResponse::noContent();
     }
 
-    public function attachUser(Request $request, Role $role, User $user, AuditLogger $auditLogger): JsonResponse
+    public function attachUser(Request $request, Role $role, User $user, AuditLogger $auditLogger)
     {
         $this->authorize('update', $role);
 
         $action = new AssignRoleToUser($auditLogger);
         $action->execute($request->user(), $user, $role->id);
 
-        return response()->json(status: 204);
+        return ApiResponse::noContent();
     }
 
-    public function detachUser(Request $request, Role $role, User $user, AuditLogger $auditLogger): JsonResponse
+    public function detachUser(Request $request, Role $role, User $user, AuditLogger $auditLogger)
     {
         $this->authorize('update', $role);
 
         $action = new DetachRoleFromUser($auditLogger);
         $action->execute($request->user(), $user, $role->id);
 
-        return response()->json(status: 204);
+        return ApiResponse::noContent();
     }
 }

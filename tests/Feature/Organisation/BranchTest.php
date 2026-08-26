@@ -45,6 +45,7 @@ class BranchTest extends TestCase
                 'created_at',
                 'updated_at',
             ],
+            'meta' => ['request_id'],
         ]);
         $this->assertDatabaseHas('branches', [
             'code' => 'hq',
@@ -72,8 +73,8 @@ class BranchTest extends TestCase
             'data' => [
                 '*' => ['id', 'name', 'code'],
             ],
-            'meta' => ['page', 'per_page', 'total'],
-            'links' => ['first', 'last', 'prev', 'next'],
+            'meta' => ['request_id', 'page', 'per_page', 'total', 'total_pages'],
+            'links' => ['first', 'last', 'prev', 'next', 'self'],
         ]);
     }
 

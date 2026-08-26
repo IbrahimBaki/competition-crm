@@ -1,19 +1,17 @@
 <?php
 
-use App\Domains\Organisation\Exceptions\BranchHasActiveDepartmentsException;
-use App\Domains\Organisation\Exceptions\DepartmentInUseException;
-use App\Domains\Organisation\Exceptions\UserBranchNotAttachedException;
 use App\Domains\Security\Http\Middleware\EnforceTwoFactorPolicy;
 use App\Domains\Security\Http\Middleware\EnsureAccountIsActive;
-use Illuminate\Auth\AuthorizationException;
+use App\Http\Middleware\AssignRequestId;
+use App\Http\Middleware\EnforceIdempotency;
+use App\Http\Middleware\NegotiateLocale;
+use App\Support\Http\Errors\ApiExceptionRenderer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Middleware\AuthenticateSession;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -24,202 +22,23 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->api(prepend: [
+            AssignRequestId::class,
             EnsureFrontendRequestsAreStateful::class,
         ]);
 
         $middleware->appendToGroup('api', AuthenticateSession::class);
+        $middleware->appendToGroup('api', NegotiateLocale::class);
         $middleware->appendToGroup('api', EnsureAccountIsActive::class);
         $middleware->appendToGroup('api', EnforceTwoFactorPolicy::class);
+        $middleware->appendToGroup('api', EnforceIdempotency::class);
+        $middleware->appendToGroup('api', 'throttle:api');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->renderable(function (Throwable $e, $request) {
+        $exceptions->render(function (Throwable $e, $request) {
             if ($request->is('api/*')) {
-                if ($e instanceof DepartmentInUseException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'department.has_open_tickets',
-                            'message' => $e->getMessage(),
-                            'meta' => [
-                                'open_tickets' => $e->openTicketCount,
-                            ],
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 409);
-                }
-
-                if ($e instanceof BranchHasActiveDepartmentsException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'branch.has_active_departments',
-                            'message' => $e->getMessage(),
-                            'meta' => [
-                                'active_departments' => $e->activeDepartmentCount,
-                            ],
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 409);
-                }
-
-                if ($e instanceof UserBranchNotAttachedException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'user.branch_not_attached',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof AdministratorRoleLockedException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'admin_role_locked',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof SystemRoleImmutableException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'system_role_immutable',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof ValidationException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'validation_failed',
-                            'message' => 'The given data was invalid.',
-                            'field_errors' => $e->errors(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof AuthorizationException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'unauthorized',
-                            'message' => 'This action is unauthorized.',
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 403);
-                }
-
-                if ($e instanceof InvitationExpiredException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'invitation_expired',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof InvitationAlreadyAcceptedException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'invitation_invalid',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof InvitationAlreadyPendingException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'invitation_already_pending',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof AccountLockedException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'account_locked',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 423);
-                }
-
-                if ($e instanceof AccountDeactivatedException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'account_deactivated',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 401);
-                }
-
-                if ($e instanceof CannotDeactivateSelfException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'cannot_deactivate_self',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 409);
-                }
-
-                if ($e instanceof CannotDeactivateLastAdministratorException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'cannot_deactivate_last_administrator',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 409);
-                }
-
-                if ($e instanceof InvalidTwoFactorCodeException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'invalid_two_factor_code',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof TwoFactorRequiredException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'two_factor_required',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 202);
-                }
-
-                if ($e instanceof TwoFactorAlreadyEnabledException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'two_factor_already_enabled',
-                            'message' => $e->getMessage(),
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 422);
-                }
-
-                if ($e instanceof NotFoundHttpException) {
-                    return response()->json([
-                        'error' => [
-                            'code' => 'not_found',
-                            'message' => 'Resource not found.',
-                            'request_id' => request()->header('X-Request-Id') ?? Str::uuid(),
-                        ],
-                    ], 404);
-                }
+                return app(ApiExceptionRenderer::class)->render($e, $request);
             }
+
+            return null;
         });
     })->create();

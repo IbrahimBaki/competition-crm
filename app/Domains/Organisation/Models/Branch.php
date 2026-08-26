@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin Builder
+ *
+ * @property BilingualString $name
  */
 class Branch extends Model
 {
@@ -20,7 +22,7 @@ class Branch extends Model
     protected $fillable = ['id', 'name', 'code', 'timezone', 'is_24_7', 'is_active'];
 
     protected $casts = [
-        'name' => 'array',
+        'name' => BilingualStringCast::class,
         'is_24_7' => 'boolean',
         'is_active' => 'boolean',
         'created_at' => 'datetime',

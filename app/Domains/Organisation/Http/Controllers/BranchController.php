@@ -10,6 +10,9 @@ use App\Domains\Organisation\Http\Requests\StoreBranchRequest;
 use App\Domains\Organisation\Http\Requests\UpdateBranchRequest;
 use App\Domains\Organisation\Http\Resources\BranchResource;
 use App\Domains\Organisation\Models\Branch;
+use App\Support\Http\ApiResponse;
+use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -22,31 +25,27 @@ class BranchController extends Controller
     {
         $this->authorize('viewAny', Branch::class);
 
-        $branches = Branch::paginate($request->input('per_page', 25));
+        $spec = CollectionQuerySpec::create()
+            ->withSorts(['id', 'name', 'created_at', '-id', '-name', '-created_at'])
+            ->withFilters(['is_active' => ['eq', 'neq']])
+            ->withSearchableColumns(['name']);
 
-        return response()->json([
-            'data' => BranchResource::collection($branches),
-            'meta' => [
-                'page' => $branches->currentPage(),
-                'per_page' => $branches->perPage(),
-                'total' => $branches->total(),
-            ],
-            'links' => [
-                'first' => $branches->url(1),
-                'last' => $branches->url($branches->lastPage()),
-                'prev' => $branches->previousPageUrl(),
-                'next' => $branches->nextPageUrl(),
-            ],
-        ]);
+        $query = new CollectionQuery($request, $spec);
+        $branches = $query->paginate(Branch::query());
+
+        return ApiResponse::collection(
+            $branches,
+            $query->meta(),
+            $query->meta()['filters'] ?? [],
+            $request->input('sort'),
+        );
     }
 
     public function show(Branch $branch)
     {
         $this->authorize('view', $branch);
 
-        return response()->json([
-            'data' => new BranchResource($branch),
-        ]);
+        return ApiResponse::item(new BranchResource($branch));
     }
 
     public function store(StoreBranchRequest $request, CreateBranch $action)
@@ -55,9 +54,7 @@ class BranchController extends Controller
 
         $branch = $action->execute($request->validated(), $request->user());
 
-        return response()->json([
-            'data' => new BranchResource($branch),
-        ], 201);
+        return ApiResponse::item(new BranchResource($branch), 201);
     }
 
     public function update(UpdateBranchRequest $request, Branch $branch, UpdateBranch $action)
@@ -66,9 +63,7 @@ class BranchController extends Controller
 
         $branch = $action->execute($branch, $request->validated(), $request->user());
 
-        return response()->json([
-            'data' => new BranchResource($branch),
-        ]);
+        return ApiResponse::item(new BranchResource($branch));
     }
 
     public function activate(Branch $branch, ActivateBranch $action)
@@ -77,9 +72,7 @@ class BranchController extends Controller
 
         $branch = $action->execute($branch, auth()->user());
 
-        return response()->json([
-            'data' => new BranchResource($branch),
-        ]);
+        return ApiResponse::item(new BranchResource($branch));
     }
 
     public function deactivate(Branch $branch, DeactivateBranch $action)
@@ -88,8 +81,6 @@ class BranchController extends Controller
 
         $branch = $action->execute($branch, auth()->user());
 
-        return response()->json([
-            'data' => new BranchResource($branch),
-        ]);
+        return ApiResponse::item(new BranchResource($branch));
     }
 }

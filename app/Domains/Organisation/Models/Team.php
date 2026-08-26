@@ -2,6 +2,7 @@
 
 namespace App\Domains\Organisation\Models;
 
+use App\Support\I18n\BilingualString;
 use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @mixin Builder
+ *
+ * @property BilingualString $name
  */
 class Team extends Model
 {
@@ -19,7 +22,7 @@ class Team extends Model
     protected $fillable = ['id', 'department_id', 'name', 'code', 'is_active'];
 
     protected $casts = [
-        'name' => 'array',
+        'name' => BilingualStringCast::class,
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

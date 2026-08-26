@@ -15,6 +15,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 /**
  * @property string $uuid
+ * @property ?string $locale
  */
 class User extends Authenticatable
 {
@@ -31,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'locale',
     ];
 
     /**

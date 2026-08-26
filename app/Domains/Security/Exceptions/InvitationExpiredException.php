@@ -2,4 +2,18 @@
 
 namespace App\Domains\Security\Exceptions;
 
-class InvitationExpiredException extends \DomainException {}
+use App\Support\Http\Errors\ErrorCode;
+use App\Support\Http\Errors\HasApiErrorCode;
+
+class InvitationExpiredException extends \DomainException implements HasApiErrorCode
+{
+    public function errorCode(): ErrorCode
+    {
+        return ErrorCode::InvitationExpired;
+    }
+
+    public function errorMeta(): array
+    {
+        return [];
+    }
+}

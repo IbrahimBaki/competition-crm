@@ -10,10 +10,11 @@ class InvitationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'uuid' => $this->id,  // The primary key is a UUID
+            'id' => (string) $this->id,
             'email' => $this->email,
-            'expires_at' => $this->expires_at,
-            'accepted_at' => $this->accepted_at,
+            'expires_at' => $this->expires_at?->toIso8601String(),
+            'accepted_at' => $this->accepted_at?->toIso8601String(),
+            'created_at' => $this->created_at?->toIso8601String(),
         ];
     }
 }
