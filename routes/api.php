@@ -1,5 +1,13 @@
 <?php
 
+use App\Domains\Customers\Http\Controllers\CustomerAttachmentController;
+use App\Domains\Customers\Http\Controllers\CustomerBlockController;
+use App\Domains\Customers\Http\Controllers\CustomerContactController;
+use App\Domains\Customers\Http\Controllers\CustomerController;
+use App\Domains\Customers\Http\Controllers\CustomerDuplicateController;
+use App\Domains\Customers\Http\Controllers\CustomerMergeController;
+use App\Domains\Customers\Http\Controllers\CustomerNoteController;
+use App\Domains\Customers\Http\Controllers\CustomerTimelineController;
 use App\Domains\Organisation\Http\Controllers\BranchController;
 use App\Domains\Organisation\Http\Controllers\BranchHolidayController;
 use App\Domains\Organisation\Http\Controllers\BranchWorkingHourController;
@@ -10,12 +18,15 @@ use App\Domains\Security\Http\Controllers\AuditLogController;
 use App\Domains\Security\Http\Controllers\AuthController;
 use App\Domains\Security\Http\Controllers\AuthMeController;
 use App\Domains\Security\Http\Controllers\AuthPolicyController;
+use App\Domains\Security\Http\Controllers\DataProtectionController;
 use App\Domains\Security\Http\Controllers\InvitationController;
 use App\Domains\Security\Http\Controllers\PasswordResetController;
 use App\Domains\Security\Http\Controllers\PermissionCatalogueController;
 use App\Domains\Security\Http\Controllers\RoleController;
 use App\Domains\Security\Http\Controllers\TwoFactorController;
 use App\Domains\Security\Http\Controllers\UserLifecycleController;
+use App\Domains\Ticketing\Http\Controllers\TicketCategoryController;
+use App\Domains\Ticketing\Http\Controllers\TicketController;
 use App\Support\Attachments\Http\AttachmentController;
 use App\Support\Http\Health\HealthController;
 use Illuminate\Http\Request;
@@ -92,6 +103,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('auth/policy', [AuthPolicyController::class, 'show']);
     Route::put('auth/policy', [AuthPolicyController::class, 'update']);
 
+    Route::get('customers/duplicates', [CustomerDuplicateController::class, 'index']);
+    Route::post('customers/duplicates/{candidate}/dismiss', [CustomerDuplicateController::class, 'dismiss']);
+
     Route::apiResource('customers', CustomerController::class)->except(['destroy']);
     Route::post('customers/{customer}/block', [CustomerBlockController::class, 'block']);
     Route::post('customers/{customer}/unblock', [CustomerBlockController::class, 'unblock']);
@@ -110,4 +124,32 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::delete('customers/{customer}/attachments/{attachment}', [CustomerAttachmentController::class, 'destroy']);
 
     Route::get('customers/{customer}/timeline', [CustomerTimelineController::class, 'index']);
+    Route::post('customers/{customer}/merge', [CustomerMergeController::class, 'store']);
+
+    Route::get('ticket-statuses', [TicketStatusController::class, 'index']);
+    Route::post('ticket-statuses', [TicketStatusController::class, 'store'])->middleware('idempotency');
+    Route::patch('ticket-statuses/{status}', [TicketStatusController::class, 'update'])->middleware('idempotency');
+
+    Route::get('tickets', [TicketController::class, 'index']);
+    Route::post('tickets', [TicketController::class, 'store'])->middleware('idempotency');
+    Route::get('tickets/{ticket}', [TicketController::class, 'show']);
+    Route::patch('tickets/{ticket}', [TicketController::class, 'update'])->middleware('idempotency');
+    Route::get('tickets/{ticket}/history', [TicketController::class, 'history']);
+
+    Route::post('tickets/{ticket}/status', [TicketLifecycleController::class, 'status'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/reopen', [TicketLifecycleController::class, 'reopen'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/spam', [TicketLifecycleController::class, 'markSpam'])->middleware('idempotency');
+    Route::delete('tickets/{ticket}/spam', [TicketLifecycleController::class, 'restoreFromSpam'])->middleware('idempotency');
+
+    Route::post('tickets/{ticket}/merge', [TicketMergeController::class, 'merge'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/split', [TicketMergeController::class, 'split'])->middleware('idempotency');
+
+    Route::get('tickets/{ticket}/links', [TicketLinkController::class, 'index']);
+    Route::post('tickets/{ticket}/links', [TicketLinkController::class, 'store'])->middleware('idempotency');
+    Route::delete('tickets/{ticket}/links/{link}', [TicketLinkController::class, 'destroy']);
+
+    Route::get('ticket-categories', [TicketCategoryController::class, 'index']);
+    Route::post('ticket-categories', [TicketCategoryController::class, 'store'])->middleware('idempotency');
+    Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update'])->middleware('idempotency');
+    Route::delete('ticket-categories/{category}', [TicketCategoryController::class, 'destroy']);
 });

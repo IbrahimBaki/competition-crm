@@ -8,6 +8,7 @@ Entry point for the **customers** feature. Stories execute in order by their `NN
 |----|------|-------|------------|------------|
 | _add rows as stories are planned_ |
 | 11 | `11-story-458.md` | BE-11 - Customer Profile, Contact Details, Notes, Attachments and the 360 Timeline | 458 | — |
+| 12 | `12-story-459.md` | BE-12 - Canonical Customer Identity Across Channels and Safe Duplicate Merge | 459 | — |
 
 ## Dependency notes
 

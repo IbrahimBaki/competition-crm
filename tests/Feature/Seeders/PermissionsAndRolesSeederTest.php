@@ -56,6 +56,9 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::CUSTOMERS_NOTE_DELETE,
             PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
+            PermissionKey::CUSTOMERS_MERGE,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $managerPermissions);
@@ -84,6 +87,8 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::CUSTOMERS_NOTE_DELETE,
             PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $supervisorPermissions);

@@ -56,6 +56,12 @@ RETENTION_AUDIT_MINIMUM_DAYS=365
 RETENTION_BATCH_SIZE=500
 RETENTION_DRY_RUN=false
 
+# Customers: Identity resolution (BE-12)
+CUSTOMER_DEFAULT_COUNTRY_CODE=+966
+
+# Ticketing: Lifecycle (BE-14)
+TICKETS_REOPEN_WINDOW_DAYS=14
+
 # يتفعّل عند R3 فقط (اقرأ docker/environment-setup.md)
 # QUEUE_CONNECTION=redis
 # BROADCAST_CONNECTION=reverb

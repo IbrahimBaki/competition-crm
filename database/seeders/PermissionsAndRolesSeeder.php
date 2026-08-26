@@ -55,6 +55,21 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::ORG_TEAMS_MANAGE_ANY,
             // tickets.*
             PermissionKey::TICKETS_VIEW_ANY,
+            PermissionKey::TICKETS_CREATE,
+            PermissionKey::TICKETS_UPDATE,
+            PermissionKey::TICKETS_ASSIGN,
+            PermissionKey::TICKETS_RECLASSIFY,
+            PermissionKey::TICKETS_TAG,
+            PermissionKey::TICKETS_HISTORY_VIEW,
+            PermissionKey::TICKETS_CATEGORIES_MANAGE,
+            PermissionKey::TICKETS_STATUS_CHANGE,
+            PermissionKey::TICKETS_REOPEN,
+            PermissionKey::TICKETS_SPAM_MARK,
+            PermissionKey::TICKETS_SPAM_RESTORE,
+            PermissionKey::TICKETS_MERGE,
+            PermissionKey::TICKETS_SPLIT,
+            PermissionKey::TICKETS_LINK,
+            PermissionKey::TICKETS_STATUSES_MANAGE,
             // customers.*
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_CREATE,
@@ -66,6 +81,9 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::CUSTOMERS_NOTE_DELETE,
             PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
+            PermissionKey::CUSTOMERS_MERGE,
         ];
 
         $role = Role::firstOrCreate(
@@ -93,6 +111,18 @@ class PermissionsAndRolesSeeder extends Seeder
             // tickets.*
             PermissionKey::TICKETS_VIEW_DEPARTMENT,
             PermissionKey::TICKETS_VIEW_TEAM,
+            PermissionKey::TICKETS_CREATE,
+            PermissionKey::TICKETS_UPDATE,
+            PermissionKey::TICKETS_ASSIGN,
+            PermissionKey::TICKETS_RECLASSIFY,
+            PermissionKey::TICKETS_TAG,
+            PermissionKey::TICKETS_HISTORY_VIEW,
+            PermissionKey::TICKETS_STATUS_CHANGE,
+            PermissionKey::TICKETS_REOPEN,
+            PermissionKey::TICKETS_SPAM_MARK,
+            PermissionKey::TICKETS_MERGE,
+            PermissionKey::TICKETS_SPLIT,
+            PermissionKey::TICKETS_LINK,
             // customers.*
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_CREATE,
@@ -104,6 +134,8 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::CUSTOMERS_NOTE_DELETE,
             PermissionKey::CUSTOMERS_ATTACHMENT_MANAGE,
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
+            PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
         ];
 
         $role = Role::firstOrCreate(
@@ -126,6 +158,17 @@ class PermissionsAndRolesSeeder extends Seeder
         $permissions = [
             PermissionKey::TICKETS_VIEW_TEAM,
             PermissionKey::TICKETS_VIEW_OWN,
+            PermissionKey::TICKETS_CREATE,
+            PermissionKey::TICKETS_UPDATE,
+            PermissionKey::TICKETS_ASSIGN,
+            PermissionKey::TICKETS_RECLASSIFY,
+            PermissionKey::TICKETS_TAG,
+            PermissionKey::TICKETS_HISTORY_VIEW,
+            PermissionKey::TICKETS_STATUS_CHANGE,
+            PermissionKey::TICKETS_REOPEN,
+            PermissionKey::TICKETS_SPAM_MARK,
+            PermissionKey::TICKETS_SPLIT,
+            PermissionKey::TICKETS_LINK,
             // customers.*
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_NOTE_VIEW,

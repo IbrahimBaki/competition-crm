@@ -2,19 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Domains\Ticketing\Models\TicketCategory;
+use App\Support\I18n\BilingualString;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 /**
- * Seeds ticket status, priority, and category catalogues.
+ * Seeds ticket category catalogues.
  *
- * Wire-up point for future story that creates ticket_statuses, ticket_priorities, and ticket_categories tables.
- * When tables exist, this seeder will install:
- * - Status catalogue (open, pending, resolved, closed, etc.) with lifecycle types and bilingual names
- * - Priority set (low, medium, high, urgent) with bilingual names
- * - Category tree (parent + children structure) with bilingual names
- *
- * All rows keyed on `code` for idempotency via updateOrCreate.
+ * Creates a sample three-level category tree with custom fields.
  *
  * @codeCoverageIgnore
  */
@@ -22,12 +19,62 @@ class TicketCatalogueSeeder extends Seeder
 {
     public function run(): void
     {
-        if (! Schema::hasTable('ticket_statuses')
-            || ! Schema::hasTable('ticket_priorities')
-            || ! Schema::hasTable('ticket_categories')) {
+        if (! Schema::hasTable('ticket_categories')) {
             $this->command?->warn('Ticket catalogue tables not yet migrated; skipping ticket catalogues.');
 
             return;
         }
+
+        $support = TicketCategory::firstOrCreate(
+            ['code' => 'support'],
+            [
+                'uuid' => Str::uuid(),
+                'name' => new BilingualString('Technical Support', 'الدعم الفني'),
+                'depth' => 1,
+                'is_active' => true,
+            ]
+        );
+
+        $billing = TicketCategory::firstOrCreate(
+            ['code' => 'billing'],
+            [
+                'uuid' => Str::uuid(),
+                'name' => new BilingualString('Billing', 'الفواتير'),
+                'depth' => 1,
+                'is_active' => true,
+            ]
+        );
+
+        $software = TicketCategory::firstOrCreate(
+            ['code' => 'support.software'],
+            [
+                'uuid' => Str::uuid(),
+                'parent_id' => $support->id,
+                'name' => new BilingualString('Software Issues', 'مشاكل البرمجيات'),
+                'depth' => 2,
+                'is_active' => true,
+            ]
+        );
+
+        $software->fields()->firstOrCreate(
+            ['key' => 'severity'],
+            [
+                'uuid' => Str::uuid(),
+                'label' => new BilingualString('Severity Level', 'مستوى الخطورة'),
+                'type' => 'select',
+                'options' => ['low', 'medium', 'high', 'critical'],
+                'is_required' => true,
+            ]
+        );
+
+        $software->fields()->firstOrCreate(
+            ['key' => 'error_code'],
+            [
+                'uuid' => Str::uuid(),
+                'label' => new BilingualString('Error Code', 'رمز الخطأ'),
+                'type' => 'text',
+                'is_required' => false,
+            ]
+        );
     }
 }

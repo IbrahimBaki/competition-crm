@@ -2,7 +2,9 @@
 
 namespace Tests\Feature\Api;
 
+use App\Domains\Customers\Models\CustomerDuplicateCandidate;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class UuidExposureTest extends TestCase
@@ -74,5 +76,62 @@ class UuidExposureTest extends TestCase
             $this->assertIsString($item['id']);
             $this->assertFalse(is_numeric($item['id']) && strpos($item['id'], '-') === false);
         }
+    }
+
+    public function test_duplicate_candidate_list_uses_uuids(): void
+    {
+        $customer1 = $this->seed()->factory('customer')->create();
+        $customer2 = $this->seed()->factory('customer')->create();
+
+        CustomerDuplicateCandidate::create([
+            'uuid' => Str::uuid(),
+            'customer_id' => min($customer1->id, $customer2->id),
+            'duplicate_customer_id' => max($customer1->id, $customer2->id),
+            'status' => 'pending',
+            'rule' => 'exact_identity',
+            'evidence' => [],
+        ]);
+
+        $response = $this->getJson('/api/v1/customers/duplicates');
+
+        $response->assertStatus(200);
+        $items = $response->json('data');
+
+        foreach ($items as $item) {
+            // Main UUID
+            $this->assertIsString($item['uuid']);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $item['uuid']);
+
+            // Customer UUIDs in nested objects
+            $this->assertIsString($item['customer']['uuid']);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $item['customer']['uuid']);
+
+            $this->assertIsString($item['duplicate_customer']['uuid']);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $item['duplicate_customer']['uuid']);
+
+            // Should NOT have numeric ids
+            $this->assertArrayNotHasKey('id', $item);
+        }
+    }
+
+    public function test_merge_response_uses_uuids(): void
+    {
+        $survivor = $this->seed()->factory('customer')->create();
+        $loser = $this->seed()->factory('customer')->create();
+
+        $response = $this->postJson(
+            "/api/v1/customers/{$survivor->uuid}/merge",
+            ['duplicate_customer_uuid' => $loser->uuid]
+        );
+
+        $response->assertStatus(200);
+        $item = $response->json('data');
+
+        // Main UUID
+        $this->assertIsString($item['uuid']);
+        $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $item['uuid']);
+
+        // Should NOT have numeric id
+        $this->assertArrayNotHasKey('id', $item);
     }
 }

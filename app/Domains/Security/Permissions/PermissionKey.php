@@ -45,6 +45,36 @@ final class PermissionKey
 
     public const TICKETS_VIEW_ANY = 'tickets.view.any';
 
+    public const TICKETS_CREATE = 'tickets.create';
+
+    public const TICKETS_UPDATE = 'tickets.update';
+
+    public const TICKETS_ASSIGN = 'tickets.assign';
+
+    public const TICKETS_RECLASSIFY = 'tickets.reclassify';
+
+    public const TICKETS_TAG = 'tickets.tag';
+
+    public const TICKETS_HISTORY_VIEW = 'tickets.history.view';
+
+    public const TICKETS_CATEGORIES_MANAGE = 'tickets.categories.manage';
+
+    public const TICKETS_STATUS_CHANGE = 'tickets.status.change';
+
+    public const TICKETS_REOPEN = 'tickets.reopen';
+
+    public const TICKETS_SPAM_MARK = 'tickets.spam.mark';
+
+    public const TICKETS_SPAM_RESTORE = 'tickets.spam.restore';
+
+    public const TICKETS_MERGE = 'tickets.merge';
+
+    public const TICKETS_SPLIT = 'tickets.split';
+
+    public const TICKETS_LINK = 'tickets.link';
+
+    public const TICKETS_STATUSES_MANAGE = 'tickets.statuses.manage';
+
     // ---- attachments (module: attachments) ------------------------------
     public const ATTACHMENTS_UPLOAD = 'attachments.upload';
 
@@ -77,6 +107,12 @@ final class PermissionKey
     public const CUSTOMERS_ATTACHMENT_MANAGE = 'customers.attachment.manage';
 
     public const CUSTOMERS_TIMELINE_VIEW = 'customers.timeline.view';
+
+    public const CUSTOMERS_DUPLICATE_VIEW = 'customers.duplicate.view';
+
+    public const CUSTOMERS_DUPLICATE_REVIEW = 'customers.duplicate.review';
+
+    public const CUSTOMERS_MERGE = 'customers.merge';
 
     public static function all(): array
     {

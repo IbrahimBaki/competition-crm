@@ -13,4 +13,6 @@ enum CustomerEventType: string
     case ContactAdded = 'contact_added';
     case ContactRemoved = 'contact_removed';
     case AttachmentAdded = 'attachment_added';
+    case Merged = 'merged';
+    case MergedInto = 'merged_into';
 }

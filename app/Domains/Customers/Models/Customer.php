@@ -5,6 +5,7 @@ namespace App\Domains\Customers\Models;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -19,6 +20,7 @@ class Customer extends Model
         'status' => CustomerStatus::class,
         'blocked_at' => 'datetime',
         'anonymised_at' => 'datetime',
+        'merged_at' => 'datetime',
     ];
 
     public function getRouteKeyName(): string
@@ -56,8 +58,41 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'blocked_by_user_id');
     }
 
+    public function mergedInto(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'merged_into_customer_id');
+    }
+
     public function isBlocked(): bool
     {
         return $this->status === CustomerStatus::Blocked;
+    }
+
+    public function isMerged(): bool
+    {
+        return $this->merged_into_customer_id !== null;
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        $customer = parent::resolveRouteBinding($value, $field);
+
+        if ($customer && $customer->isMerged()) {
+            $survivor = $customer->mergedInto;
+            $hops = 1;
+
+            while ($survivor && $survivor->isMerged() && $hops < 10) {
+                $survivor = $survivor->mergedInto;
+                $hops++;
+            }
+
+            if ($hops >= 10) {
+                throw new ModelNotFoundException;
+            }
+
+            return $survivor ?? $customer;
+        }
+
+        return $customer;
     }
 }

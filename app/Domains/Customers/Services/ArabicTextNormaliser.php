@@ -38,23 +38,57 @@ class ArabicTextNormaliser implements TextNormaliser
 
     public function normaliseContact(string $value, ContactType $type): string
     {
+        if ($type->isPhoneLike()) {
+            return $this->normalisePhoneE164($value);
+        }
+
         return match ($type) {
-            ContactType::Email, ContactType::PortalLogin => mb_strtolower(trim($value), 'UTF-8'),
-            ContactType::Phone, ContactType::Whatsapp => $this->normalisePhoneNumber($value),
+            ContactType::Email, ContactType::PortalLogin, ContactType::Chat => mb_strtolower(trim($value), 'UTF-8'),
+            default => '',
         };
     }
 
-    private function normalisePhoneNumber(string $value): string
+    private function normalisePhoneE164(string $value): string
     {
-        // Remove all non-digit characters
-        $digits = preg_replace('/\D/', '', $value);
+        // Convert Arabic-Indic digits to ASCII
+        $value = $this->foldArabicIndic($value);
 
-        // Drop leading 00 or + country prefix marker
-        if (str_starts_with($digits, '00')) {
-            $digits = substr($digits, 2);
+        // Keep only digits and leading +
+        $value = preg_replace('/[^\d+]/', '', $value);
+
+        if (empty($value)) {
+            return '';
         }
 
-        return $digits;
+        // If already international format (starts with +)
+        if ($value[0] === '+') {
+            return $value;
+        }
+
+        // Handle leading 00 (international format without +)
+        if (str_starts_with($value, '00')) {
+            return '+'.substr($value, 2);
+        }
+
+        // Handle leading 0 (domestic format with trunk prefix)
+        if ($value[0] === '0') {
+            $value = substr($value, 1);
+        }
+
+        // Add country code for domestic format
+        $countryCode = config('customers.identity.default_country_code', '+966');
+        $countryCode = ltrim($countryCode, '+');
+
+        return "+{$countryCode}{$value}";
+    }
+
+    private function foldArabicIndic(string $value): string
+    {
+        // Arabic-Indic digits: ٠-٩ (U+0660-U+0669) -> 0-9
+        $arabicIndic = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        $latin = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        return str_replace($arabicIndic, $latin, $value);
     }
 
     private function normalizeUnicode(string $value): string

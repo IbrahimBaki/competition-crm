@@ -18,12 +18,12 @@ planner:
   mode: auto
   auth:
     anthropic: subscription
-  modelOverride:
-    anthropic: claude-opus-5
   budget:
     maxFileReads: 25
     maxContextBytes: 50000
     maxDurationSeconds: 180
+  modelOverride:
+    anthropic: claude-opus-5
   cache:
     enabled: true
   maxOutputTokens: 16384

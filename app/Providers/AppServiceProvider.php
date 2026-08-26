@@ -4,11 +4,18 @@ namespace App\Providers;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
+use App\Domains\Customers\Models\CustomerDuplicateCandidate;
 use App\Domains\Customers\Models\CustomerNote;
 use App\Domains\Customers\Policies\CustomerContactPolicy;
+use App\Domains\Customers\Policies\CustomerDuplicatePolicy;
 use App\Domains\Customers\Policies\CustomerNotePolicy;
 use App\Domains\Customers\Policies\CustomerPolicy;
 use App\Domains\Customers\Services\ArabicTextNormaliser;
+use App\Domains\Customers\Services\Merge\MergeRelationRegistry;
+use App\Domains\Customers\Services\Merge\Relations\AttachmentMergeRelation;
+use App\Domains\Customers\Services\Merge\Relations\ContactMergeRelation;
+use App\Domains\Customers\Services\Merge\Relations\EventMergeRelation;
+use App\Domains\Customers\Services\Merge\Relations\NoteMergeRelation;
 use App\Domains\Customers\Services\Retention\CustomerNotePurgeHandler;
 use App\Domains\Customers\Services\TextNormaliser;
 use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
@@ -31,6 +38,11 @@ use App\Domains\Security\Permissions\PermissionKey;
 use App\Domains\Security\Policies\AuditLogPolicy;
 use App\Domains\Security\Policies\RolePolicy;
 use App\Domains\Security\Policies\UserPolicy;
+use App\Domains\Ticketing\Models\Ticket;
+use App\Domains\Ticketing\Models\TicketCategory;
+use App\Domains\Ticketing\Models\TicketStatusDefinition;
+use App\Domains\Ticketing\Policies\TicketCategoryPolicy;
+use App\Domains\Ticketing\Policies\TicketPolicy;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Policies\AttachmentPolicy;
@@ -96,6 +108,28 @@ class AppServiceProvider extends ServiceProvider
             return $registry;
         });
 
+        $this->app->singleton(TicketTransitionMap::class);
+        $this->app->singleton(ReopenWindow::class);
+
+        $this->app->singleton(TicketMergeRelationRegistry::class, function ($app) {
+            $registry = new TicketMergeRelationRegistry;
+            $registry->register($app->make(TagMergeRelation::class));
+            $registry->register($app->make(LinkMergeRelation::class));
+
+            return $registry;
+        });
+
+        $this->app->singleton(MergeRelationRegistry::class, function ($app) {
+            $registry = new MergeRelationRegistry;
+            $registry->register($app->make(NoteMergeRelation::class));
+            $registry->register($app->make(EventMergeRelation::class));
+            $registry->register($app->make(ContactMergeRelation::class));
+            $registry->register($app->make(AttachmentMergeRelation::class));
+            // Ticket and message relations register here once BE-Ticketing and messaging land.
+
+            return $registry;
+        });
+
         $this->app->singleton(RetentionRegistry::class, function ($app) {
             $registry = new RetentionRegistry;
             $registry->register($app->make(AttachmentPurgeHandler::class));
@@ -123,7 +157,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Customer::class, CustomerPolicy::class);
         Gate::policy(CustomerContact::class, CustomerContactPolicy::class);
+        Gate::policy(CustomerDuplicateCandidate::class, CustomerDuplicatePolicy::class);
         Gate::policy(CustomerNote::class, CustomerNotePolicy::class);
+        Gate::policy(Ticket::class, TicketPolicy::class);
+        Gate::policy(TicketCategory::class, TicketCategoryPolicy::class);
+        Gate::policy(TicketStatusDefinition::class, TicketStatusDefinitionPolicy::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));

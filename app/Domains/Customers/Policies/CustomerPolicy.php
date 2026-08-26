@@ -55,4 +55,11 @@ class CustomerPolicy
             ? Response::allow()
             : Response::deny();
     }
+
+    public function merge(User $user, Customer $customer): Response
+    {
+        return $user->can(PermissionKey::CUSTOMERS_MERGE)
+            ? Response::allow()
+            : Response::deny();
+    }
 }

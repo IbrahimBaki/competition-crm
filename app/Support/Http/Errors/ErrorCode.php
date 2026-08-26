@@ -44,6 +44,22 @@ enum ErrorCode: string
     case CustomerNotBlocked = 'customer.not_blocked';
     case DuplicateContactIdentity = 'customer.duplicate_contact_identity';
     case CustomerMustHaveContact = 'customer.must_have_contact';
+    case CannotMergeCustomerIntoItself = 'customer.cannot_merge_into_itself';
+    case CustomerAlreadyMerged = 'customer.already_merged';
+
+    case TicketCategoryDepthExceeded = 'ticket.category_depth_exceeded';
+    case InvalidTicketCustomField = 'ticket.invalid_custom_field';
+    case TicketCategoryInactive = 'ticket.category_inactive';
+    case TicketAlreadyAssigned = 'ticket.already_assigned';
+    case SavedViewNameTaken = 'ticket.saved_view_name_taken';
+    case TicketIllegalTransition = 'ticket.illegal_transition';
+    case TicketReopenWindowExpired = 'ticket.reopen_window_expired';
+    case TicketTransitionReasonRequired = 'ticket.transition_reason_required';
+    case TicketAlreadyMerged = 'ticket.already_merged';
+    case TicketCannotMergeIntoItself = 'ticket.cannot_merge_into_itself';
+    case TicketCannotLinkToItself = 'ticket.cannot_link_to_itself';
+    case TicketNotSpam = 'ticket.not_spam';
+    case TicketIsReadOnly = 'ticket.is_read_only';
 
     public function httpStatus(): int
     {
@@ -62,10 +78,18 @@ enum ErrorCode: string
             self::AttachmentTooLarge,
             self::AttachmentTypeNotAllowed,
             self::BotProtectionFailed,
-            self::CustomerMustHaveContact => 422,
+            self::CustomerMustHaveContact,
+            self::TicketCategoryDepthExceeded,
+            self::InvalidTicketCustomField,
+            self::TicketCategoryInactive,
+            self::TicketIllegalTransition,
+            self::TicketReopenWindowExpired,
+            self::TicketTransitionReasonRequired,
+            self::TicketCannotLinkToItself => 422,
 
             self::Unauthorized,
-            self::CustomerBlocked => 403,
+            self::CustomerBlocked,
+            self::TicketIsReadOnly => 403,
             self::Unauthenticated,
             self::AccountDeactivated => 401,
             self::NotFound => 404,
@@ -82,7 +106,14 @@ enum ErrorCode: string
             self::AttachmentScanPending,
             self::CustomerAlreadyBlocked,
             self::CustomerNotBlocked,
-            self::DuplicateContactIdentity => 409,
+            self::DuplicateContactIdentity,
+            self::CannotMergeCustomerIntoItself,
+            self::CustomerAlreadyMerged,
+            self::TicketAlreadyAssigned,
+            self::SavedViewNameTaken,
+            self::TicketAlreadyMerged,
+            self::TicketCannotMergeIntoItself,
+            self::TicketNotSpam => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,
