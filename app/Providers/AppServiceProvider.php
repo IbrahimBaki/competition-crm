@@ -72,6 +72,7 @@ use App\Domains\Ticketing\Services\Retention\TicketMessagePurgeHandler;
 use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
 use App\Domains\Ticketing\Services\Sla\NullSlaClockHooks;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
+use App\Domains\Workspace\Services\Retention\AgentTaskPurgeHandler;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Policies\AttachmentPolicy;
@@ -210,6 +211,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(CustomerNotePurgeHandler::class));
             $registry->register($app->make(TicketMessagePurgeHandler::class));
             $registry->register($app->make(NotificationPurgeHandler::class));
+            $registry->register($app->make(AgentTaskPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -228,6 +230,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TemplateRenderer::class);
         $this->app->singleton(NotificationPayloadAuthoriser::class);
         $this->app->singleton(NotificationDispatcher::class);
+
+        $this->app->singleton(QuickReplyRenderer::class);
     }
 
     /**
@@ -252,6 +256,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(TicketStatusDefinition::class, TicketStatusDefinitionPolicy::class);
         Gate::policy(Notification::class, NotificationPolicy::class);
         Gate::policy(NotificationPreference::class, NotificationPreferencePolicy::class);
+        Gate::policy(AgentTask::class, AgentTaskPolicy::class);
+        Gate::policy(QuickReply::class, QuickReplyPolicy::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));
