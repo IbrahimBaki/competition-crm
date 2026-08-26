@@ -10,7 +10,7 @@ class UserBranchNotAttachedException extends Exception implements HasApiErrorCod
 {
     public function __construct()
     {
-        parent::__construct('User is not attached to this branch', 422);
+        parent::__construct(__('errors.organisation.user_branch_not_attached'), 422);
     }
 
     public function errorCode(): ErrorCode

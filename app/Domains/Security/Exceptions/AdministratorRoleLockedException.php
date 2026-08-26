@@ -8,9 +8,9 @@ use Exception;
 
 class AdministratorRoleLockedException extends Exception implements HasApiErrorCode
 {
-    public function __construct(string $message = 'Cannot remove administrative permissions from the administrator role.')
+    public function __construct(?string $message = null)
     {
-        parent::__construct($message);
+        parent::__construct($message ?? __('errors.security.administrator_role_locked'));
     }
 
     public function errorCode(): ErrorCode

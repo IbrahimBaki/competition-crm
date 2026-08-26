@@ -5,6 +5,7 @@ namespace App\Domains\Organisation\Http\Resources;
 use App\Domains\Organisation\Models\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
 
 /** @mixin Branch */
 class BranchResource extends JsonResource
@@ -13,7 +14,7 @@ class BranchResource extends JsonResource
     {
         return [
             'id' => (string) $this->id,
-            'name' => $this->name,
+            'name' => $this->name->forLocale(App::getLocale()),
             'code' => $this->code,
             'timezone' => $this->timezone,
             'is_24_7' => (bool) $this->is_24_7,

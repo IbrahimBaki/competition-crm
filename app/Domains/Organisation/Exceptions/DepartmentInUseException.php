@@ -10,7 +10,7 @@ class DepartmentInUseException extends Exception implements HasApiErrorCode
 {
     public function __construct(public readonly int $openTicketCount)
     {
-        parent::__construct("Department has {$openTicketCount} open tickets", 409);
+        parent::__construct(__('errors.organisation.department_has_open_tickets', ['count' => $openTicketCount]), 409);
     }
 
     public function errorCode(): ErrorCode

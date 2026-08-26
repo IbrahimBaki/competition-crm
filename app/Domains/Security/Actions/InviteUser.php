@@ -22,7 +22,7 @@ class InviteUser
             ->first();
 
         if ($pendingInvitation) {
-            throw new InvitationAlreadyPendingException("An invitation is already pending for {$email}");
+            throw new InvitationAlreadyPendingException($email);
         }
 
         $rawToken = Str::random(64);

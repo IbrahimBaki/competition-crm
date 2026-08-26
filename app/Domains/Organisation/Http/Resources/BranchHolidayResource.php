@@ -5,6 +5,7 @@ namespace App\Domains\Organisation\Http\Resources;
 use App\Domains\Organisation\Models\BranchHoliday;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\App;
 
 /** @mixin BranchHoliday */
 class BranchHolidayResource extends JsonResource
@@ -13,7 +14,7 @@ class BranchHolidayResource extends JsonResource
     {
         return [
             'id' => (string) $this->id,
-            'name' => $this->name,
+            'name' => $this->name->forLocale(App::getLocale()),
             'date' => $this->date,
             'recurring_month_day' => $this->recurring_month_day,
             'created_at' => $this->created_at?->toIso8601String(),

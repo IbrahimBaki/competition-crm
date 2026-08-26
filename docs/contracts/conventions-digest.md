@@ -4,7 +4,7 @@
 - منظمة واحدة فقط. لا يوجد `tenant_id` ولا عزل بين مؤسسات.
 - كل جدول له `id` (UUID، عمود `binary(16)` أو `char(36)` حسب القرار المعتمد في `docs/contracts/api-contract.md`) — الـ API لا يرجّع أبدًا auto-increment.
 - كل الأوقات UTC في القاعدة، تحويل العرض فقط عند الحاجة باستخدام timezone الفرع (`Branch.timezone`).
-- أي حقل بيكتبه أدمن (اسم، وصف، label) = عمودين أو JSON `{ar, en}`، وليس عمود نصي واحد.
+- أي حقل بيكتبه أدمن (اسم، وصف، label) = عمودين أو JSON `{ar, en}`، وليس عمود نصي واحد. اقرأ `docs/contracts/localization.md` كاملاً.
 
 ## الصلاحيات (BE-03)
 - صيغة المفتاح: `{module}.{action}[.{scope}]` — الأمثلة: `tickets.view.department`, `customers.merge.any`.

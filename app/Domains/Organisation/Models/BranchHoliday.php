@@ -3,6 +3,7 @@
 namespace App\Domains\Organisation\Models;
 
 use App\Support\I18n\BilingualString;
+use App\Support\I18n\Casts\BilingualStringCast;
 use Database\Factories\BranchHolidayFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

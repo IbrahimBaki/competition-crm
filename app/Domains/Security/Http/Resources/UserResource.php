@@ -13,6 +13,7 @@ class UserResource extends JsonResource
             'id' => $this->uuid,
             'email' => $this->email,
             'name' => $this->name,
+            'locale' => $this->locale,
             'is_active' => $this->isActive(),
             'has_two_factor' => $this->hasTwoFactorEnabled(),
             'last_login_at' => $this->last_login_at?->toIso8601String(),

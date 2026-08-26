@@ -8,9 +8,9 @@ use Exception;
 
 class SystemRoleImmutableException extends Exception implements HasApiErrorCode
 {
-    public function __construct(string $message = 'System roles cannot be deleted.')
+    public function __construct(?string $message = null)
     {
-        parent::__construct($message);
+        parent::__construct($message ?? __('errors.security.system_role_immutable'));
     }
 
     public function errorCode(): ErrorCode

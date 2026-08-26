@@ -10,7 +10,7 @@ class BranchHasActiveDepartmentsException extends Exception implements HasApiErr
 {
     public function __construct(public readonly int $activeDepartmentCount)
     {
-        parent::__construct("Branch has {$activeDepartmentCount} active departments", 409);
+        parent::__construct(__('errors.organisation.branch_has_active_departments', ['count' => $activeDepartmentCount]), 409);
     }
 
     public function errorCode(): ErrorCode
