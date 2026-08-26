@@ -22,7 +22,7 @@ use Illuminate\Routing\Controller;
 class RoleController extends Controller
 {
     use AuthorizesRequests;
-{
+
     public function index(Request $request): AnonymousResourceCollection
     {
         $this->authorize('viewAny', Role::class);

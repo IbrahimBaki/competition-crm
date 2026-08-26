@@ -11,6 +11,14 @@ final class PermissionKey
 
     public const ADMIN_USERS_MANAGE = 'admin.users.manage';
 
+    public const ADMIN_USERS_INVITE = 'admin.users.invite';
+
+    public const ADMIN_USERS_ACTIVATE = 'admin.users.activate';
+
+    public const ADMIN_USERS_DEACTIVATE = 'admin.users.deactivate';
+
+    public const ADMIN_USERS_MANAGE_TWO_FACTOR_POLICY = 'admin.users.manage_two_factor_policy';
+
     public const ADMIN_STRUCTURE_MANAGE = 'admin.structure.manage';
 
     // ---- organisation (module: org) ------------------------------------

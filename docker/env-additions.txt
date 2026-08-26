@@ -18,6 +18,15 @@ MAIL_HOST=mailpit
 MAIL_PORT=1025
 MAIL_ENCRYPTION=null
 
+# Session security — HttpOnly, Secure (false in local), SameSite=Lax
+SESSION_SECURE_COOKIE=false
+SESSION_DOMAIN=
+# SANCTUM_STATEFUL_DOMAINS قائمة الـ domains التي تحصل على stateful-auth cookies
+SANCTUM_STATEFUL_DOMAINS=localhost,localhost:3000,127.0.0.1,127.0.0.1:8000
+
+# SPA URL لاستخدامه في invitation emails والـ redirects
+SPA_URL=http://localhost:3000
+
 # يتفعّل عند R3 فقط (اقرأ docker/environment-setup.md)
 # QUEUE_CONNECTION=redis
 # BROADCAST_CONNECTION=reverb

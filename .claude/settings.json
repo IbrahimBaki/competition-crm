@@ -1,5 +1,8 @@
 {
   "hooks": {
+      "UserPromptSubmit": [
+          { "hooks": [{ "type": "command", "command": ".claude/hooks/track_current_story.sh" }] }
+      ],
     "PreToolUse": [
       {
         "matcher": "Bash",
@@ -28,7 +31,8 @@
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/session_verify.sh" }
+          { "type": "command", "command": "bash .claude/hooks/session_verify.sh" },
+            { "type": "command", "command": ".claude/hooks/verify_story_completion.sh" }
         ]
       }
     ]
