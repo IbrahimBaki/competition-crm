@@ -1,0 +1,27 @@
+version: 1
+project:
+  name: competition-crm
+  primaryLanguage: php
+  projectRoots:
+    - .
+tracker:
+  type: azure
+  workspace: ibbaqi
+  project: Competition-CRM
+naming:
+  includeTrackerId: true
+  globalSequence: true
+agents: []
+planner:
+  enabled: true
+  provider: anthropic
+  mode: auto
+  budget:
+    maxFileReads: 25
+    maxContextBytes: 50000
+    maxDurationSeconds: 180
+  cache:
+    enabled: true
+  maxOutputTokens: 16384
+  auth:
+    anthropic: subscription
