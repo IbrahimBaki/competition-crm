@@ -12,6 +12,7 @@ use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Services\Lifecycle\ReopenWindow;
 use App\Domains\Ticketing\Services\Lifecycle\TicketTransitionMap;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
+use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -21,6 +22,7 @@ class ChangeTicketStatus
         private readonly RecordTicketEvent $recordEvent,
         private readonly TicketTransitionMap $transitionMap,
         private readonly ReopenWindow $reopenWindow,
+        private readonly SlaClockHooks $slaHooks,
     ) {}
 
     public function __invoke(
@@ -75,6 +77,15 @@ class ChangeTicketStatus
                 'to' => $to->value,
                 'reason' => $reason,
             ]);
+
+            $now = CarbonImmutable::now('UTC');
+            $stopsClock = $target->stopsSlaClock();
+
+            $this->slaHooks->statusChanged($ticket, $stopsClock, $target->id, $now);
+
+            if ($to->value === 'resolved') {
+                $this->slaHooks->ticketResolved($ticket, $now);
+            }
 
             return $ticket->fresh();
         });

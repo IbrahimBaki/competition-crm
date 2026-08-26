@@ -21,4 +21,16 @@ enum TicketEventType: string
     case Split = 'split';
     case Linked = 'linked';
     case Unlinked = 'unlinked';
+    case MessagePosted = 'message_posted';
+    case InternalNoteAdded = 'internal_note_added';
+    case MessageRetried = 'message_retried';
+    case Claimed = 'claimed';
+    case TransferredToAgent = 'transferred_to_agent';
+    case TransferredToDepartment = 'transferred_to_department';
+    case SlaWarningRaised = 'sla_warning_raised';
+    case SlaBreached = 'sla_breached';
+    case SlaPaused = 'sla_paused';
+    case SlaResumed = 'sla_resumed';
+    case SlaRetargeted = 'sla_retargeted';
+    case SlaReset = 'sla_reset';
 }

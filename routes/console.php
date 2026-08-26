@@ -12,3 +12,4 @@ Schedule::command('backup:run')->dailyAt('01:00')->withoutOverlapping();
 Schedule::command('backup:verify')->dailyAt('02:00')->withoutOverlapping();
 Schedule::command('retention:purge')->dailyAt('03:30')->withoutOverlapping();
 Schedule::command('tickets:close-expired')->hourly()->withoutOverlapping();
+Schedule::command('sla:sweep')->everyFiveMinutes()->withoutOverlapping();

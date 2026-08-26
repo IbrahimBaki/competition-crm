@@ -56,10 +56,43 @@ class TicketResource extends JsonResource
             'available_transitions' => $availableTransitions,
             'merged_into_id' => $this->mergedInto?->uuid,
             'parent_ticket_id' => $this->parent?->uuid,
+            'version' => $this->version,
+            'assigned_at' => $this->assigned_at?->toIso8601String(),
             'reopen_deadline_at' => $this->reopen_deadline_at?->toIso8601String(),
             'reopened_count' => $this->reopened_count,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
+            'sla' => $this->computeSlaBlock(),
+        ];
+    }
+
+    private function computeSlaBlock(): ?array
+    {
+        $clockService = app(SlaClockService::class);
+        $now = CarbonImmutable::now('UTC');
+
+        $clocks = $this->whenLoaded('slaClocks', fn () => $this->slaClocks);
+
+        if (! $clocks) {
+            return null;
+        }
+
+        $result = [];
+
+        foreach ([SlaTargetType::FirstResponse, SlaTargetType::Resolution] as $type) {
+            $clock = $clocks->firstWhere('target_type', $type->value);
+
+            if ($clock) {
+                $position = $clockService->position($clock, $now);
+                $result[$type->value] = new TicketSlaResource($position);
+            } else {
+                $result[$type->value] = null;
+            }
+        }
+
+        return [
+            'first_response' => $result[SlaTargetType::FirstResponse->value],
+            'resolution' => $result[SlaTargetType::Resolution->value],
         ];
     }
 }

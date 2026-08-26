@@ -27,6 +27,10 @@ use App\Domains\Security\Http\Controllers\TwoFactorController;
 use App\Domains\Security\Http\Controllers\UserLifecycleController;
 use App\Domains\Ticketing\Http\Controllers\TicketCategoryController;
 use App\Domains\Ticketing\Http\Controllers\TicketController;
+use App\Domains\Ticketing\Http\Controllers\TicketLifecycleController;
+use App\Domains\Ticketing\Http\Controllers\TicketLinkController;
+use App\Domains\Ticketing\Http\Controllers\TicketMergeController;
+use App\Domains\Ticketing\Http\Controllers\TicketStatusController;
 use App\Support\Attachments\Http\AttachmentController;
 use App\Support\Http\Health\HealthController;
 use Illuminate\Http\Request;
@@ -132,6 +136,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::get('tickets', [TicketController::class, 'index']);
     Route::post('tickets', [TicketController::class, 'store'])->middleware('idempotency');
+
+    Route::get('tickets/queues/mine', [TicketQueueController::class, 'mine']);
+    Route::get('tickets/queues/department/{department}', [TicketQueueController::class, 'department']);
+
     Route::get('tickets/{ticket}', [TicketController::class, 'show']);
     Route::patch('tickets/{ticket}', [TicketController::class, 'update'])->middleware('idempotency');
     Route::get('tickets/{ticket}/history', [TicketController::class, 'history']);
@@ -144,9 +152,20 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('tickets/{ticket}/merge', [TicketMergeController::class, 'merge'])->middleware('idempotency');
     Route::post('tickets/{ticket}/split', [TicketMergeController::class, 'split'])->middleware('idempotency');
 
+    Route::post('tickets/{ticket}/assign', [TicketAssignmentController::class, 'assign'])->middleware('idempotency');
+    Route::delete('tickets/{ticket}/assign', [TicketAssignmentController::class, 'unassign'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/claim', [TicketAssignmentController::class, 'claim'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/transfer/agent', [TicketAssignmentController::class, 'transferToAgent'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/transfer/department', [TicketAssignmentController::class, 'transferToDepartment'])->middleware('idempotency');
+
     Route::get('tickets/{ticket}/links', [TicketLinkController::class, 'index']);
     Route::post('tickets/{ticket}/links', [TicketLinkController::class, 'store'])->middleware('idempotency');
     Route::delete('tickets/{ticket}/links/{link}', [TicketLinkController::class, 'destroy']);
+
+    Route::get('tickets/{ticket}/messages', [TicketMessageController::class, 'index']);
+    Route::post('tickets/{ticket}/messages', [TicketMessageController::class, 'store'])->middleware('idempotency');
+    Route::get('tickets/{ticket}/messages/{message}/delivery-events', [TicketMessageController::class, 'deliveryEvents']);
+    Route::post('tickets/{ticket}/messages/{message}/retry', [TicketMessageController::class, 'retry'])->middleware('idempotency');
 
     Route::get('ticket-categories', [TicketCategoryController::class, 'index']);
     Route::post('ticket-categories', [TicketCategoryController::class, 'store'])->middleware('idempotency');

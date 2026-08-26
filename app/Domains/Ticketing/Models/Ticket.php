@@ -4,6 +4,7 @@ namespace App\Domains\Ticketing\Models;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Organisation\Models\Department;
+use App\Domains\Sla\Models\TicketSlaClock;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,6 +30,9 @@ class Ticket extends Model
         'merged_at',
         'parent_ticket_id',
         'spam_marked_at',
+        'assigned_user_id',
+        'assigned_at',
+        'version',
     ];
 
     protected $casts = [
@@ -41,6 +45,9 @@ class Ticket extends Model
         'reopened_count' => 'integer',
         'merged_at' => 'datetime',
         'spam_marked_at' => 'datetime',
+        'assigned_at' => 'datetime',
+        'assignment_locked_at' => 'datetime',
+        'version' => 'integer',
     ];
 
     public function getRouteKeyName(): string
@@ -104,6 +111,11 @@ class Ticket extends Model
         return $this->hasMany(TicketEvent::class)->orderBy('occurred_at', 'desc');
     }
 
+    public function messages(): HasMany
+    {
+        return $this->hasMany(TicketMessage::class)->orderBy('created_at');
+    }
+
     public function links(): HasMany
     {
         return $this->hasMany(TicketLink::class, 'source_ticket_id');
@@ -112,6 +124,11 @@ class Ticket extends Model
     public function linkedFrom(): HasMany
     {
         return $this->hasMany(TicketLink::class, 'target_ticket_id');
+    }
+
+    public function slaClocks(): HasMany
+    {
+        return $this->hasMany(TicketSlaClock::class);
     }
 
     public function lifecycleType(): TicketStatus
@@ -127,5 +144,16 @@ class Ticket extends Model
     public function isSpam(): bool
     {
         return $this->lifecycleType() === TicketStatus::Spam;
+    }
+
+    public function recordEvent(TicketEventType $type, array $payload = [], ?User $actor = null): TicketEvent
+    {
+        return TicketEvent::create([
+            'ticket_id' => $this->id,
+            'type' => $type,
+            'payload' => $payload,
+            'actor_user_id' => $actor?->id,
+            'occurred_at' => now(),
+        ]);
     }
 }

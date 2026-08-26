@@ -51,6 +51,14 @@ final class PermissionKey
 
     public const TICKETS_ASSIGN = 'tickets.assign';
 
+    public const TICKETS_CLAIM = 'tickets.claim';
+
+    public const TICKETS_TRANSFER_AGENT = 'tickets.transfer.agent';
+
+    public const TICKETS_TRANSFER_DEPARTMENT = 'tickets.transfer.department';
+
+    public const TICKETS_QUEUE_VIEW = 'tickets.queue.view';
+
     public const TICKETS_RECLASSIFY = 'tickets.reclassify';
 
     public const TICKETS_TAG = 'tickets.tag';
@@ -72,6 +80,16 @@ final class PermissionKey
     public const TICKETS_SPLIT = 'tickets.split';
 
     public const TICKETS_LINK = 'tickets.link';
+
+    public const TICKET_MESSAGE_VIEW = 'ticket.message.view';
+
+    public const TICKET_MESSAGE_SEND = 'ticket.message.send';
+
+    public const TICKET_MESSAGE_INTERNAL_VIEW = 'ticket.message.internal_view';
+
+    public const TICKET_MESSAGE_INTERNAL_WRITE = 'ticket.message.internal_write';
+
+    public const TICKET_MESSAGE_RETRY = 'ticket.message.retry';
 
     public const TICKETS_STATUSES_MANAGE = 'tickets.statuses.manage';
 
@@ -113,6 +131,13 @@ final class PermissionKey
     public const CUSTOMERS_DUPLICATE_REVIEW = 'customers.duplicate.review';
 
     public const CUSTOMERS_MERGE = 'customers.merge';
+
+    // ---- SLA (module: sla) -----------------------------------------------
+    public const SLA_POLICIES_VIEW = 'sla.policies.view';
+
+    public const SLA_POLICIES_MANAGE = 'sla.policies.manage';
+
+    public const SLA_RESET = 'sla.reset';
 
     public static function all(): array
     {

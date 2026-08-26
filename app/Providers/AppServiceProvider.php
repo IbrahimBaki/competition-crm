@@ -38,11 +38,24 @@ use App\Domains\Security\Permissions\PermissionKey;
 use App\Domains\Security\Policies\AuditLogPolicy;
 use App\Domains\Security\Policies\RolePolicy;
 use App\Domains\Security\Policies\UserPolicy;
+use App\Domains\Sla\Services\SlaClockHooksBridge;
+use App\Domains\Sla\Services\SlaClockService;
+use App\Domains\Sla\Services\SlaEvaluator;
+use App\Domains\Sla\Services\SlaPolicyResolver;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketCategory;
+use App\Domains\Ticketing\Models\TicketMessage;
 use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Policies\TicketCategoryPolicy;
+use App\Domains\Ticketing\Policies\TicketMessagePolicy;
 use App\Domains\Ticketing\Policies\TicketPolicy;
+use App\Domains\Ticketing\Services\Merge\Relations\LinkMergeRelation;
+use App\Domains\Ticketing\Services\Merge\Relations\MessageMergeRelation;
+use App\Domains\Ticketing\Services\Merge\Relations\TagMergeRelation;
+use App\Domains\Ticketing\Services\Merge\TicketMergeRelationRegistry;
+use App\Domains\Ticketing\Services\Retention\TicketMessagePurgeHandler;
+use App\Domains\Ticketing\Services\Sla\NullSlaClockHooks;
+use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Policies\AttachmentPolicy;
@@ -61,6 +74,7 @@ use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -78,6 +92,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BranchUsageChecker::class,
             DefaultBranchUsageChecker::class
+        );
+
+        // TODO(story: routing engine) - replace NullDepartmentTransferEvaluator with a real routing/SLA engine
+        $this->app->bind(
+            DepartmentTransferEvaluator::class,
+            NullDepartmentTransferEvaluator::class
         );
 
         $driver = config('security.scanning.driver');
@@ -111,10 +131,18 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(TicketTransitionMap::class);
         $this->app->singleton(ReopenWindow::class);
 
+        $this->app->singleton(SlaPolicyResolver::class);
+        $this->app->singleton(SlaClockService::class);
+        $this->app->singleton(SlaEvaluator::class);
+        $this->app->singleton(SlaClockHooksBridge::class);
+
+        $this->app->bind(SlaClockHooks::class, NullSlaClockHooks::class);
+
         $this->app->singleton(TicketMergeRelationRegistry::class, function ($app) {
             $registry = new TicketMergeRelationRegistry;
             $registry->register($app->make(TagMergeRelation::class));
             $registry->register($app->make(LinkMergeRelation::class));
+            $registry->register($app->make(MessageMergeRelation::class));
 
             return $registry;
         });
@@ -135,8 +163,8 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(AttachmentPurgeHandler::class));
             $registry->register($app->make(AuditPurgeHandler::class));
             $registry->register($app->make(CustomerNotePurgeHandler::class));
+            $registry->register($app->make(TicketMessagePurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
-            $registry->register(new NullPurgeHandler('messages'));
             $registry->register(new NullPurgeHandler('logs'));
 
             return $registry;
@@ -161,6 +189,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(CustomerNote::class, CustomerNotePolicy::class);
         Gate::policy(Ticket::class, TicketPolicy::class);
         Gate::policy(TicketCategory::class, TicketCategoryPolicy::class);
+        Gate::policy(TicketMessage::class, TicketMessagePolicy::class);
         Gate::policy(TicketStatusDefinition::class, TicketStatusDefinitionPolicy::class);
 
         foreach (PermissionKey::all() as $key) {
@@ -219,5 +248,20 @@ class AppServiceProvider extends ServiceProvider
         Queue::failing(function ($event) {
             RequestId::set('');
         });
+    }
+
+    private function slaTablesExist(): bool
+    {
+        static $exists;
+
+        if ($exists === null) {
+            try {
+                $exists = Schema::hasTable('sla_policies');
+            } catch (\Throwable) {
+                $exists = false;
+            }
+        }
+
+        return $exists;
     }
 }

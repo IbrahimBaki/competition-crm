@@ -134,4 +134,68 @@ class UuidExposureTest extends TestCase
         // Should NOT have numeric id
         $this->assertArrayNotHasKey('id', $item);
     }
+
+    public function test_ticket_messages_use_uuids(): void
+    {
+        $ticket = $this->seed()->factory('ticket')->create();
+        $user = $this->seed()->factory('user')->create();
+        $user->grantPermission('ticket.message.view');
+        $user->grantPermission('ticket.message.send');
+
+        $this->actingAs($user)->postJson(
+            "/api/v1/tickets/{$ticket->uuid}/messages",
+            [
+                'body' => 'Test message',
+                'channel' => 'email',
+            ]
+        );
+
+        $response = $this->actingAs($user)->getJson("/api/v1/tickets/{$ticket->uuid}/messages");
+
+        $response->assertStatus(200);
+        $messages = $response->json('data');
+
+        foreach ($messages as $message) {
+            // Main UUID
+            $this->assertIsString($message['uuid']);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $message['uuid']);
+
+            // Should NOT have numeric id
+            $this->assertArrayNotHasKey('id', $message);
+        }
+    }
+
+    public function test_ticket_message_delivery_events_use_uuids(): void
+    {
+        $ticket = $this->seed()->factory('ticket')->create();
+        $user = $this->seed()->factory('user')->create();
+        $user->grantPermission('ticket.message.view');
+        $user->grantPermission('ticket.message.send');
+
+        $postResponse = $this->actingAs($user)->postJson(
+            "/api/v1/tickets/{$ticket->uuid}/messages",
+            [
+                'body' => 'Test message',
+                'channel' => 'email',
+            ]
+        );
+
+        $messageUuid = $postResponse->json('data.uuid');
+
+        $response = $this->actingAs($user)->getJson(
+            "/api/v1/tickets/{$ticket->uuid}/messages/{$messageUuid}/delivery-events"
+        );
+
+        $response->assertStatus(200);
+        $events = $response->json('data');
+
+        foreach ($events as $event) {
+            // Event UUID
+            $this->assertIsString($event['uuid']);
+            $this->assertMatchesRegularExpression('/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i', $event['uuid']);
+
+            // Should NOT have numeric id
+            $this->assertArrayNotHasKey('id', $event);
+        }
+    }
 }

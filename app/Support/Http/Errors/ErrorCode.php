@@ -51,6 +51,10 @@ enum ErrorCode: string
     case InvalidTicketCustomField = 'ticket.invalid_custom_field';
     case TicketCategoryInactive = 'ticket.category_inactive';
     case TicketAlreadyAssigned = 'ticket.already_assigned';
+    case TicketAlreadyClaimed = 'ticket.already_claimed';
+    case TicketVersionConflict = 'ticket.version_conflict';
+    case TicketNotAssigned = 'ticket.not_assigned';
+    case TicketSameDepartment = 'ticket.same_department';
     case SavedViewNameTaken = 'ticket.saved_view_name_taken';
     case TicketIllegalTransition = 'ticket.illegal_transition';
     case TicketReopenWindowExpired = 'ticket.reopen_window_expired';
@@ -60,6 +64,17 @@ enum ErrorCode: string
     case TicketCannotLinkToItself = 'ticket.cannot_link_to_itself';
     case TicketNotSpam = 'ticket.not_spam';
     case TicketIsReadOnly = 'ticket.is_read_only';
+
+    case IllegalDeliveryTransition = 'illegal_delivery_transition';
+    case MessageNotRetryable = 'message_not_retryable';
+    case InternalNoteNotSendable = 'internal_note_not_sendable';
+    case TicketConversationReadOnly = 'ticket_conversation_read_only';
+
+    case SlaBreachImmutable = 'sla.breach_immutable';
+    case SlaClockNotRunning = 'sla.clock_not_running';
+    case SlaClockAlreadyPaused = 'sla.clock_already_paused';
+    case SlaPolicyInUse = 'sla.policy_in_use';
+    case TargetAlreadyExhausted = 'sla.target_already_exhausted';
 
     public function httpStatus(): int
     {
@@ -85,11 +100,16 @@ enum ErrorCode: string
             self::TicketIllegalTransition,
             self::TicketReopenWindowExpired,
             self::TicketTransitionReasonRequired,
-            self::TicketCannotLinkToItself => 422,
+            self::TicketCannotLinkToItself,
+            self::TicketNotAssigned,
+            self::IllegalDeliveryTransition,
+            self::InternalNoteNotSendable,
+            self::SlaClockNotRunning => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
-            self::TicketIsReadOnly => 403,
+            self::TicketIsReadOnly,
+            self::SlaBreachImmutable => 403,
             self::Unauthenticated,
             self::AccountDeactivated => 401,
             self::NotFound => 404,
@@ -110,10 +130,18 @@ enum ErrorCode: string
             self::CannotMergeCustomerIntoItself,
             self::CustomerAlreadyMerged,
             self::TicketAlreadyAssigned,
+            self::TicketAlreadyClaimed,
+            self::TicketVersionConflict,
+            self::TicketSameDepartment,
             self::SavedViewNameTaken,
             self::TicketAlreadyMerged,
             self::TicketCannotMergeIntoItself,
-            self::TicketNotSpam => 409,
+            self::TicketNotSpam,
+            self::MessageNotRetryable,
+            self::TicketConversationReadOnly,
+            self::SlaClockAlreadyPaused,
+            self::SlaPolicyInUse,
+            self::TargetAlreadyExhausted => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

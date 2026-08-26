@@ -46,6 +46,11 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ORG_TEAMS_VIEW_ANY,
             PermissionKey::ORG_TEAMS_MANAGE_ANY,
             PermissionKey::TICKETS_VIEW_ANY,
+            PermissionKey::TICKET_MESSAGE_VIEW,
+            PermissionKey::TICKET_MESSAGE_SEND,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_VIEW,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_WRITE,
+            PermissionKey::TICKET_MESSAGE_RETRY,
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_CREATE,
             PermissionKey::CUSTOMERS_UPDATE,
@@ -77,6 +82,11 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ORG_TEAMS_VIEW_ANY,
             PermissionKey::TICKETS_VIEW_DEPARTMENT,
             PermissionKey::TICKETS_VIEW_TEAM,
+            PermissionKey::TICKET_MESSAGE_VIEW,
+            PermissionKey::TICKET_MESSAGE_SEND,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_VIEW,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_WRITE,
+            PermissionKey::TICKET_MESSAGE_RETRY,
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_CREATE,
             PermissionKey::CUSTOMERS_UPDATE,
@@ -104,6 +114,11 @@ class PermissionsAndRolesSeederTest extends TestCase
         $expectedPermissions = [
             PermissionKey::TICKETS_VIEW_TEAM,
             PermissionKey::TICKETS_VIEW_OWN,
+            PermissionKey::TICKET_MESSAGE_VIEW,
+            PermissionKey::TICKET_MESSAGE_SEND,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_VIEW,
+            PermissionKey::TICKET_MESSAGE_INTERNAL_WRITE,
+            PermissionKey::TICKET_MESSAGE_RETRY,
             PermissionKey::CUSTOMERS_VIEW,
             PermissionKey::CUSTOMERS_NOTE_VIEW,
             PermissionKey::CUSTOMERS_NOTE_CREATE,
@@ -122,6 +137,7 @@ class PermissionsAndRolesSeederTest extends TestCase
 
         $expectedPermissions = [
             PermissionKey::TICKETS_VIEW_OWN,
+            PermissionKey::TICKET_MESSAGE_VIEW,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $viewerPermissions);

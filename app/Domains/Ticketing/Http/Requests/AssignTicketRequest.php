@@ -15,6 +15,7 @@ class AssignTicketRequest extends FormRequest
     {
         return [
             'assignee_uuid' => ['nullable', 'string', 'exists:users,uuid'],
+            'version' => ['nullable', 'integer', 'min:1'],
         ];
     }
 }

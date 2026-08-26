@@ -3,11 +3,15 @@
 namespace Tests\Feature\Ticketing;
 
 use App\Domains\Ticketing\Models\Ticket;
+use App\Domains\Ticketing\Models\TicketMessage;
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class TicketMergeTest extends TestCase
 {
+    use DatabaseMigrations;
+
     private User $user;
 
     protected function setUp(): void
@@ -70,5 +74,54 @@ class TicketMergeTest extends TestCase
 
         $response->assertConflict();
         $response->assertJsonPath('error.code', 'ticket.already_merged');
+    }
+
+    public function test_merge_repoints_source_messages_to_target(): void
+    {
+        $source = Ticket::factory()->create();
+        $target = Ticket::factory()->create();
+
+        $sourceMessage = TicketMessage::factory()->create(['ticket_id' => $source->id]);
+        $targetMessage = TicketMessage::factory()->create(['ticket_id' => $target->id]);
+
+        $response = $this->actingAs($this->user)->postJson("/api/v1/tickets/{$source->uuid}/merge", [
+            'target' => $target->uuid,
+        ]);
+
+        $response->assertOk();
+
+        $sourceMessage->refresh();
+        $this->assertEquals($target->id, $sourceMessage->ticket_id);
+
+        $targetMessage->refresh();
+        $this->assertEquals($target->id, $targetMessage->ticket_id);
+    }
+
+    public function test_merge_preserves_message_chronology(): void
+    {
+        $source = Ticket::factory()->create();
+        $target = Ticket::factory()->create();
+
+        // Create messages with controlled timestamps
+        $oldMessage = TicketMessage::factory()->create([
+            'ticket_id' => $source->id,
+            'body' => 'From source',
+            'created_at' => now()->subHours(2),
+        ]);
+
+        $newMessage = TicketMessage::factory()->create([
+            'ticket_id' => $target->id,
+            'body' => 'From target',
+            'created_at' => now()->subHour(),
+        ]);
+
+        $this->actingAs($this->user)->postJson("/api/v1/tickets/{$source->uuid}/merge", [
+            'target' => $target->uuid,
+        ]);
+
+        $messages = $target->messages()->get();
+        $this->assertCount(2, $messages);
+        $this->assertEquals('From source', $messages[0]->body);
+        $this->assertEquals('From target', $messages[1]->body);
     }
 }

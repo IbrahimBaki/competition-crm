@@ -12,6 +12,7 @@ use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Models\TicketPriority;
 use App\Domains\Ticketing\Models\TicketStatus;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
+use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Domains\Ticketing\Services\TicketCategoryTree;
 use App\Domains\Ticketing\Services\TicketCustomFieldValidator;
 use App\Domains\Ticketing\Services\TicketReferenceGenerator;
@@ -27,6 +28,7 @@ class CreateTicket
         private readonly TicketCustomFieldValidator $fieldValidator,
         private readonly RecordTicketEvent $recordEvent,
         private readonly SyncTicketTags $syncTags,
+        private readonly SlaClockHooks $slaHooks,
     ) {}
 
     public function handle(
@@ -81,6 +83,7 @@ class CreateTicket
             }
 
             $this->recordEvent->handle($ticket, TicketEventType::Created, $actor);
+            $this->slaHooks->ticketCreated($ticket);
 
             return $ticket;
         });

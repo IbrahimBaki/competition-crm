@@ -69,6 +69,38 @@ class TicketPolicy
         return $this->scopeFilter->allows($user, $ticket->department);
     }
 
+    public function claim(User $user, Ticket $ticket): bool
+    {
+        if (! $user->hasPermissionTo(PermissionKey::TICKETS_CLAIM)) {
+            return false;
+        }
+
+        return $this->scopeFilter->allows($user, $ticket->department);
+    }
+
+    public function transferToAgent(User $user, Ticket $ticket): bool
+    {
+        if (! $user->hasPermissionTo(PermissionKey::TICKETS_TRANSFER_AGENT)) {
+            return false;
+        }
+
+        return $this->scopeFilter->allows($user, $ticket->department);
+    }
+
+    public function transferToDepartment(User $user, Ticket $ticket): bool
+    {
+        if (! $user->hasPermissionTo(PermissionKey::TICKETS_TRANSFER_DEPARTMENT)) {
+            return false;
+        }
+
+        return $this->scopeFilter->allows($user, $ticket->department);
+    }
+
+    public function viewQueue(User $user): bool
+    {
+        return $user->hasPermissionTo(PermissionKey::TICKETS_QUEUE_VIEW);
+    }
+
     public function reclassify(User $user, Ticket $ticket): bool
     {
         if (! $user->hasPermissionTo(PermissionKey::TICKETS_RECLASSIFY)) {
