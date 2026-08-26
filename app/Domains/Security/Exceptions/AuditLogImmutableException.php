@@ -17,4 +17,9 @@ final class AuditLogImmutableException extends RuntimeException implements HasAp
     {
         return ErrorCode::AuditLogImmutable;
     }
+
+    public function errorMeta(): array
+    {
+        return [];
+    }
 }

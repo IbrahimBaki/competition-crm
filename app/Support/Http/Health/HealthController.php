@@ -35,7 +35,7 @@ class HealthController extends Controller
         ];
 
         return response()->json(['data' => $data], $httpStatus)
-            ->header('X-Request-Id', app(RequestId::class)->current());
+            ->header('X-Request-Id', RequestId::current());
     }
 
     private function checkApp(): array
@@ -79,8 +79,17 @@ class HealthController extends Controller
                 ->mailer()
                 ->getSymfonyTransport();
 
-            $transport->start();
-            $transport->stop();
+            // Only call start/stop for transports that support it
+            // (ArrayTransport and NullTransport used in tests don't need it)
+            $transportClass = $transport::class;
+            if (! str_contains($transportClass, 'ArrayTransport') && ! str_contains($transportClass, 'NullTransport')) {
+                if (method_exists($transport, 'start')) {
+                    $transport->start();
+                }
+                if (method_exists($transport, 'stop')) {
+                    $transport->stop();
+                }
+            }
 
             return ['status' => 'ok'];
         } catch (Throwable $e) {

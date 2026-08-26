@@ -43,10 +43,27 @@ class AuditLogController extends Controller
         }
 
         $query = new CollectionQuery($request, $spec);
-        $data = $query->paginate(AuditLog::query());
+        $baseQuery = AuditLog::query();
+
+        // Apply filters and sorting
+        $baseQuery = $query->applyTo($baseQuery);
+
+        // Apply default sort if none specified
+        if (! $request->input('sort')) {
+            $baseQuery = $baseQuery->orderByDesc('recorded_at');
+        }
+
+        // Paginate the final query
+        $paginator = $baseQuery->paginate($request->input('per_page', 25), ['*'], 'page', $request->input('page', 1))
+            ->appends($request->query());
+
+        // Transform items to resources
+        $data = $paginator->setCollection(
+            $paginator->getCollection()->map(fn ($item) => new AuditLogResource($item))
+        );
 
         return ApiResponse::collection(
-            AuditLogResource::collection($data),
+            $data,
             $query->meta(),
             $query->meta()['filters'] ?? [],
             $request->input('sort'),

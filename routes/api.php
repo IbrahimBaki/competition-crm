@@ -4,6 +4,7 @@ use App\Domains\Organisation\Http\Controllers\BranchController;
 use App\Domains\Organisation\Http\Controllers\DepartmentController;
 use App\Domains\Organisation\Http\Controllers\TeamController;
 use App\Domains\Organisation\Http\Controllers\UserPlacementController;
+use App\Domains\Security\Http\Controllers\AuditLogController;
 use App\Domains\Security\Http\Controllers\AuthController;
 use App\Domains\Security\Http\Controllers\AuthMeController;
 use App\Domains\Security\Http\Controllers\AuthPolicyController;
@@ -13,6 +14,7 @@ use App\Domains\Security\Http\Controllers\PermissionCatalogueController;
 use App\Domains\Security\Http\Controllers\RoleController;
 use App\Domains\Security\Http\Controllers\TwoFactorController;
 use App\Domains\Security\Http\Controllers\UserLifecycleController;
+use App\Support\Http\Health\HealthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
