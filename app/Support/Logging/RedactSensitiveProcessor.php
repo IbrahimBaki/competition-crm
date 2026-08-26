@@ -19,6 +19,10 @@ final class RedactSensitiveProcessor
         'otp',
         'two_factor_code',
         'invitation_token',
+        'storage_key',
+        'checksum_sha256',
+        'bot_protection_secret',
+        'scanner_token',
     ];
 
     private const PII_KEYS = ['email', 'phone', 'national_id', 'full_name'];

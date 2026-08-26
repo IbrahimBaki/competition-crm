@@ -29,6 +29,16 @@ enum ErrorCode: string
     case TwoFactorAlreadyEnabled = 'two_factor_already_enabled';
     case AuditLogImmutable = 'audit_log_immutable';
 
+    case AttachmentScanPending = 'attachment.scan_pending';
+    case AttachmentScanFailed = 'attachment.scan_failed';
+    case AttachmentTooLarge = 'attachment.too_large';
+    case AttachmentTypeNotAllowed = 'attachment.type_not_allowed';
+    case BotProtectionFailed = 'bot_protection_failed';
+
+    case UserAlreadyAnonymised = 'user.already_anonymised';
+    case CannotAnonymiseLastAdmin = 'cannot_anonymise_last_administrator';
+    case AuditRetentionWindowTooShort = 'audit_retention_window_too_short';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -40,7 +50,12 @@ enum ErrorCode: string
             self::InvitationInvalid,
             self::InvitationAlreadyPending,
             self::InvalidTwoFactorCode,
-            self::TwoFactorAlreadyEnabled => 422,
+            self::TwoFactorAlreadyEnabled,
+            self::UserAlreadyAnonymised,
+            self::AttachmentScanFailed,
+            self::AttachmentTooLarge,
+            self::AttachmentTypeNotAllowed,
+            self::BotProtectionFailed => 422,
 
             self::Unauthorized => 403,
             self::Unauthenticated,
@@ -51,9 +66,12 @@ enum ErrorCode: string
             self::AccountLocked,
             self::CannotDeactivateSelf,
             self::CannotDeactivateLastAdmin,
+            self::CannotAnonymiseLastAdmin,
             self::DepartmentHasOpenTickets,
             self::BranchHasActiveDepartments,
-            self::AuditLogImmutable => 409,
+            self::AuditLogImmutable,
+            self::AuditRetentionWindowTooShort,
+            self::AttachmentScanPending => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

@@ -2,8 +2,8 @@
 
 namespace App\Domains\Security\Exceptions;
 
-use App\Support\Errors\Contracts\HasApiErrorCode;
-use App\Support\Errors\ErrorCode;
+use App\Support\Http\Errors\ErrorCode;
+use App\Support\Http\Errors\HasApiErrorCode;
 
 class InvalidTwoFactorCodeException extends \DomainException implements HasApiErrorCode
 {

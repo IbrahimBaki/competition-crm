@@ -60,6 +60,20 @@ return [
             'report' => false,
         ],
 
+        'attachments' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private/attachments'),
+            'visibility' => 'private',
+            'throw' => true,
+        ],
+
+        'backups' => [
+            'driver' => 'local',
+            'root' => storage_path('backups'),
+            'visibility' => 'private',
+            'throw' => true,
+        ],
+
     ],
 
     /*

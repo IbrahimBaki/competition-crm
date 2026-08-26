@@ -2,8 +2,8 @@
 
 namespace App\Domains\Security\Exceptions;
 
-use App\Support\Errors\Contracts\HasApiErrorCode;
-use App\Support\Errors\ErrorCode;
+use App\Support\Http\Errors\HasApiErrorCode;
+use App\Support\Http\Errors\ErrorCode;
 
 class CannotDeactivateLastAdministratorException extends \DomainException implements HasApiErrorCode
 {

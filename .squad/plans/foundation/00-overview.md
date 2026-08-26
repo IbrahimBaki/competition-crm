@@ -15,6 +15,8 @@ Entry point for the **foundation** feature. Stories execute in order by their `N
 | 06 | `06-story-453.md` | BE-06 - Localization Architecture: Bilingual Content, Locale Negotiation and Zero Hardcoded Strings | 453 | — |
 | 07 | `07-story-454.md` | BE-07 - Day-One Seed Data and Environment Bootstrap | 454 | — |
 | 08 | `08-story-455.md` | BE-08 - Business Audit Trail and Operational Observability | 455 | — |
+| 09 | `09-story-456.md` | BE-09 - Security Baseline: Input Handling, File Uploads, Scanning and Public Endpoint Protection | 456 | — |
+| 10 | `10-story-457.md` | BE-10 - Backup, Restore, Data Retention and Personal Data Erasure | 457 | — |
 
 ## Dependency notes
 

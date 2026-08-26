@@ -31,3 +31,11 @@
 
 ## قبل ما تكتب أي endpoint جديد
 ابحث عنه أولاً في `docs/contracts/api-contract.md` (لو موجود) بـ `grep` على الـ path — لا تقرأ الملف كامل لو كبير.
+
+## Security Baseline (BE-09)
+- **Validation:** كل write endpoint مع FormRequest صريح؛ mass assignment مقفول بـ `$guarded = ['*']` أو `$fillable` صريح على كل Model، مفروض بـ architecture test.
+- **Secrets:** جميع المفاتيح والـ tokens من `config/*` + environment فقط، لا حرفي في الـ repo، ولا عودة من أي endpoint أو Resource.
+- **Uploads:** `AttachmentRules` يفرض max size + MIME/extension allowlist؛ التخزين على private disk خارج web root بـ UUID key؛ اسم الملف الأصلي metadata فقط.
+- **Scanning:** كل ملف يبدأ `pending` (quarantined)؛ job على الـ queue يضيّ `clean`/`infected`؛ `pending` download → HTTP 409 `attachment.scan_pending`؛ `infected` → 422 `attachment.scan_failed` والـ bytes محذوفة.
+- **Anonymous endpoints:** مجموعة `/api/v1` من `auth/login`, `auth/two-factor/challenge`, `auth/password/*`, `invitations/*/accept` تحت `throttle:public` + `bot.protect` middleware؛ health probes (`/health/live`, `/health/ready`) خارج bot protection.
+- **Attachment authorization:** كل download عبر `AttachmentPolicy::download`؛ UUID معروف لكن غير مصرح → 404 `not_found`، ليس 403 (لا تفشي الملكية).

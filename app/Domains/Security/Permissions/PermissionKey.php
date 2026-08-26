@@ -45,6 +45,18 @@ final class PermissionKey
 
     public const TICKETS_VIEW_ANY = 'tickets.view.any';
 
+    // ---- attachments (module: attachments) ------------------------------
+    public const ATTACHMENTS_UPLOAD = 'attachments.upload';
+
+    public const ATTACHMENTS_DOWNLOAD = 'attachments.download';
+
+    // ---- data protection (module: dataprotection) -------------------------
+    public const DATAPROTECTION_ERASURE_EXECUTE = 'dataprotection.erasure.execute';
+
+    public const DATAPROTECTION_RETENTION_VIEW = 'dataprotection.retention.view';
+
+    public const DATAPROTECTION_BACKUP_VIEW = 'dataprotection.backup.view';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

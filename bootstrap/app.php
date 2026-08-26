@@ -26,6 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
             EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        $middleware->alias([
+            'bot.protect' => ProtectPublicEndpoint::class,
+        ]);
+
         $middleware->appendToGroup('api', AuthenticateSession::class);
         $middleware->appendToGroup('api', NegotiateLocale::class);
         $middleware->appendToGroup('api', EnsureAccountIsActive::class);

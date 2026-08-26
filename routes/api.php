@@ -1,6 +1,8 @@
 <?php
 
 use App\Domains\Organisation\Http\Controllers\BranchController;
+use App\Domains\Organisation\Http\Controllers\BranchHolidayController;
+use App\Domains\Organisation\Http\Controllers\BranchWorkingHourController;
 use App\Domains\Organisation\Http\Controllers\DepartmentController;
 use App\Domains\Organisation\Http\Controllers\TeamController;
 use App\Domains\Organisation\Http\Controllers\UserPlacementController;
@@ -14,6 +16,7 @@ use App\Domains\Security\Http\Controllers\PermissionCatalogueController;
 use App\Domains\Security\Http\Controllers\RoleController;
 use App\Domains\Security\Http\Controllers\TwoFactorController;
 use App\Domains\Security\Http\Controllers\UserLifecycleController;
+use App\Support\Attachments\Http\AttachmentController;
 use App\Support\Http\Health\HealthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,12 +25,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::prefix('v1')->group(function () {
+Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
     Route::post('auth/two-factor/challenge', [TwoFactorController::class, 'challenge']);
     Route::post('auth/password/forgot', [PasswordResetController::class, 'forgot']);
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
+});
+
+Route::prefix('v1')->group(function () {
     Route::get('health/live', [HealthController::class, 'live']);
     Route::get('health/ready', [HealthController::class, 'ready']);
 });
@@ -37,6 +43,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('/auth/me', [AuthMeController::class, 'show']);
     Route::get('/permissions/catalogue', [PermissionCatalogueController::class, 'show']);
     Route::get('audit-logs', [AuditLogController::class, 'index']);
+
+    Route::post('attachments', [AttachmentController::class, 'store'])->middleware('throttle:uploads');
+    Route::get('attachments/{attachment}', [AttachmentController::class, 'show']);
 
     Route::apiResource('roles', RoleController::class);
     Route::post('roles/{role}/users/{user}', [RoleController::class, 'attachUser']);
@@ -72,6 +81,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('users/invite', [UserLifecycleController::class, 'invite']);
     Route::post('users/{user}/deactivate', [UserLifecycleController::class, 'deactivate']);
     Route::post('users/{user}/activate', [UserLifecycleController::class, 'activate']);
+    Route::post('users/{user}/erase-personal-data', [DataProtectionController::class, 'erase'])->middleware('idempotency');
+    Route::get('data-protection/retention', [DataProtectionController::class, 'retention']);
 
     Route::post('auth/two-factor', [TwoFactorController::class, 'enable']);
     Route::post('auth/two-factor/confirm', [TwoFactorController::class, 'confirm']);
