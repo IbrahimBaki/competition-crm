@@ -24,4 +24,12 @@ return [
         'two_factor_required' => 'Two-factor authentication is required',
         'user_already_deactivated' => 'User is already deactivated',
     ],
+    'mail' => [
+        'invitation' => [
+            'subject' => 'You are invited to join Support CRM',
+            'greeting' => 'Welcome',
+            'line' => 'You are invited to join Support CRM.',
+            'action' => 'Accept Invitation',
+        ],
+    ],
 ];

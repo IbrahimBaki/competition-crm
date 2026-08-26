@@ -24,4 +24,12 @@ return [
         'two_factor_required' => 'المصادقة الثنائية مطلوبة',
         'user_already_deactivated' => 'تم إلغاء تنشيط المستخدم بالفعل',
     ],
+    'mail' => [
+        'invitation' => [
+            'subject' => 'أنت مدعو للانضمام إلى Support CRM',
+            'greeting' => 'أهلاً وسهلاً',
+            'line' => 'أنت مدعو للانضمام إلى نظام Support CRM.',
+            'action' => 'قبول الدعوة',
+        ],
+    ],
 ];

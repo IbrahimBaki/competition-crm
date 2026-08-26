@@ -3,6 +3,7 @@
 namespace App\Domains\Security\Mail;
 
 use App\Domains\Security\Models\UserInvitation;
+use App\Support\I18n\LocalizationSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -20,8 +21,10 @@ class UserInvitedMail extends Mailable
 
     public function envelope(): Envelope
     {
+        $locale = app(LocalizationSettings::class)->defaultLocale();
+
         return new Envelope(
-            subject: 'You are invited to join Support CRM',
+            subject: __('errors.mail.invitation.subject', locale: $locale),
         );
     }
 
