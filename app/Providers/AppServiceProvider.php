@@ -15,6 +15,7 @@ use App\Domains\Organisation\Services\NullDepartmentUsageChecker;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
 use App\Domains\Security\Policies\RolePolicy;
+use App\Domains\Security\Policies\UserPolicy;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -26,8 +27,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(WorkingTimeService::class);
-
         $this->app->bind(
             DepartmentUsageChecker::class,
             NullDepartmentUsageChecker::class
@@ -37,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
             BranchUsageChecker::class,
             DefaultBranchUsageChecker::class
         );
+
+        $this->app->singleton(WorkingTimeService::class);
     }
 
     /**
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Department::class, DepartmentPolicy::class);
         Gate::policy(Team::class, TeamPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));

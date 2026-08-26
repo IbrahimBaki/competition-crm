@@ -18,6 +18,8 @@ class BranchResource extends JsonResource
             'timezone' => $this->timezone,
             'is_24_7' => (bool) $this->is_24_7,
             'is_active' => (bool) $this->is_active,
+            'working_hours' => BranchWorkingHourResource::collection($this->whenLoaded('workingHours')),
+            'holidays' => BranchHolidayResource::collection($this->whenLoaded('holidays')),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
         ];

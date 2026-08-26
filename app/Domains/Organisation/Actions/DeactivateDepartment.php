@@ -26,6 +26,7 @@ class DeactivateDepartment
 
             $after = $department->toArray();
             if (isset($data['reassign_to_department_id'])) {
+                // TODO: In the Ticketing story, bulk-reassign users from this dept to reassign_to_department_id
                 $after['reassign_intent'] = $data['reassign_to_department_id'];
             }
 
