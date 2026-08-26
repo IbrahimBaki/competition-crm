@@ -3,7 +3,7 @@
 namespace Tests\Feature\Security;
 
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class LoginTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     public function test_user_can_login_with_valid_credentials(): void

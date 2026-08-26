@@ -6,7 +6,7 @@ use App\Domains\Security\Actions\AcceptInvitation;
 use App\Domains\Security\Exceptions\ExpiredInvitationException;
 use App\Domains\Security\Exceptions\InvalidInvitationException;
 use App\Domains\Security\Models\UserInvitation;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -19,7 +19,7 @@ class AcceptInvitationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     private function strongPassword(): string

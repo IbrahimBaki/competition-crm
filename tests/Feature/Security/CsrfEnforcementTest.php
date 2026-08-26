@@ -3,7 +3,7 @@
 namespace Tests\Feature\Security;
 
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -14,7 +14,7 @@ class CsrfEnforcementTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     public function test_logout_without_csrf_token_returns_419(): void

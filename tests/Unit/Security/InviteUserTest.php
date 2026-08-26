@@ -6,7 +6,7 @@ use App\Domains\Security\Actions\InviteUser;
 use App\Domains\Security\Exceptions\InvitationAlreadyPendingException;
 use App\Domains\Security\Models\AuditLog;
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -17,7 +17,7 @@ class InviteUserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     public function test_token_is_stored_as_sha256_hash(): void

@@ -18,7 +18,7 @@ class BranchTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'Database\Seeders\RolesSeeder']);
+        $this->artisan('db:seed', ['--class' => 'Database\Seeders\PermissionsAndRolesSeeder']);
         $this->admin = User::factory()->create(['email' => 'admin@example.com']);
         $adminRole = Role::where('name', Role::ADMINISTRATOR)->first();
         $this->admin->roles()->attach($adminRole);

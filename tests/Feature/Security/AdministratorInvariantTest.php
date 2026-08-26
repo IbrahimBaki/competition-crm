@@ -15,7 +15,7 @@ class AdministratorInvariantTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->artisan('db:seed', ['--class' => 'Database\Seeders\RolesSeeder']);
+        $this->artisan('db:seed', ['--class' => 'Database\Seeders\PermissionsAndRolesSeeder']);
     }
 
     public function test_cannot_remove_admin_permissions_from_administrator_role(): void

@@ -6,7 +6,7 @@ use App\Domains\Security\Actions\AuthenticateStaff;
 use App\Domains\Security\Exceptions\AccountDeactivatedException;
 use App\Domains\Security\Exceptions\AccountLockedException;
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -18,7 +18,7 @@ class AuthenticateStaffTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     public function test_locks_account_after_10_failed_attempts(): void

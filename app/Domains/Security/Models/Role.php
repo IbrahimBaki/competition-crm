@@ -12,7 +12,16 @@ class Role extends Model
 {
     public const ADMINISTRATOR = 'administrator';
 
+    public const MANAGER = 'manager';
+
+    public const SUPERVISOR = 'supervisor';
+
+    public const AGENT = 'agent';
+
+    public const VIEWER = 'viewer';
+
     protected $fillable = [
+        'uuid',
         'name',
         'display_name',
         'is_system',

@@ -5,7 +5,7 @@ namespace Tests\Feature\Security;
 use App\Domains\Security\Mail\UserInvitedMail;
 use App\Domains\Security\Models\UserInvitation;
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class InvitationFlowTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
         Mail::fake();
     }
 

@@ -5,7 +5,7 @@ namespace Tests\Unit\Security;
 use App\Domains\Security\Actions\ConfirmTwoFactor;
 use App\Domains\Security\Actions\EnableTwoFactor;
 use App\Models\User;
-use Database\Seeders\RolesSeeder;
+use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use PragmaRX\Google2FA\Google2FA;
@@ -18,7 +18,7 @@ class TwoFactorEnrolmentTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(RolesSeeder::class);
+        $this->seed(PermissionsAndRolesSeeder::class);
     }
 
     public function test_can_enable_two_factor(): void
