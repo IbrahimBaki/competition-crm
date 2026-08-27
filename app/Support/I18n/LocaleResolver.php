@@ -2,6 +2,7 @@
 
 namespace App\Support\I18n;
 
+use App\Domains\Portal\Models\PortalAccount;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,7 @@ class LocaleResolver
 
     public function __construct(private LocalizationSettings $settings) {}
 
-    public function resolve(Request $request, ?User $user): string
+    public function resolve(Request $request, User|PortalAccount|null $user = null): string
     {
         if ($locale = $this->parseAcceptLanguage($request)) {
             return $locale;

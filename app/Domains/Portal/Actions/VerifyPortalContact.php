@@ -2,7 +2,6 @@
 
 namespace App\Domains\Portal\Actions;
 
-use App\Domains\Customers\Actions\CreateCustomer;
 use App\Domains\Customers\Exceptions\CustomerBlockedException;
 use App\Domains\Customers\Services\Identity\CustomerIdentityResolver;
 use App\Domains\Portal\Exceptions\PortalVerificationTokenInvalidException;
@@ -14,7 +13,6 @@ class VerifyPortalContact
 {
     public function __construct(
         private CustomerIdentityResolver $identityResolver,
-        private CreateCustomer $createCustomer,
     ) {}
 
     public function handle(string $plainToken): PortalAccount
@@ -23,7 +21,9 @@ class VerifyPortalContact
             $tokenHash = hash('sha256', $plainToken);
 
             $verificationToken = PortalVerificationToken::where('token_hash', $tokenHash)
-                ->firstOrFail(new PortalVerificationTokenInvalidException);
+                ->firstOr(function () {
+                    throw new PortalVerificationTokenInvalidException;
+                });
 
             if ($verificationToken->consumed_at !== null) {
                 throw new PortalVerificationTokenInvalidException;
@@ -35,20 +35,18 @@ class VerifyPortalContact
 
             $account = $verificationToken->account;
 
-            $customer = $this->identityResolver->resolveByEmail($account->email);
+            $resolution = $this->identityResolver->resolve([
+                ['type' => 'email', 'value' => $account->email],
+            ]);
 
-            if ($customer === null) {
-                $customer = $this->createCustomer->handle(
-                    contacts: [['channel' => 'email', 'value' => $account->email]],
-                );
-            }
+            $customer = $resolution->customer;
 
-            if ($customer->blocked_at !== null) {
+            if ($customer !== null && $customer->blocked_at !== null) {
                 throw new CustomerBlockedException($customer->blocked_reason ?? 'Unknown reason');
             }
 
             $account->update([
-                'customer_id' => $customer->id,
+                'customer_id' => $customer?->id,
                 'email_verified_at' => now(),
             ]);
 

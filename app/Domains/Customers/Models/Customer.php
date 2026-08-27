@@ -4,6 +4,7 @@ namespace App\Domains\Customers\Models;
 
 use App\Models\User;
 use App\Support\Attachments\Attachment;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Customer extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['name', 'company_account_id', 'preferred_locale'];

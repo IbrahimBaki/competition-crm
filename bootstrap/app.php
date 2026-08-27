@@ -1,5 +1,7 @@
 <?php
 
+use App\Domains\Portal\Http\Middleware\DenyPortalToken;
+use App\Domains\Portal\Http\Middleware\EnsurePortalAccount;
 use App\Domains\Security\Http\Middleware\EnforceTwoFactorPolicy;
 use App\Domains\Security\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\AssignRequestId;

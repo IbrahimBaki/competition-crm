@@ -46,4 +46,9 @@ class PortalAccount extends Authenticatable
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function portal_verification_tokens()
+    {
+        return $this->hasMany(PortalVerificationToken::class);
+    }
 }
