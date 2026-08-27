@@ -4,7 +4,7 @@ APP_PATH ?= /var/www/html/competition-crm
 
 DEXEC = docker exec -w $(APP_PATH) $(PHP_CONTAINER)
 
-.PHONY: help artisan composer lint lint-fix test test-security hooks sh mysql
+.PHONY: help artisan composer lint lint-fix test test-security hooks sh mysql fe-install fe-generate fe-test fe-build fe-dev
 
 help: ## يعرض الأوامر المتاحة
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -42,3 +42,19 @@ sh: ## يفتح shell جوه كونتينر الـ PHP
 
 mysql: ## يفتح mysql client على قاعدة المشروع
 	docker exec -it $(MYSQL_CONTAINER) mysql -uroot -proot support_crm_competition
+
+# Frontend (SPA) targets
+fe-install: ## cd frontend && npm ci
+	cd frontend && npm ci
+
+fe-generate: ## cd frontend && npm run api:generate
+	cd frontend && npm run api:generate
+
+fe-test: ## cd frontend && npm run test && npm run typecheck && npm run lint
+	cd frontend && npm run test && npm run typecheck && npm run lint
+
+fe-build: ## cd frontend && npm run build
+	cd frontend && npm run build
+
+fe-dev: ## cd frontend && npm run dev
+	cd frontend && npm run dev

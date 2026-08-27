@@ -1107,6 +1107,8 @@ paths:
                 properties:
                   data:
                     type: array
+                    items:
+                      type: object
 
     put:
       tags: [Organization]

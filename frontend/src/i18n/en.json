@@ -1,0 +1,33 @@
+{
+  "nav.dashboard": "Dashboard",
+  "nav.ticketing": "Tickets",
+  "nav.admin": "Administration",
+  "nav.admin.users": "Users",
+  "nav.admin.roles": "Roles",
+  "nav.logout": "Logout",
+
+  "auth.title": "Sign In",
+  "auth.email_label": "Email",
+  "auth.password_label": "Password",
+  "auth.sign_in_button": "Sign In",
+  "auth.two_factor_title": "Two-Factor Authentication",
+  "auth.two_factor_description": "Enter the code from your authenticator app",
+  "auth.code_label": "Authentication Code",
+  "auth.verify_button": "Verify",
+
+  "pages.dashboard.title": "Dashboard",
+  "pages.dashboard.welcome": "Welcome back",
+  "pages.dashboard.no_modules": "No modules available. Contact your administrator to request access.",
+
+  "pages.tickets.title": "Tickets",
+
+  "error.validation_failed": "Please check the form and try again",
+  "error.unauthenticated": "Your session has expired. Please log in again.",
+  "error.forbidden": "You don't have permission to perform this action.",
+  "error.not_found": "The requested resource was not found.",
+  "error.conflict": "A conflict occurred. Please try again.",
+  "error.csrf": "Security token expired. Please refresh and try again.",
+  "error.rate_limited": "Too many requests. Please wait a moment.",
+  "error.network": "Network error. Please check your connection.",
+  "error.server": "Server error. Please try again later."
+}

@@ -1,0 +1,33 @@
+{
+  "nav.dashboard": "لوحة التحكم",
+  "nav.ticketing": "التذاكر",
+  "nav.admin": "الإدارة",
+  "nav.admin.users": "المستخدمون",
+  "nav.admin.roles": "الأدوار",
+  "nav.logout": "تسجيل الخروج",
+
+  "auth.title": "تسجيل الدخول",
+  "auth.email_label": "البريد الإلكتروني",
+  "auth.password_label": "كلمة المرور",
+  "auth.sign_in_button": "دخول",
+  "auth.two_factor_title": "المصادقة متعددة العوامل",
+  "auth.two_factor_description": "أدخل الرمز من تطبيق المصادقة الخاص بك",
+  "auth.code_label": "رمز المصادقة",
+  "auth.verify_button": "التحقق",
+
+  "pages.dashboard.title": "لوحة التحكم",
+  "pages.dashboard.welcome": "أهلا وسهلا",
+  "pages.dashboard.no_modules": "لا توجد وحدات متاحة. تواصل مع المسؤول للحصول على الوصول.",
+
+  "pages.tickets.title": "التذاكر",
+
+  "error.validation_failed": "يرجى التحقق من النموذج والمحاولة مرة أخرى",
+  "error.unauthenticated": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى.",
+  "error.forbidden": "ليس لديك الإذن لتنفيذ هذا الإجراء.",
+  "error.not_found": "لم يتم العثور على المورد المطلوب.",
+  "error.conflict": "حدث تضارب. يرجى المحاولة مرة أخرى.",
+  "error.csrf": "انتهت رمز الأمان. يرجى التحديث والمحاولة مرة أخرى.",
+  "error.rate_limited": "طلبات كثيرة جدا. يرجى الانتظار قليلا.",
+  "error.network": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+  "error.server": "خطأ في الخادم. يرجى المحاولة لاحقا."
+}
