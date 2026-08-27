@@ -101,6 +101,10 @@ enum ErrorCode: string
     case EmailInboundAlreadyProcessed = 'email.inbound_already_processed';
     case EmailLoopDetected = 'email.loop_detected';
 
+    case WebFormNotFound = 'channels.web_form.not_found';
+    case WebFormInactive = 'channels.web_form.inactive';
+    case WebFormValidationFailed = 'channels.web_form.validation_failed';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -144,7 +148,8 @@ enum ErrorCode: string
             self::MentionTargetNotVisible,
             self::EmailInboundUnparseable,
             self::EmailInboundAlreadyProcessed,
-            self::EmailLoopDetected => 422,
+            self::EmailLoopDetected,
+            self::WebFormValidationFailed => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -152,7 +157,9 @@ enum ErrorCode: string
             self::SlaBreachImmutable => 403,
             self::Unauthenticated,
             self::AccountDeactivated => 401,
-            self::NotFound => 404,
+            self::NotFound,
+            self::WebFormNotFound,
+            self::WebFormInactive => 404,
             self::RateLimited => 429,
 
             self::AccountLocked,

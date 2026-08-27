@@ -5,6 +5,7 @@ use App\Domains\Security\Http\Middleware\EnsureAccountIsActive;
 use App\Http\Middleware\AssignRequestId;
 use App\Http\Middleware\EnforceIdempotency;
 use App\Http\Middleware\NegotiateLocale;
+use App\Http\Middleware\ProtectPublicEndpoint;
 use App\Support\Http\Errors\ApiExceptionRenderer;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -28,6 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'bot.protect' => ProtectPublicEndpoint::class,
+            'public.protect' => ProtectPublicEndpoint::class,
         ]);
 
         $middleware->appendToGroup('api', AuthenticateSession::class);

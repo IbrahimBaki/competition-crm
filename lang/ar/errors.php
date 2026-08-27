@@ -106,6 +106,13 @@ return [
         'inbound_already_processed' => 'تم معالجة هذا البريد الإلكتروني بالفعل',
         'loop_detected' => 'تم اكتشاف حلقة بريد إلكتروني وتم منعها',
     ],
+    'channels' => [
+        'web_form' => [
+            'not_found' => 'النموذج غير موجود',
+            'inactive' => 'النموذج غير متاح',
+            'validation_failed' => 'إرسال النموذج يحتوي على بيانات غير صحيحة',
+        ],
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'أنت مدعو للانضمام إلى Support CRM',

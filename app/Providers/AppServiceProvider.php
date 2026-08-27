@@ -299,6 +299,18 @@ class AppServiceProvider extends ServiceProvider
             return Limit::perMinute(10)->by($request->user()?->getAuthIdentifier() ?? $request->ip());
         });
 
+        RateLimiter::for('web-form', function ($request) {
+            $maxPerMinute = (int) config('channels.web_form.rate_limit.max_per_minute', 5);
+            $maxPerHour = (int) config('channels.web_form.rate_limit.max_per_hour', 30);
+            $formKey = $request->route('formKey') ?? '';
+            $key = hash('sha256', ($request->ip() ?? '').$formKey);
+
+            return [
+                Limit::perMinute($maxPerMinute)->by($key),
+                Limit::perHour($maxPerHour)->by($key),
+            ];
+        });
+
         Queue::createPayloadUsing(function () {
             $currentId = RequestId::current();
 

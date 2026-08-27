@@ -52,6 +52,11 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
     Route::post('channels/email/inbound', [InboundEmailWebhookController::class, 'store'])->middleware(['public.protect', 'idempotency']);
+
+    Route::get('channels/web-forms/{formKey}', [PublicWebFormController::class, 'show']);
+    Route::post('channels/web-forms/{formKey}/submissions', [PublicWebFormController::class, 'store'])
+        ->middleware(['public.protect', 'throttle:web-form', 'idempotency']);
+    Route::get('channels/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
 });
 
 Route::prefix('v1')->group(function () {

@@ -106,6 +106,13 @@ return [
         'inbound_already_processed' => 'This email has already been processed',
         'loop_detected' => 'Email loop detected and suppressed',
     ],
+    'channels' => [
+        'web_form' => [
+            'not_found' => 'Form not found',
+            'inactive' => 'Form is not available',
+            'validation_failed' => 'Form submission contains invalid data',
+        ],
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'You are invited to join Support CRM',
