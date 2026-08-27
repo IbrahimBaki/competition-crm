@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Portal;
 
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Portal\Models\PortalAccount;
 use App\Domains\Ticketing\Models\Ticket;
-use Database\Factories\CustomerFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -15,8 +15,8 @@ class PortalTicketVisibilityTest extends TestCase
 
     public function test_customer_cannot_access_other_customer_ticket(): void
     {
-        $customer1 = CustomerFactory::new()->create();
-        $customer2 = CustomerFactory::new()->create();
+        $customer1 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 1', 'status' => 'active']);
+        $customer2 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 2', 'status' => 'active']);
 
         $account1 = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
@@ -38,8 +38,8 @@ class PortalTicketVisibilityTest extends TestCase
 
     public function test_ticket_listing_shows_only_own_tickets(): void
     {
-        $customer1 = CustomerFactory::new()->create();
-        $customer2 = CustomerFactory::new()->create();
+        $customer1 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 1', 'status' => 'active']);
+        $customer2 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 2', 'status' => 'active']);
 
         $account1 = PortalAccount::create([
             'uuid' => (string) Str::uuid(),

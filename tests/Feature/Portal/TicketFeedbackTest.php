@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Portal;
 
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Portal\Models\PortalAccount;
 use App\Domains\Ticketing\Models\Ticket;
-use Database\Factories\CustomerFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class TicketFeedbackTest extends TestCase
 
     public function test_feedback_accepts_score_1_to_5(): void
     {
-        $customer = CustomerFactory::new()->create();
+        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
             'email' => 'test@example.com',
@@ -45,7 +45,7 @@ class TicketFeedbackTest extends TestCase
 
     public function test_feedback_rejects_score_outside_1_to_5(): void
     {
-        $customer = CustomerFactory::new()->create();
+        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
             'email' => 'test@example.com',
@@ -68,7 +68,7 @@ class TicketFeedbackTest extends TestCase
 
     public function test_second_feedback_returns_409_conflict(): void
     {
-        $customer = CustomerFactory::new()->create();
+        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
             'email' => 'test@example.com',
