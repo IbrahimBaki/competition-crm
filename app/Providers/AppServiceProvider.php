@@ -340,6 +340,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ProviderMessageTemplate::class, ProviderMessageTemplatePolicy::class);
         Gate::policy(KnowledgeArticle::class, KnowledgeArticlePolicy::class);
         Gate::policy(KnowledgeCategory::class, KnowledgeCategoryPolicy::class);
+        Gate::policy(ApiToken::class, ApiTokenPolicy::class);
 
         $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
 

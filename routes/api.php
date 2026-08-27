@@ -13,6 +13,7 @@ use App\Domains\Customers\Http\Controllers\CustomerDuplicateController;
 use App\Domains\Customers\Http\Controllers\CustomerMergeController;
 use App\Domains\Customers\Http\Controllers\CustomerNoteController;
 use App\Domains\Customers\Http\Controllers\CustomerTimelineController;
+use App\Domains\Integrations\Http\Controllers\ApiTokenController;
 use App\Domains\Organisation\Http\Controllers\BranchController;
 use App\Domains\Organisation\Http\Controllers\BranchHolidayController;
 use App\Domains\Organisation\Http\Controllers\BranchWorkingHourController;
@@ -291,4 +292,22 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
 
     Route::get('reports', [ReportController::class, 'index']);
     Route::get('reports/{report}', [ReportController::class, 'show']);
+
+    // API tokens (staff management)
+    Route::apiResource('integration/tokens', ApiTokenController::class)->only(['index', 'store', 'destroy']);
 });
+
+// Integration routes (machine-to-machine via API tokens)
+Route::prefix('v1/integration')
+    ->middleware(['api.auth', 'throttle:api'])
+    ->group(function () {
+        // Token management endpoints only accessible to staff via session auth
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::get('tokens', [ApiTokenController::class, 'index']);
+            Route::post('tokens', [ApiTokenController::class, 'store'])->middleware('idempotency');
+            Route::delete('tokens/{token}', [ApiTokenController::class, 'destroy']);
+        });
+
+        // Future integration endpoints will go here (webhooks, ERP, import)
+        // when using machine tokens with required scopes
+    });
