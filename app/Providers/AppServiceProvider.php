@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Customers\Models\Customer;
 use App\Domains\Ai\Services\Provider\AiProvider;
 use App\Domains\Ai\Services\Provider\NullAiProvider;
 use App\Domains\Ai\Services\Retention\AiSuggestionPurgeHandler;
@@ -15,7 +16,6 @@ use App\Domains\Channels\Messaging\Services\Transport\ProviderMessageTransport;
 use App\Domains\Channels\WebForm\Models\WebForm;
 use App\Domains\Channels\WebForm\Policies\WebFormPolicy;
 use App\Domains\Channels\WebForm\Services\Retention\WebFormSubmissionPurgeHandler;
-use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
 use App\Domains\Customers\Models\CustomerNote;
@@ -35,6 +35,8 @@ use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
 use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
 use App\Domains\Customers\Services\Timeline\TimelineRegistry;
 use App\Domains\Integrations\Services\Erp\HttpErpClient;
+use App\Domains\Integrations\Services\Retention\ImportRunPurgeHandler;
+use App\Domains\Integrations\Services\Retention\WebhookDeliveryPurgeHandler;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Domains\Knowledge\Models\KnowledgeCategory;
 use App\Domains\Knowledge\Policies\KnowledgeArticlePolicy;
