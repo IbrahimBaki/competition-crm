@@ -97,6 +97,10 @@ enum ErrorCode: string
     case MentionNotAllowedOnPublicReply = 'mention.not_allowed_on_public_reply';
     case MentionTargetNotVisible = 'mention.target_not_visible';
 
+    case EmailInboundUnparseable = 'email.inbound_unparseable';
+    case EmailInboundAlreadyProcessed = 'email.inbound_already_processed';
+    case EmailLoopDetected = 'email.loop_detected';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -137,7 +141,10 @@ enum ErrorCode: string
             self::QuickReplyTitleTaken,
             self::QuickReplyScopeMismatch,
             self::MentionNotAllowedOnPublicReply,
-            self::MentionTargetNotVisible => 422,
+            self::MentionTargetNotVisible,
+            self::EmailInboundUnparseable,
+            self::EmailInboundAlreadyProcessed,
+            self::EmailLoopDetected => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,

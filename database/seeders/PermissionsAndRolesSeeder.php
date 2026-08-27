@@ -109,6 +109,9 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED,
             PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
             PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
+            // channels.*
+            PermissionKey::CHANNELS_EMAIL_REPLAY_LIST,
+            PermissionKey::CHANNELS_EMAIL_REPLAY_ACTION,
         ];
 
         $role = Role::firstOrCreate(

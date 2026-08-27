@@ -20,7 +20,7 @@ class StoreAgentTaskRequest extends FormRequest
             'description' => 'nullable|string',
             'due_at' => 'nullable|date_format:c',
             'due_in_working_time' => 'boolean',
-            'branch_id' => 'nullable|uuid|exists:branches,uuid',
+            'branch_id' => 'nullable|uuid|exists:branches,id',
             'ticket_id' => 'nullable|uuid|exists:tickets,uuid',
         ];
     }

@@ -18,7 +18,7 @@ readonly class CreateAgentTask
         ?DateTimeInterface $dueAt = null,
         bool $dueInWorkingTime = false,
         ?int $ticketId = null,
-        ?int $branchId = null,
+        ?string $branchId = null,
     ): AgentTask {
         if (! $owner->is_active) {
             throw new AgentTaskOwnerUnavailableException;

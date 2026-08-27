@@ -2,6 +2,7 @@
 
 namespace App\Domains\Workspace\Http\Controllers;
 
+use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Workspace\Actions\ChangeAgentTaskState;
 use App\Domains\Workspace\Actions\CreateAgentTask;
 use App\Domains\Workspace\Http\Requests\StoreAgentTaskRequest;
@@ -50,9 +51,17 @@ readonly class AgentTaskController
         // Apply standard filters and pagination
         $paginated = $collectionQuery->paginate($query);
 
+        $meta = $collectionQuery->meta();
+
+        // Create a new paginator with Resources as items
+        $resourcePaginator = $paginated->setCollection(
+            AgentTaskResource::collection($paginated->items())
+        );
+
         return ApiResponse::collection(
-            AgentTaskResource::collection($paginated),
-            collectionQuery: $collectionQuery
+            $resourcePaginator,
+            filters: $meta['filters'] ?? [],
+            sort: $meta['sort'] ?? null
         )->toResponse(request());
     }
 
@@ -66,14 +75,14 @@ readonly class AgentTaskController
         // Resolve UUIDs to IDs for ticket and branch (if provided)
         $ticketId = null;
         if ($request->filled('ticket_id')) {
-            $ticket = AgentTask::where('uuid', $request->input('ticket_id'))->first();
+            $ticket = Ticket::where('uuid', $request->input('ticket_id'))->first();
             $ticketId = $ticket?->id;
         }
 
         $branchId = null;
         if ($request->filled('branch_id')) {
-            $branch = AgentTask::where('uuid', $request->input('branch_id'))->first();
-            $branchId = $branch?->id;
+            // Branch uses 'id' as the UUID column, so we can get it directly
+            $branchId = $request->input('branch_id');
         }
 
         $task = $this->createTask->handle(

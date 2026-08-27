@@ -101,6 +101,11 @@ return [
         'not_allowed_on_public_reply' => 'الإشارات إلى الموظفين غير مسموحة في الردود العامة',
         'target_not_visible' => 'المستخدم المشار إليه لا يملك إمكانية الوصول إلى هذه التذكرة',
     ],
+    'email' => [
+        'inbound_unparseable' => 'غير قادر على تحليل رسالة البريد الإلكتروني الوارد',
+        'inbound_already_processed' => 'تم معالجة هذا البريد الإلكتروني بالفعل',
+        'loop_detected' => 'تم اكتشاف حلقة بريد إلكتروني وتم منعها',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'أنت مدعو للانضمام إلى Support CRM',

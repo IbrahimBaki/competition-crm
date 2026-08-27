@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
@@ -212,6 +213,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(TicketMessagePurgeHandler::class));
             $registry->register($app->make(NotificationPurgeHandler::class));
             $registry->register($app->make(AgentTaskPurgeHandler::class));
+            $registry->register($app->make(InboundEmailPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -258,6 +260,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(NotificationPreference::class, NotificationPreferencePolicy::class);
         Gate::policy(AgentTask::class, AgentTaskPolicy::class);
         Gate::policy(QuickReply::class, QuickReplyPolicy::class);
+
+        $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));

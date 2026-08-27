@@ -14,5 +14,6 @@ Schedule::command('retention:purge')->dailyAt('03:30')->withoutOverlapping();
 Schedule::command('tickets:close-expired')->hourly()->withoutOverlapping();
 Schedule::command('sla:sweep')->everyFiveMinutes()->withoutOverlapping();
 Schedule::command('agent-tasks:reminder-sweep')->everyFiveMinutes()->withoutOverlapping();
+Schedule::command('email:resweep')->everyTenMinutes()->withoutOverlapping();
 // TODO(465): fold tickets:close-expired into an automation rule once rules are seeded in production
 Schedule::command('automation:sweep')->everyTenMinutes()->withoutOverlapping();

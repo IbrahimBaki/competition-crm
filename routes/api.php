@@ -51,6 +51,7 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::post('auth/password/forgot', [PasswordResetController::class, 'forgot']);
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
+    Route::post('channels/email/inbound', [InboundEmailWebhookController::class, 'store'])->middleware(['public.protect', 'idempotency']);
 });
 
 Route::prefix('v1')->group(function () {
@@ -187,6 +188,9 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::patch('agent-tasks/{task}', [AgentTaskController::class, 'update'])->middleware('idempotency');
     Route::delete('agent-tasks/{task}', [AgentTaskController::class, 'destroy']);
     Route::post('agent-tasks/{task}/state', [AgentTaskStateController::class, 'store'])->middleware('idempotency');
+
+    Route::get('channels/email/inbound', [InboundEmailReplayController::class, 'index']);
+    Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay'])->middleware('idempotency');
 
     Route::get('quick-replies', [QuickReplyController::class, 'index']);
     Route::post('quick-replies', [QuickReplyController::class, 'store'])->middleware('idempotency');

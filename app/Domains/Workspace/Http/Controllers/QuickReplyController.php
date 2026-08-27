@@ -35,8 +35,7 @@ readonly class QuickReplyController
             ->withFilters([
                 'scope' => ['eq'],
             ])
-            ->withSearchableColumns(['title'])
-            ->withIncludes([]);
+            ->withSearchableColumns(['title']);
 
         $query = QuickReply::where(function ($q) {
             $q->where('owner_id', auth()->id())->orWhereNull('owner_id');
@@ -44,9 +43,17 @@ readonly class QuickReplyController
 
         $paginated = $collectionQuery->paginate($query);
 
+        $meta = $collectionQuery->meta();
+
+        // Create a new paginator with Resources as items
+        $resourcePaginator = $paginated->setCollection(
+            QuickReplyResource::collection($paginated->items())
+        );
+
         return ApiResponse::collection(
-            QuickReplyResource::collection($paginated),
-            collectionQuery: $collectionQuery
+            $resourcePaginator,
+            filters: $meta['filters'] ?? [],
+            sort: $meta['sort'] ?? null
         )->toResponse(request());
     }
 

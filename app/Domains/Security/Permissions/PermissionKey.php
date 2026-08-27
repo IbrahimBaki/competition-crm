@@ -170,6 +170,11 @@ final class PermissionKey
 
     public const WORKSPACE_TICKET_MESSAGE_MENTION = 'workspace.ticket.message.mention';
 
+    // ---- channels (module: channels) - email replay ----------------------
+    public const CHANNELS_EMAIL_REPLAY_LIST = 'channels.email.replay.list';
+
+    public const CHANNELS_EMAIL_REPLAY_ACTION = 'channels.email.replay.action';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

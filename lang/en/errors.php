@@ -101,6 +101,11 @@ return [
         'not_allowed_on_public_reply' => 'Mentions are not allowed on public replies',
         'target_not_visible' => 'Mentioned user does not have access to this ticket',
     ],
+    'email' => [
+        'inbound_unparseable' => 'Unable to parse the inbound email message',
+        'inbound_already_processed' => 'This email has already been processed',
+        'loop_detected' => 'Email loop detected and suppressed',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'You are invited to join Support CRM',
