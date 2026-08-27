@@ -7,8 +7,7 @@ use App\Domains\Channels\WebForm\Models\WebForm;
 use App\Domains\Channels\WebForm\Models\WebFormField;
 use App\Domains\Channels\WebForm\Models\WebFormFieldType;
 use App\Domains\Channels\WebForm\Services\Validation\WebFormPayloadValidator;
-use App\Domains\Customers\Services\ArabicTextNormaliser;
-use Illuminate\Foundation\Testing::RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class WebFormPayloadValidatorTest extends TestCase

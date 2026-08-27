@@ -184,6 +184,11 @@ final class PermissionKey
 
     public const CHANNELS_WEB_FORM_DELETE = 'channels.web_form.delete';
 
+    // ---- channels (module: channels) - messaging ---------------------------
+    public const CHANNELS_MESSAGING_TEMPLATES_VIEW = 'channels.messaging.templates.view';
+
+    public const CHANNELS_MESSAGING_TEMPLATES_MANAGE = 'channels.messaging.templates.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

@@ -112,6 +112,20 @@ return [
             'inactive' => 'Form is not available',
             'validation_failed' => 'Form submission contains invalid data',
         ],
+        'whatsapp' => [
+            'free_form_window_closed' => 'Free-form replies are not available outside the 24-hour customer service window. Please use an approved template instead.',
+            'opt_in_required' => 'Customer has not opted in to receive WhatsApp messages',
+        ],
+        'sms' => [
+            'opted_out' => 'Customer has opted out of SMS messages',
+        ],
+        'provider_template' => [
+            'not_approved' => 'Template has not been approved or is inactive',
+            'variable_missing' => 'Template variable is missing or invalid',
+        ],
+        'provider_message' => [
+            'send_failed' => 'Failed to send message through provider',
+        ],
     ],
     'mail' => [
         'invitation' => [

@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
+use App\Domains\Channels\Messaging\Jobs\SendProviderMessageJob;
+use App\Domains\Channels\Messaging\Services\Retention\ProviderInboundPurgeHandler;
+use App\Domains\Channels\Messaging\Services\Transport\NullProviderMessageTransport;
+use App\Domains\Channels\Messaging\Services\Transport\ProviderMessageTransport;
 use App\Domains\Channels\WebForm\Models\WebForm;
 use App\Domains\Channels\WebForm\Policies\WebFormPolicy;
 use App\Domains\Channels\WebForm\Services\Retention\WebFormSubmissionPurgeHandler;
@@ -218,6 +222,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(AgentTaskPurgeHandler::class));
             $registry->register($app->make(InboundEmailPurgeHandler::class));
             $registry->register($app->make(WebFormSubmissionPurgeHandler::class));
+            $registry->register($app->make(ProviderInboundPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -265,8 +270,23 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AgentTask::class, AgentTaskPolicy::class);
         Gate::policy(QuickReply::class, QuickReplyPolicy::class);
         Gate::policy(WebForm::class, WebFormPolicy::class);
+        Gate::policy(ProviderMessageTemplate::class, ProviderMessageTemplatePolicy::class);
 
         $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
+
+        $whatsappTransport = config('channels.whatsapp.transport', 'null');
+        $smsTransport = config('channels.sms.transport', 'null');
+
+        $this->app->when(SendProviderMessageJob::class)
+            ->needs(ProviderMessageTransport::class)
+            ->give(function () use ($whatsappTransport) {
+                $transport = $whatsappTransport === 'null' ? 'null' : $whatsappTransport;
+
+                return match ($transport) {
+                    'null' => $this->app->make(NullProviderMessageTransport::class),
+                    default => $this->app->make(NullProviderMessageTransport::class),
+                };
+            });
 
         foreach (PermissionKey::all() as $key) {
             Gate::define($key, fn (User $user) => in_array($key, $user->permissionKeys(), true));

@@ -1,5 +1,8 @@
 <?php
 
+use App\Domains\Channels\Messaging\Http\Controllers\ProviderDeliveryReceiptController;
+use App\Domains\Channels\Messaging\Http\Controllers\ProviderInboundWebhookController;
+use App\Domains\Channels\Messaging\Http\Controllers\ProviderMessageTemplateController;
 use App\Domains\Channels\WebForm\Http\Controllers\WebFormController;
 use App\Domains\Customers\Http\Controllers\CustomerAttachmentController;
 use App\Domains\Customers\Http\Controllers\CustomerBlockController;
@@ -53,6 +56,11 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
     Route::post('channels/email/inbound', [InboundEmailWebhookController::class, 'store'])->middleware(['public.protect', 'idempotency']);
+
+    Route::post('channels/whatsapp/inbound', [ProviderInboundWebhookController::class, 'handleWhatsapp'])->middleware(['idempotency']);
+    Route::post('channels/whatsapp/receipts', [ProviderDeliveryReceiptController::class, 'handleWhatsapp']);
+    Route::post('channels/sms/inbound', [ProviderInboundWebhookController::class, 'handleSms'])->middleware(['idempotency']);
+    Route::post('channels/sms/receipts', [ProviderDeliveryReceiptController::class, 'handleSms']);
 
     Route::get('channels/web-forms/{formKey}', [PublicWebFormController::class, 'show']);
     Route::post('channels/web-forms/{formKey}/submissions', [PublicWebFormController::class, 'store'])
@@ -199,6 +207,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay'])->middleware('idempotency');
 
     Route::apiResource('channels/web-forms', WebFormController::class);
+
+    Route::get('messaging/templates', [ProviderMessageTemplateController::class, 'index']);
 
     Route::get('quick-replies', [QuickReplyController::class, 'index']);
     Route::post('quick-replies', [QuickReplyController::class, 'store'])->middleware('idempotency');

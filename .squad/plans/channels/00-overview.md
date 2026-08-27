@@ -9,6 +9,8 @@ Entry point for the **channels** feature. Stories execute in order by their `NN`
 | _add rows as stories are planned_ |
 | 21 | `21-story-468.md` | BE-21 - Email Channel: Threading, Correlation, Loop Prevention, Bounces and Replay | 468 | — |
 | 22 | `22-story-469.md` | BE-22 - Public Web Form Intake: Configuration, Validation, Spam Control and Duplicate Protection | 469 | — |
+| 23 | `23-story-470.md` | BE-23 - Provider Messaging Channels: WhatsApp and SMS Windows, Templates, Opt-In/Opt-Out and Delivery Status | 470 | — |
+| 24 | `24-story-471.md` | BE-24 - Live Chat: Session Lifecycle, Queueing, Reconnect, Handoff and Transcript Persistence | 471 | — |
 
 ## Dependency notes
 

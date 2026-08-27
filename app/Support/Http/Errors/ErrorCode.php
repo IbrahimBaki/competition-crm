@@ -105,6 +105,13 @@ enum ErrorCode: string
     case WebFormInactive = 'channels.web_form.inactive';
     case WebFormValidationFailed = 'channels.web_form.validation_failed';
 
+    case WhatsappFreeFormWindowClosed = 'channels.whatsapp.free_form_window_closed';
+    case WhatsappOptInRequired = 'channels.whatsapp.opt_in_required';
+    case SmsOptedOut = 'channels.sms.opted_out';
+    case ProviderTemplateNotApproved = 'channels.provider_template.not_approved';
+    case ProviderTemplateVariableMissing = 'channels.provider_template.variable_missing';
+    case ProviderMessageSendFailed = 'channels.provider_message.send_failed';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -149,7 +156,13 @@ enum ErrorCode: string
             self::EmailInboundUnparseable,
             self::EmailInboundAlreadyProcessed,
             self::EmailLoopDetected,
-            self::WebFormValidationFailed => 422,
+            self::WebFormValidationFailed,
+            self::WhatsappFreeFormWindowClosed,
+            self::WhatsappOptInRequired,
+            self::SmsOptedOut,
+            self::ProviderTemplateNotApproved,
+            self::ProviderTemplateVariableMissing,
+            self::ProviderMessageSendFailed => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,

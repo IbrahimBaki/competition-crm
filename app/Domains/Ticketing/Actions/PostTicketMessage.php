@@ -2,6 +2,8 @@
 
 namespace App\Domains\Ticketing\Actions;
 
+use App\Domains\Channels\Messaging\Exceptions\WhatsappFreeFormWindowClosedException;
+use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
 use App\Domains\Ticketing\Exceptions\TicketConversationReadOnlyException;
 use App\Domains\Ticketing\Models\MessageAuthorType;
 use App\Domains\Ticketing\Models\MessageChannel;
@@ -24,6 +26,10 @@ class PostTicketMessage
     public function __construct(
         private readonly RecordTicketEvent $eventRecorder,
         private readonly SlaClockHooks $slaHooks,
+        private readonly MessagingConsentGuard $consentGuard,
+        private readonly WhatsappWindowPolicy $windowPolicy,
+        private readonly ProviderTemplateRenderer $templateRenderer,
+        private readonly LocaleResolver $localeResolver,
     ) {}
 
     /**
@@ -37,17 +43,22 @@ class PostTicketMessage
         bool $isInternal = false,
         string $bodyFormat = 'text',
         array $attachmentUuids = [],
+        ?string $templateKey = null,
+        array $templateVariables = [],
     ): TicketMessage {
         if ($ticket->isMerged() || $ticket->isSpam()) {
             throw new TicketConversationReadOnlyException('Conversation on this ticket is read-only');
         }
 
-        return DB::transaction(function () use ($ticket, $actor, $channel, $body, $isInternal, $bodyFormat, $attachmentUuids) {
+        return DB::transaction(function () use ($ticket, $actor, $channel, $body, $isInternal, $bodyFormat, $attachmentUuids, $templateKey, $templateVariables) {
             if ($isInternal) {
                 $channel = MessageChannel::Internal;
                 $deliveryState = null;
             } else {
                 $deliveryState = MessageDeliveryState::Queued;
+
+                // Guard chain for messaging channels (before persistence)
+                $body = $this->applyOutboundGuards($ticket, $channel, $body, $templateKey, $templateVariables);
             }
 
             $message = $ticket->messages()->create([
@@ -111,5 +122,60 @@ class PostTicketMessage
 
             return $message;
         });
+    }
+
+    private function applyOutboundGuards(
+        Ticket $ticket,
+        MessageChannel $channel,
+        string $body,
+        ?string $templateKey,
+        array $templateVariables,
+    ): string {
+        // For non-messaging channels, no guards apply
+        if (! in_array($channel, [MessageChannel::Whatsapp, MessageChannel::Sms], true)) {
+            return $body;
+        }
+
+        // Get the customer's contact for this channel
+        $contact = $ticket->customer->contacts()
+            ->where('type', $channel === MessageChannel::Whatsapp ? 'whatsapp' : 'phone')
+            ->first();
+
+        if (! $contact) {
+            $contact = $ticket->customer->contacts()
+                ->whereIn('type', ['whatsapp', 'phone'])
+                ->first();
+        }
+
+        if (! $contact) {
+            throw new \InvalidArgumentException('Customer has no contact information for '.$channel->value);
+        }
+
+        // Check consent
+        $this->consentGuard->assertMayReceive($contact, $channel);
+
+        // WhatsApp: check window or use template
+        if ($channel === MessageChannel::Whatsapp) {
+            if ($templateKey) {
+                // Use template path
+                $template = ProviderMessageTemplate::query()
+                    ->where('channel', MessageChannel::Whatsapp)
+                    ->where('key', $templateKey)
+                    ->firstOrFail();
+
+                $locale = $this->localeResolver->resolve($contact->customer->locale ?? 'en');
+
+                return $this->templateRenderer->render($template, $templateVariables, $locale);
+            } else {
+                // Free-form path - check window
+                if (! $this->windowPolicy->isOpen($ticket, now())) {
+                    $expiresAt = $this->windowPolicy->expiresAt($ticket);
+
+                    throw new WhatsappFreeFormWindowClosedException($expiresAt ?? now());
+                }
+            }
+        }
+
+        return $body;
     }
 }

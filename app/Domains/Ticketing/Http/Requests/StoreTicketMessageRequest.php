@@ -17,6 +17,8 @@ class StoreTicketMessageRequest extends FormRequest
             'is_internal' => ['sometimes', 'boolean'],
             'attachment_uuids' => ['sometimes', 'array', 'max:10'],
             'attachment_uuids.*' => ['uuid'],
+            'template_key' => ['nullable', 'string', 'max:100'],
+            'template_variables' => ['nullable', 'array'],
         ];
     }
 

@@ -36,4 +36,29 @@ return [
         // Retention for stored raw submission payloads, in days.
         'submission_retention_days' => env('CHANNELS_WEB_FORM_SUBMISSION_RETENTION_DAYS', 90),
     ],
+
+    'whatsapp' => [
+        // Free-form (non-template) reply window, in hours, measured from the
+        // last inbound customer message on the ticket.
+        'free_form_window_hours' => env('CHANNELS_WHATSAPP_FREE_FORM_WINDOW_HOURS', 24),
+
+        // Outbound transport: 'null' logs instead of calling a provider.
+        'transport' => env('CHANNELS_WHATSAPP_TRANSPORT', 'null'),
+
+        // Shared secret for provider inbound + receipt webhooks.
+        'webhook_secret' => env('CHANNELS_WHATSAPP_WEBHOOK_SECRET'),
+
+        // Retention for stored raw provider payloads, in days.
+        'raw_retention_days' => env('CHANNELS_WHATSAPP_RAW_RETENTION_DAYS', 90),
+    ],
+
+    'sms' => [
+        'transport' => env('CHANNELS_SMS_TRANSPORT', 'null'),
+        'webhook_secret' => env('CHANNELS_SMS_WEBHOOK_SECRET'),
+        'max_body_length' => env('CHANNELS_SMS_MAX_BODY_LENGTH', 1600),
+        'raw_retention_days' => env('CHANNELS_SMS_RAW_RETENTION_DAYS', 90),
+    ],
+
+    // Characters taken from an inbound body when the channel carries no subject.
+    'derived_subject_length' => env('CHANNELS_DERIVED_SUBJECT_LENGTH', 80),
 ];

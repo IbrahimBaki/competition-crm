@@ -34,6 +34,7 @@ class DatabaseSeeder extends Seeder
             $this->call(SlaPolicySeeder::class);
             $this->call(TicketCatalogueSeeder::class);
             $this->call(NotificationTemplatesSeeder::class);
+            $this->call(ProviderMessageTemplatesSeeder::class);
             $this->call(SeedAdminUserSeeder::class);
         });
     }
