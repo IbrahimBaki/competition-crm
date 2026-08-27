@@ -101,6 +101,14 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::AUTOMATION_RULES_MANAGE,
             PermissionKey::AUTOMATION_EXECUTIONS_VIEW,
             PermissionKey::TICKETS_ESCALATE,
+            // workspace.*
+            PermissionKey::WORKSPACE_TASKS_CREATE,
+            PermissionKey::WORKSPACE_TASKS_VIEW_OWN,
+            PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS,
+            PermissionKey::WORKSPACE_TASKS_REASSIGN,
+            PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED,
+            PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
+            PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
         ];
 
         $role = Role::firstOrCreate(
@@ -166,6 +174,14 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::AUTOMATION_RULES_VIEW,
             PermissionKey::AUTOMATION_EXECUTIONS_VIEW,
             PermissionKey::TICKETS_ESCALATE,
+            // workspace.*
+            PermissionKey::WORKSPACE_TASKS_CREATE,
+            PermissionKey::WORKSPACE_TASKS_VIEW_OWN,
+            PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS,
+            PermissionKey::WORKSPACE_TASKS_REASSIGN,
+            PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED,
+            PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
+            PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
         ];
 
         $role = Role::firstOrCreate(
@@ -216,6 +232,11 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::SLA_POLICIES_VIEW,
             // automation.*
             PermissionKey::TICKETS_ESCALATE,
+            // workspace.*
+            PermissionKey::WORKSPACE_TASKS_CREATE,
+            PermissionKey::WORKSPACE_TASKS_VIEW_OWN,
+            PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
+            PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
         ];
 
         $role = Role::firstOrCreate(

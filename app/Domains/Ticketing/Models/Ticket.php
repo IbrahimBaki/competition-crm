@@ -131,6 +131,12 @@ class Ticket extends Model
         return $this->hasMany(TicketSlaClock::class);
     }
 
+    public function watchers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'ticket_watchers')
+            ->withTimestamps();
+    }
+
     public function lifecycleType(): TicketStatus
     {
         return $this->status?->lifecycle_type ?? TicketStatus::New;

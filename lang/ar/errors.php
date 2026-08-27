@@ -46,6 +46,8 @@ return [
         'message_not_retryable' => 'لا يمكن إعادة محاولة هذه الرسالة',
         'internal_note_not_sendable' => 'لا يمكن إرسال الملاحظات الداخلية',
         'ticket_conversation_read_only' => 'المحادثة على هذه التذكرة للقراءة فقط',
+        'already_watched' => 'أنت تتابع بالفعل هذه التذكرة',
+        'not_watched' => 'أنت لا تتابع هذه التذكرة',
     ],
     'sla' => [
         'breach_immutable' => 'سجلات انتهاكات SLA قابلة للإضافة فقط ولا يمكن تعديلها',
@@ -86,6 +88,18 @@ return [
         'two_factor_required' => 'المصادقة الثنائية مطلوبة',
         'user_already_anonymised' => 'تم حذف بيانات المستخدم الشخصية بالفعل',
         'user_already_deactivated' => 'تم إلغاء تنشيط المستخدم بالفعل',
+    ],
+    'agent_task' => [
+        'illegal_transition' => 'انتقال حالة المهمة هذا غير مسموح',
+        'owner_unavailable' => 'مالك المهمة غير متاح',
+    ],
+    'quick_reply' => [
+        'title_taken' => 'رد سريع بهذا العنوان موجود بالفعل',
+        'scope_mismatch' => 'إعدادات نطاق الرد السريع غير صحيحة',
+    ],
+    'mention' => [
+        'not_allowed_on_public_reply' => 'الإشارات إلى الموظفين غير مسموحة في الردود العامة',
+        'target_not_visible' => 'المستخدم المشار إليه لا يملك إمكانية الوصول إلى هذه التذكرة',
     ],
     'mail' => [
         'invitation' => [

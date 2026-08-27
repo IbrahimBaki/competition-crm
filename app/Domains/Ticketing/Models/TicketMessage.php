@@ -86,6 +86,17 @@ class TicketMessage extends Model
         return $this->hasMany(TicketMessageDeliveryEvent::class)->orderBy('occurred_at');
     }
 
+    public function mentions(): HasMany
+    {
+        return $this->hasMany(TicketMessageMention::class);
+    }
+
+    public function mentionedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'ticket_message_mentions', 'ticket_message_id', 'mentioned_user_id')
+            ->withTimestamps();
+    }
+
     public function scopeCustomerVisible(Builder $query): Builder
     {
         return $query->where('is_internal', false);

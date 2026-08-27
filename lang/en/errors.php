@@ -46,6 +46,8 @@ return [
         'message_not_retryable' => 'This message cannot be retried',
         'internal_note_not_sendable' => 'Internal notes cannot be delivered',
         'ticket_conversation_read_only' => 'Conversation on this ticket is read-only',
+        'already_watched' => 'You are already watching this ticket',
+        'not_watched' => 'You are not watching this ticket',
     ],
     'sla' => [
         'breach_immutable' => 'SLA breaches are append-only and cannot be modified',
@@ -86,6 +88,18 @@ return [
         'two_factor_required' => 'Two-factor authentication is required',
         'user_already_anonymised' => 'User has already been anonymised',
         'user_already_deactivated' => 'User is already deactivated',
+    ],
+    'agent_task' => [
+        'illegal_transition' => 'This task state transition is not allowed',
+        'owner_unavailable' => 'Task owner is not available',
+    ],
+    'quick_reply' => [
+        'title_taken' => 'A quick reply with this title already exists',
+        'scope_mismatch' => 'Quick reply scope configuration is invalid',
+    ],
+    'mention' => [
+        'not_allowed_on_public_reply' => 'Mentions are not allowed on public replies',
+        'target_not_visible' => 'Mentioned user does not have access to this ticket',
     ],
     'mail' => [
         'invitation' => [

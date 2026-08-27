@@ -11,4 +11,7 @@ enum NotificationEventType: string
     case TicketEscalated = 'ticket.escalated';
     case TicketMessagePosted = 'ticket.message.posted';
     case UserInvited = 'user.invited';
+    case AgentTaskReminder = 'agent_task.reminder';
+    case TicketMentioned = 'ticket.mentioned';
+    case TicketWatchedUpdate = 'ticket.watched.update';
 }

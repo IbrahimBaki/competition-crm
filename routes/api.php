@@ -31,6 +31,11 @@ use App\Domains\Ticketing\Http\Controllers\TicketLifecycleController;
 use App\Domains\Ticketing\Http\Controllers\TicketLinkController;
 use App\Domains\Ticketing\Http\Controllers\TicketMergeController;
 use App\Domains\Ticketing\Http\Controllers\TicketStatusController;
+use App\Domains\Ticketing\Http\Controllers\TicketWatcherController;
+use App\Domains\Workspace\Http\Controllers\AgentTaskController;
+use App\Domains\Workspace\Http\Controllers\AgentTaskStateController;
+use App\Domains\Workspace\Http\Controllers\QuickReplyController;
+use App\Domains\Workspace\Http\Controllers\QuickReplyRenderController;
 use App\Support\Attachments\Http\AttachmentController;
 use App\Support\Http\Health\HealthController;
 use Illuminate\Http\Request;
@@ -167,10 +172,28 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::get('tickets/{ticket}/messages/{message}/delivery-events', [TicketMessageController::class, 'deliveryEvents']);
     Route::post('tickets/{ticket}/messages/{message}/retry', [TicketMessageController::class, 'retry'])->middleware('idempotency');
 
+    Route::get('tickets/{ticket}/watchers', [TicketWatcherController::class, 'index']);
+    Route::post('tickets/{ticket}/watchers', [TicketWatcherController::class, 'store'])->middleware('idempotency');
+    Route::delete('tickets/{ticket}/watchers/{user}', [TicketWatcherController::class, 'destroy']);
+
     Route::get('ticket-categories', [TicketCategoryController::class, 'index']);
     Route::post('ticket-categories', [TicketCategoryController::class, 'store'])->middleware('idempotency');
     Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update'])->middleware('idempotency');
     Route::delete('ticket-categories/{category}', [TicketCategoryController::class, 'destroy']);
+
+    Route::get('agent-tasks', [AgentTaskController::class, 'index']);
+    Route::post('agent-tasks', [AgentTaskController::class, 'store'])->middleware('idempotency');
+    Route::get('agent-tasks/{task}', [AgentTaskController::class, 'show']);
+    Route::patch('agent-tasks/{task}', [AgentTaskController::class, 'update'])->middleware('idempotency');
+    Route::delete('agent-tasks/{task}', [AgentTaskController::class, 'destroy']);
+    Route::post('agent-tasks/{task}/state', [AgentTaskStateController::class, 'store'])->middleware('idempotency');
+
+    Route::get('quick-replies', [QuickReplyController::class, 'index']);
+    Route::post('quick-replies', [QuickReplyController::class, 'store'])->middleware('idempotency');
+    Route::get('quick-replies/{reply}', [QuickReplyController::class, 'show']);
+    Route::patch('quick-replies/{reply}', [QuickReplyController::class, 'update'])->middleware('idempotency');
+    Route::delete('quick-replies/{reply}', [QuickReplyController::class, 'destroy']);
+    Route::post('quick-replies/render', [QuickReplyRenderController::class, 'store']);
 
     Route::get('automation/rules', [AutomationRuleController::class, 'index']);
     Route::get('automation/rules/{rule}', [AutomationRuleController::class, 'show']);

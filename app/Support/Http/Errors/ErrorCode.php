@@ -88,6 +88,15 @@ enum ErrorCode: string
     case NotificationNotAuthorised = 'notification.not_authorised';
     case NotificationPreferenceInvalid = 'notification.preference_invalid';
 
+    case IllegalAgentTaskTransition = 'agent_task.illegal_transition';
+    case AgentTaskOwnerUnavailable = 'agent_task.owner_unavailable';
+    case QuickReplyTitleTaken = 'quick_reply.title_taken';
+    case QuickReplyScopeMismatch = 'quick_reply.scope_mismatch';
+    case TicketAlreadyWatched = 'ticket.already_watched';
+    case TicketNotWatched = 'ticket.not_watched';
+    case MentionNotAllowedOnPublicReply = 'mention.not_allowed_on_public_reply';
+    case MentionTargetNotVisible = 'mention.target_not_visible';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -122,7 +131,13 @@ enum ErrorCode: string
             self::AutomationEscalationReasonRequired,
             self::NotificationTemplateMissing,
             self::NotificationChannelUnsupported,
-            self::NotificationPreferenceInvalid => 422,
+            self::NotificationPreferenceInvalid,
+            self::IllegalAgentTaskTransition,
+            self::AgentTaskOwnerUnavailable,
+            self::QuickReplyTitleTaken,
+            self::QuickReplyScopeMismatch,
+            self::MentionNotAllowedOnPublicReply,
+            self::MentionTargetNotVisible => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -162,7 +177,9 @@ enum ErrorCode: string
             self::TargetAlreadyExhausted,
             self::AutomationRuleKeyTaken,
             self::AutomationExecutionImmutable,
-            self::AutomationEscalationTargetUnavailable => 409,
+            self::AutomationEscalationTargetUnavailable,
+            self::TicketAlreadyWatched,
+            self::TicketNotWatched => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

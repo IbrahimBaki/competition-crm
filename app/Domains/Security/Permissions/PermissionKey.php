@@ -155,6 +155,21 @@ final class PermissionKey
 
     public const NOTIFICATIONS_VIEW_DELIVERY_LOG = 'notifications.view_delivery_log';
 
+    // ---- workspace (module: workspace) ----------------------------------
+    public const WORKSPACE_TASKS_CREATE = 'workspace.tasks.create';
+
+    public const WORKSPACE_TASKS_VIEW_OWN = 'workspace.tasks.view.own';
+
+    public const WORKSPACE_TASKS_VIEW_OTHERS = 'workspace.tasks.view.others';
+
+    public const WORKSPACE_TASKS_REASSIGN = 'workspace.tasks.reassign';
+
+    public const WORKSPACE_QUICK_REPLIES_MANAGE_SHARED = 'workspace.quick_replies.manage.shared';
+
+    public const WORKSPACE_TICKET_WATCHERS_VIEW = 'workspace.ticket.watchers.view';
+
+    public const WORKSPACE_TICKET_MESSAGE_MENTION = 'workspace.ticket.message.mention';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);
