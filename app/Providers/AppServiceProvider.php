@@ -34,6 +34,7 @@ use App\Domains\Customers\Services\TextNormaliser;
 use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
 use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
 use App\Domains\Customers\Services\Timeline\TimelineRegistry;
+use App\Domains\Integrations\Services\Erp\HttpErpClient;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Domains\Knowledge\Models\KnowledgeCategory;
 use App\Domains\Knowledge\Policies\KnowledgeArticlePolicy;
@@ -169,6 +170,12 @@ class AppServiceProvider extends ServiceProvider
             $aiProvider === 'null' ? NullAiProvider::class : NullAiProvider::class
         );
 
+        $erpEnabled = config('integrations.erp.enabled', false);
+        $this->app->bind(
+            ErpClient::class,
+            $erpEnabled ? HttpErpClient::class : NullErpClient::class
+        );
+
         $this->app->singleton(WorkingTimeService::class);
         $this->app->singleton(RequestId::class);
         $this->app->singleton(LocalizationSettings::class);
@@ -284,6 +291,8 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(AiUsagePurgeHandler::class));
             $registry->register(new PortalTokenPurgeHandler);
             $registry->register($app->make(ReportExportPurgeHandler::class));
+            $registry->register($app->make(WebhookDeliveryPurgeHandler::class));
+            $registry->register($app->make(ImportRunPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 

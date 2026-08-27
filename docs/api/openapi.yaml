@@ -1,0 +1,169 @@
+openapi: 3.1.0
+info:
+  title: Support CRM API
+  version: 1.0.0
+  description: Support CRM platform API with integrated automation, reporting, and external integrations
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: Local development
+  - url: https://api.support.example.com/api/v1
+    description: Production
+
+components:
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiTokenResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        token_prefix:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        last_used_at:
+          type: string
+          format: date-time
+          nullable: true
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        revoked_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    IssuedApiTokenResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        token:
+          type: string
+          description: Plaintext token - returned once only
+        token_prefix:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            request_id:
+              type: string
+            field_errors:
+              type: object
+              nullable: true
+            meta:
+              type: object
+              nullable: true
+
+paths:
+  /integration/tokens:
+    get:
+      summary: List API tokens
+      security:
+        - bearer: []
+      responses:
+        '200':
+          description: List of API tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApiTokenResponse'
+                  meta:
+                    type: object
+                    properties:
+                      pagination:
+                        type: object
+    post:
+      summary: Issue new API token
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - tickets.read
+                      - tickets.write
+                      - customers.read
+                      - knowledge.read
+                      - reports.read
+                      - webhooks.manage
+      responses:
+        '201':
+          description: Token issued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/IssuedApiTokenResponse'
+
+    delete:
+      summary: Revoke API token
+      security:
+        - bearer: []
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Token revoked successfully
+
+securityDefinitions:
+  bearer:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: Bearer token for API authentication

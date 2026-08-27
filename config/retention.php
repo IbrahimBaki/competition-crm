@@ -13,6 +13,8 @@ return [
         'ai_suggestions' => ['days' => env('RETENTION_AI_SUGGESTIONS_DAYS', 90)],
         'ai_usage_records' => ['days' => env('RETENTION_AI_USAGE_DAYS', 180)],
         'portal_tokens' => ['days' => env('RETENTION_PORTAL_TOKENS_DAYS', 30)],
+        'webhook_deliveries' => ['days' => env('RETENTION_WEBHOOK_DELIVERIES_DAYS', 30)],
+        'import_runs' => ['days' => env('RETENTION_IMPORT_RUNS_DAYS', 90)],
     ],
 
     'audit_minimum_days' => env('RETENTION_AUDIT_MINIMUM_DAYS', 365),
