@@ -21,7 +21,12 @@ class ReportRangeTooLargeException extends \DomainException implements HasApiErr
         return new self($maxDays);
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::ReportRangeTooLarge;
     }

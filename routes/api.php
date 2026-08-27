@@ -296,18 +296,3 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     // API tokens (staff management)
     Route::apiResource('integration/tokens', ApiTokenController::class)->only(['index', 'store', 'destroy']);
 });
-
-// Integration routes (machine-to-machine via API tokens)
-Route::prefix('v1/integration')
-    ->middleware(['api.auth', 'throttle:api'])
-    ->group(function () {
-        // Token management endpoints only accessible to staff via session auth
-        Route::middleware('auth:sanctum')->group(function () {
-            Route::get('tokens', [ApiTokenController::class, 'index']);
-            Route::post('tokens', [ApiTokenController::class, 'store'])->middleware('idempotency');
-            Route::delete('tokens/{token}', [ApiTokenController::class, 'destroy']);
-        });
-
-        // Future integration endpoints will go here (webhooks, ERP, import)
-        // when using machine tokens with required scopes
-    });

@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Domains\Customers\Models\Customer;
-use App\Domains\Customers\Services\ArabicTextNormaliser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -13,15 +12,12 @@ class CustomerFactory extends Factory
 
     public function definition(): array
     {
-        $normaliser = new ArabicTextNormaliser;
         $name = fake()->name();
 
         return [
-            'id' => Str::uuid(),
+            'uuid' => Str::uuid(),
             'name' => $name,
-            'name_normalised' => $normaliser->normaliseName($name),
             'preferred_locale' => fake()->randomElement(['ar', 'en']),
-            'status' => 'active',
         ];
     }
 

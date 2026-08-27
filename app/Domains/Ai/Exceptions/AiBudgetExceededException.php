@@ -13,7 +13,7 @@ class AiBudgetExceededException extends Exception implements HasApiErrorCode
         return ErrorCode::AiBudgetExceeded;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
 use App\Domains\Ticketing\Models\MessageChannel;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class ProviderMessageTemplatesSeeder extends Seeder
 {
@@ -56,7 +57,7 @@ class ProviderMessageTemplatesSeeder extends Seeder
         foreach ($templates as $template) {
             ProviderMessageTemplate::updateOrCreate(
                 ['channel' => $template['channel'], 'key' => $template['key']],
-                $template
+                array_merge($template, ['uuid' => Str::uuid()])
             );
         }
     }

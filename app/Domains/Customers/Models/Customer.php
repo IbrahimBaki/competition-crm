@@ -17,7 +17,7 @@ class Customer extends Model
 
     protected $guarded = ['*'];
 
-    protected $fillable = ['name', 'company_account_id', 'preferred_locale'];
+    protected $fillable = ['uuid', 'name', 'company_account_id', 'preferred_locale'];
 
     protected $casts = [
         'status' => CustomerStatus::class,
@@ -25,6 +25,20 @@ class Customer extends Model
         'anonymised_at' => 'datetime',
         'merged_at' => 'datetime',
     ];
+
+    /**
+     * Boot the model with UUID and name_normalised generation.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->uuid ??= Str::uuid();
+            if (! $model->name_normalised && $model->name) {
+                $model->name_normalised = app(TextNormaliser::class)->normaliseName($model->name);
+            }
+        });
+    }
 
     public function getRouteKeyName(): string
     {

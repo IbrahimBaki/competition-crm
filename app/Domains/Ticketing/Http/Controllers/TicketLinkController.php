@@ -18,9 +18,9 @@ class TicketLinkController extends Controller
     {
         $this->authorize('view', $ticket);
 
-        $links = TicketLink::where('source_ticket_id', $ticket->id)->get();
+        $links = TicketLink::where('source_ticket_id', $ticket->id)->paginate();
 
-        return ApiResponse::ok(TicketLinkResource::collection($links));
+        return ApiResponse::collection($links);
     }
 
     public function store(

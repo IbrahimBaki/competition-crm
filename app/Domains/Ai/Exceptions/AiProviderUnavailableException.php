@@ -20,7 +20,7 @@ class AiProviderUnavailableException extends Exception implements HasApiErrorCod
         return ErrorCode::AiProviderUnavailable;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [
             'reason' => $this->reason,

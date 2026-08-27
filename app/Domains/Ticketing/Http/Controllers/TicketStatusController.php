@@ -16,9 +16,9 @@ class TicketStatusController extends Controller
     {
         $this->authorize('viewAny', TicketStatusDefinition::class);
 
-        $statuses = TicketStatusDefinition::orderBy('position')->get();
+        $statuses = TicketStatusDefinition::orderBy('position')->paginate();
 
-        return ApiResponse::ok(TicketStatusResource::collection($statuses));
+        return ApiResponse::collection($statuses);
     }
 
     public function store(StoreTicketStatusRequest $request)

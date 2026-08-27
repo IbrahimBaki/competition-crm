@@ -13,7 +13,7 @@ class AiSuggestionAlreadyResolvedException extends Exception implements HasApiEr
         return ErrorCode::AiSuggestionAlreadyResolved;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }

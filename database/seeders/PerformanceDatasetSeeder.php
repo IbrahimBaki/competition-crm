@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Ticketing\Models\Ticket;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class PerformanceDatasetSeeder extends Seeder
 {
@@ -34,21 +32,16 @@ class PerformanceDatasetSeeder extends Seeder
         $ticketChunks = array_chunk(range(1, $ticketCount), 500);
 
         foreach ($ticketChunks as $chunk) {
-            $tickets = [];
             foreach ($chunk as $i) {
                 $customer = $customers->random();
-                $tickets[] = [
-                    'id' => Str::uuid(),
+                Ticket::factory()->create([
                     'customer_id' => $customer->id,
                     'organisation_id' => $customer->organisation_id,
                     'subject' => 'Test Ticket #'.$i,
                     'reference' => sprintf('TK-%06d', $i),
                     'created_at' => now()->subDays(rand(0, 90)),
-                    'updated_at' => now(),
-                ];
+                ]);
             }
-
-            DB::table('tickets')->insert($tickets);
         }
 
         // Create messages for each ticket
@@ -58,21 +51,14 @@ class PerformanceDatasetSeeder extends Seeder
 
         foreach ($messageChunks as $chunk) {
             foreach ($chunk as $ticket) {
-                $messages = [];
                 for ($i = 0; $i < $messagesPerTicket; $i++) {
-                    $messages[] = [
-                        'id' => Str::uuid(),
+                    TicketMessage::factory()->create([
                         'ticket_id' => $ticket->id,
                         'organisation_id' => $ticket->organisation_id,
                         'body' => 'Test message '.$i.' for ticket '.$ticket->reference,
                         'visibility' => $i === 0 ? 'public' : 'internal',
                         'created_at' => $ticket->created_at->addMinutes($i * 30),
-                        'updated_at' => now(),
-                    ];
-                }
-
-                if (! empty($messages)) {
-                    DB::table('ticket_messages')->insert($messages);
+                    ]);
                 }
             }
         }

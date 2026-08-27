@@ -14,8 +14,13 @@ class ReportExportExpiredException extends \DomainException implements HasApiErr
         parent::__construct($message ?: 'Export has expired and is no longer available');
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
     {
         return ErrorCode::ReportExportExpired;
+    }
+
+    public function errorMeta(): array
+    {
+        return [];
     }
 }

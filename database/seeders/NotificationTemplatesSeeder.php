@@ -7,6 +7,7 @@ use App\Domains\Notifications\Enums\NotificationEventType;
 use App\Domains\Notifications\Models\NotificationTemplate;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class NotificationTemplatesSeeder extends Seeder
 {
@@ -188,6 +189,7 @@ class NotificationTemplatesSeeder extends Seeder
                     'channel' => $template['channel'],
                 ],
                 [
+                    'uuid' => Str::uuid(),
                     'subject' => [
                         'ar' => $template['ar_subject'],
                         'en' => $template['en_subject'],

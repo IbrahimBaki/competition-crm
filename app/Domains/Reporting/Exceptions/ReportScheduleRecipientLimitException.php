@@ -22,7 +22,12 @@ class ReportScheduleRecipientLimitException extends \DomainException implements 
         return new self($count, $maxRecipients);
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::ReportScheduleRecipientLimitExceeded;
     }

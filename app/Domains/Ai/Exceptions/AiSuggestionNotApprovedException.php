@@ -13,7 +13,7 @@ class AiSuggestionNotApprovedException extends Exception implements HasApiErrorC
         return ErrorCode::AiSuggestionNotApproved;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }

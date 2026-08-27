@@ -13,7 +13,7 @@ class SmsOptedOutException extends Exception implements HasApiErrorCode
         return ErrorCode::SmsOptedOut;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }

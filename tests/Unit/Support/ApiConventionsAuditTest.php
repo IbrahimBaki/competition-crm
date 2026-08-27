@@ -24,7 +24,7 @@ class ApiConventionsAuditTest extends TestCase
     private function getControllerFiles(): array
     {
         $controllers = [];
-        $basePath = base_path('app/Domains');
+        $basePath = dirname(__DIR__, 3).'/app/Domains';
 
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($basePath)

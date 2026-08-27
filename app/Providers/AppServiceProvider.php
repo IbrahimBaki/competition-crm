@@ -7,6 +7,24 @@ use App\Domains\Ai\Services\Provider\AiProvider;
 use App\Domains\Ai\Services\Provider\NullAiProvider;
 use App\Domains\Ai\Services\Retention\AiSuggestionPurgeHandler;
 use App\Domains\Ai\Services\Retention\AiUsagePurgeHandler;
+use App\Domains\Automation\Services\Actions\Handlers\AddTagAction;
+use App\Domains\Automation\Services\Actions\Handlers\AssignAction;
+use App\Domains\Automation\Services\Actions\Handlers\ChangeStatusAction;
+use App\Domains\Automation\Services\Actions\Handlers\EscalateAction;
+use App\Domains\Automation\Services\Actions\Handlers\NotifyAction;
+use App\Domains\Automation\Services\Actions\Handlers\RaisePriorityAction;
+use App\Domains\Automation\Services\Actions\Handlers\ReassignAction;
+use App\Domains\Automation\Services\Actions\Handlers\TransferDepartmentAction;
+use App\Domains\Automation\Services\Actions\RuleActionRegistry;
+use App\Domains\Automation\Services\Conditions\ConditionEvaluator;
+use App\Domains\Automation\Services\Conditions\TicketFactProvider;
+use App\Domains\Automation\Services\Routing\AutomationBackedTransferEvaluator;
+use App\Domains\Automation\Services\Routing\Strategies\LeastBusyStrategy;
+use App\Domains\Automation\Services\Routing\Strategies\ManualStrategy;
+use App\Domains\Automation\Services\Routing\Strategies\RoundRobinStrategy;
+use App\Domains\Automation\Services\Routing\Strategies\SkillBasedStrategy;
+use App\Domains\Automation\Services\RuleEngine;
+use App\Domains\Automation\Services\TicketAutomationBridge;
 use App\Domains\Channels\Chat\Services\Retention\ChatSessionPurgeHandler;
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
 use App\Domains\Channels\Messaging\Jobs\SendProviderMessageJob;
@@ -101,13 +119,13 @@ use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Policies\TicketCategoryPolicy;
 use App\Domains\Ticketing\Policies\TicketMessagePolicy;
 use App\Domains\Ticketing\Policies\TicketPolicy;
+use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
 use App\Domains\Ticketing\Services\Merge\Relations\LinkMergeRelation;
 use App\Domains\Ticketing\Services\Merge\Relations\MessageMergeRelation;
 use App\Domains\Ticketing\Services\Merge\Relations\TagMergeRelation;
 use App\Domains\Ticketing\Services\Merge\TicketMergeRelationRegistry;
 use App\Domains\Ticketing\Services\Retention\TicketMessagePurgeHandler;
 use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
-use App\Domains\Ticketing\Services\Sla\NullSlaClockHooks;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Domains\Workspace\Services\Retention\AgentTaskPurgeHandler;
 use App\Models\User;
@@ -202,7 +220,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SlaEvaluator::class);
         $this->app->singleton(SlaClockHooksBridge::class);
 
-        $this->app->bind(SlaClockHooks::class, NullSlaClockHooks::class);
+        $this->app->bind(SlaClockHooks::class, SlaClockHooksBridge::class);
 
         $this->app->bind(TicketAutomationHooks::class, TicketAutomationBridge::class);
 

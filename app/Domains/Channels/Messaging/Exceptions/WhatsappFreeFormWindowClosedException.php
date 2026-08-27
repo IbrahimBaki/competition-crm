@@ -20,7 +20,7 @@ class WhatsappFreeFormWindowClosedException extends Exception implements HasApiE
         return ErrorCode::WhatsappFreeFormWindowClosed;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [
             'window_expired_at' => $this->windowExpiresAt->toIso8601String(),

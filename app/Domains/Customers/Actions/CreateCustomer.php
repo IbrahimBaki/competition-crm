@@ -20,12 +20,9 @@ class CreateCustomer
     {
         return \DB::transaction(function () use ($data, $actor) {
             $customer = Customer::create([
-                'id' => Str::uuid(),
                 'name' => $data['name'],
-                'name_normalised' => $this->normaliser->normaliseName($data['name']),
                 'company_account_id' => $data['company_account_id'] ?? null,
                 'preferred_locale' => $data['preferred_locale'] ?? 'en',
-                'status' => 'active',
             ]);
 
             $customer->events()->create([

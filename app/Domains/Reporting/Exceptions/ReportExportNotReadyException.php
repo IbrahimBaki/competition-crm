@@ -14,7 +14,12 @@ class ReportExportNotReadyException extends \DomainException implements HasApiEr
         parent::__construct($message ?: 'Export is not yet ready for download');
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::ReportExportNotReady;
     }

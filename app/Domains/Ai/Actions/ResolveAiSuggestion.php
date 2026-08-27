@@ -32,11 +32,12 @@ class ResolveAiSuggestion
             'resolved_at' => now(),
         ]);
 
-        $this->auditLogger->log(
-            action: "ai_suggestion_{$decision}",
-            subject: $suggestion,
-            actor: $actor,
-            metadata: ['feature' => $suggestion->feature->value],
+        $this->auditLogger->record(
+            $actor,
+            "ai_suggestion_{$decision}",
+            $suggestion,
+            ['state' => AiSuggestionState::Pending->value],
+            ['state' => $newState->value]
         );
     }
 }

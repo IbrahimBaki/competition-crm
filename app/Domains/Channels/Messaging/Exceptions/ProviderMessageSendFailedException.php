@@ -20,7 +20,7 @@ class ProviderMessageSendFailedException extends Exception implements HasApiErro
         return ErrorCode::ProviderMessageSendFailed;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [
             'reason' => $this->reason,

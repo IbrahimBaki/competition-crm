@@ -8,26 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('web_forms', function (Blueprint $table) {
-            $table->dropForeign(['department_id']);
-            $table->dropColumn('department_id');
-        });
-
-        Schema::table('web_forms', function (Blueprint $table) {
-            $table->uuid('department_id')->after('description');
-            $table->foreign('department_id')->references('id')->on('departments');
-        });
+        // No-op: superseded by direct fix in the original create-migrations (eaf0613).
     }
 
     public function down(): void
     {
-        Schema::table('web_forms', function (Blueprint $table) {
-            $table->dropForeign(['department_id']);
-            $table->dropColumn('department_id');
-        });
-
-        Schema::table('web_forms', function (Blueprint $table) {
-            $table->foreignId('department_id')->constrained('departments');
-        });
+        // No-op.
     }
 };

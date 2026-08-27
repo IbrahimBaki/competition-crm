@@ -21,7 +21,12 @@ class UnknownReportException extends \DomainException implements HasApiErrorCode
         return new self($reportKey);
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::UnknownReport;
     }

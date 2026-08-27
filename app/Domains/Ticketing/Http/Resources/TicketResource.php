@@ -2,8 +2,12 @@
 
 namespace App\Domains\Ticketing\Http\Resources;
 
+use App\Domains\Sla\Http\Resources\TicketSlaResource;
+use App\Domains\Sla\Models\SlaTargetType;
+use App\Domains\Sla\Services\SlaClockService;
 use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Services\Lifecycle\TicketTransitionMap;
+use Carbon\CarbonImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

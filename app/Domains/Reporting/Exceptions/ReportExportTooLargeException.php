@@ -22,7 +22,12 @@ class ReportExportTooLargeException extends \DomainException implements HasApiEr
         return new self($rowCount, $maxRows);
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::ReportExportTooLarge;
     }

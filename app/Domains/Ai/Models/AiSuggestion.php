@@ -6,6 +6,7 @@ use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class AiSuggestion extends Model
 {
@@ -32,6 +33,17 @@ class AiSuggestion extends Model
     ];
 
     protected $hidden = ['id'];
+
+    /**
+     * Boot the model with UUID generation.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->uuid ??= Str::uuid();
+        });
+    }
 
     public function ticket(): BelongsTo
     {

@@ -13,7 +13,7 @@ class ProviderTemplateNotApprovedException extends Exception implements HasApiEr
         return ErrorCode::ProviderTemplateNotApproved;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }

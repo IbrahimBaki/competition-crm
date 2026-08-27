@@ -8,11 +8,15 @@ use App\Domains\Integrations\Http\Requests\StoreApiTokenRequest;
 use App\Domains\Integrations\Http\Resources\ApiTokenResource;
 use App\Domains\Integrations\Http\Resources\IssuedApiTokenResource;
 use App\Domains\Integrations\Models\ApiToken;
+use App\Http\Controllers\Controller;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
-final class ApiTokenController
+final class ApiTokenController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private readonly IssueApiToken $issueApiToken,
         private readonly RevokeApiToken $revokeApiToken,

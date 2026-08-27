@@ -21,7 +21,12 @@ class UnsupportedExportFormatException extends \DomainException implements HasAp
         return new self($format);
     }
 
-    public function getErrorCode(): ErrorCode
+    public function errorCode(): ErrorCode
+    
+    public function errorMeta(): array
+    {
+        return [];
+    }
     {
         return ErrorCode::UnsupportedExportFormat;
     }

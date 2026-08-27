@@ -19,7 +19,7 @@ class ProviderTemplateVariableMissingException extends Exception implements HasA
         return ErrorCode::ProviderTemplateVariableMissing;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [
             'variable_name' => $this->variableName,

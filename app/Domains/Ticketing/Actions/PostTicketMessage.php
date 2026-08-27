@@ -2,6 +2,9 @@
 
 namespace App\Domains\Ticketing\Actions;
 
+use App\Domains\Ai\Exceptions\AiSuggestionNotApprovedException;
+use App\Domains\Ai\Models\AiSuggestion;
+use App\Domains\Ai\Models\AiSuggestionState;
 use App\Domains\Channels\Messaging\Exceptions\WhatsappFreeFormWindowClosedException;
 use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
 use App\Domains\Ticketing\Exceptions\TicketConversationReadOnlyException;
@@ -18,6 +21,7 @@ use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Exceptions\AttachmentInfectedException;
 use App\Support\Attachments\Exceptions\AttachmentPendingScanException;
 use App\Support\Attachments\ScanState;
+use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
 
@@ -61,7 +65,7 @@ class PostTicketMessage
             }
         }
 
-        return DB::transaction(function () use ($ticket, $actor, $channel, $body, $isInternal, $bodyFormat, $attachmentUuids, $templateKey, $templateVariables) {
+        return DB::transaction(function () use ($ticket, $actor, $channel, $body, $isInternal, $bodyFormat, $attachmentUuids, $templateKey, $templateVariables, $aiSuggestionId, $suggestion) {
             if ($isInternal) {
                 $channel = MessageChannel::Internal;
                 $deliveryState = null;

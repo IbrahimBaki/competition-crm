@@ -13,7 +13,7 @@ class WhatsappOptInRequiredException extends Exception implements HasApiErrorCod
         return ErrorCode::WhatsappOptInRequired;
     }
 
-    public function getPayload(): array
+    public function errorMeta(): array
     {
         return [];
     }
