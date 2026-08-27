@@ -175,6 +175,15 @@ final class PermissionKey
 
     public const CHANNELS_EMAIL_REPLAY_ACTION = 'channels.email.replay.action';
 
+    // ---- channels (module: channels) - web forms --------------------------
+    public const CHANNELS_WEB_FORM_VIEW = 'channels.web_form.view';
+
+    public const CHANNELS_WEB_FORM_CREATE = 'channels.web_form.create';
+
+    public const CHANNELS_WEB_FORM_UPDATE = 'channels.web_form.update';
+
+    public const CHANNELS_WEB_FORM_DELETE = 'channels.web_form.delete';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

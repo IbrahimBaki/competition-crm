@@ -148,7 +148,21 @@ final class SubmitWebForm
                 'user_agent' => $userAgent,
             ]);
 
-            // TODO: Dispatch acknowledgement notification
+            // Send acknowledgement notification to customer
+            $customerEmail = $customer->contacts()
+                ->where('type', 'email')
+                ->first()?->value;
+
+            if ($customerEmail) {
+                Mail::send('notifications.web-form-acknowledgement', [
+                    'ticket_reference' => $ticket->reference,
+                    'tracking_token' => $trackingToken,
+                    'form_title' => (string) $form->title,
+                ], function ($message) use ($customerEmail, $form) {
+                    $message->to($customerEmail)
+                        ->subject(__('emails.web_form.acknowledgement.subject', ['form' => $form->title]));
+                });
+            }
 
             return new WebFormSubmissionResult(
                 ticketReference: $ticket->reference,

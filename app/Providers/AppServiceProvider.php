@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
+use App\Domains\Channels\WebForm\Models\WebForm;
+use App\Domains\Channels\WebForm\Policies\WebFormPolicy;
+use App\Domains\Channels\WebForm\Services\Retention\WebFormSubmissionPurgeHandler;
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
@@ -214,6 +217,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(NotificationPurgeHandler::class));
             $registry->register($app->make(AgentTaskPurgeHandler::class));
             $registry->register($app->make(InboundEmailPurgeHandler::class));
+            $registry->register($app->make(WebFormSubmissionPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -260,6 +264,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(NotificationPreference::class, NotificationPreferencePolicy::class);
         Gate::policy(AgentTask::class, AgentTaskPolicy::class);
         Gate::policy(QuickReply::class, QuickReplyPolicy::class);
+        Gate::policy(WebForm::class, WebFormPolicy::class);
 
         $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
 

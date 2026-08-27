@@ -14,4 +14,5 @@ enum NotificationEventType: string
     case AgentTaskReminder = 'agent_task.reminder';
     case TicketMentioned = 'ticket.mentioned';
     case TicketWatchedUpdate = 'ticket.watched.update';
+    case WebFormSubmissionAcknowledged = 'web_form.submission.acknowledged';
 }

@@ -112,6 +112,10 @@ class PermissionsAndRolesSeeder extends Seeder
             // channels.*
             PermissionKey::CHANNELS_EMAIL_REPLAY_LIST,
             PermissionKey::CHANNELS_EMAIL_REPLAY_ACTION,
+            PermissionKey::CHANNELS_WEB_FORM_VIEW,
+            PermissionKey::CHANNELS_WEB_FORM_CREATE,
+            PermissionKey::CHANNELS_WEB_FORM_UPDATE,
+            PermissionKey::CHANNELS_WEB_FORM_DELETE,
         ];
 
         $role = Role::firstOrCreate(

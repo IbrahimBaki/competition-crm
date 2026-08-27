@@ -163,6 +163,14 @@ class NotificationTemplatesSeeder extends Seeder
                 'ar_body' => 'حدث تحديث على التذكرة {{ticket_reference}} التي تتابعها',
                 'en_body' => 'There is an update on ticket {{ticket_reference}} you are watching',
             ],
+            [
+                'code' => NotificationEventType::WebFormSubmissionAcknowledged->value,
+                'channel' => NotificationChannel::Mail->value,
+                'ar_subject' => 'شكراً على إرسال النموذج - {{form_title}}',
+                'en_subject' => 'Thank you for your submission - {{form_title}}',
+                'ar_body' => 'شكراً على إرسالك للنموذج. رقم تذكرتك هو {{ticket_reference}}. يمكنك متابعة حالة تذكرتك باستخدام رمز التتبع: {{tracking_token}}',
+                'en_body' => 'Thank you for your submission. Your ticket reference is {{ticket_reference}}. You can track the status of your ticket using this tracking code: {{tracking_token}}',
+            ],
         ];
 
         foreach ($templates as $template) {

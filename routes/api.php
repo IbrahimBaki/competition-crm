@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Channels\WebForm\Http\Controllers\WebFormController;
 use App\Domains\Customers\Http\Controllers\CustomerAttachmentController;
 use App\Domains\Customers\Http\Controllers\CustomerBlockController;
 use App\Domains\Customers\Http\Controllers\CustomerContactController;
@@ -196,6 +197,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
 
     Route::get('channels/email/inbound', [InboundEmailReplayController::class, 'index']);
     Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay'])->middleware('idempotency');
+
+    Route::apiResource('channels/web-forms', WebFormController::class);
 
     Route::get('quick-replies', [QuickReplyController::class, 'index']);
     Route::post('quick-replies', [QuickReplyController::class, 'store'])->middleware('idempotency');
