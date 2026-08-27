@@ -39,6 +39,8 @@ use App\Domains\Security\Http\Controllers\PermissionCatalogueController;
 use App\Domains\Security\Http\Controllers\RoleController;
 use App\Domains\Security\Http\Controllers\TwoFactorController;
 use App\Domains\Security\Http\Controllers\UserLifecycleController;
+use App\Domains\Sla\Http\Controllers\SlaPolicyController;
+use App\Domains\Sla\Http\Controllers\TicketSlaController;
 use App\Domains\Ticketing\Http\Controllers\TicketCategoryController;
 use App\Domains\Ticketing\Http\Controllers\TicketController;
 use App\Domains\Ticketing\Http\Controllers\TicketLifecycleController;
@@ -278,8 +280,17 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::post('knowledge/articles/{article}/versions/{version}/restore', [KnowledgeArticleVersionController::class, 'store'])->middleware('idempotency');
     Route::post('knowledge/articles/render', [KnowledgeArticleRenderController::class, 'store']);
 
+    // SLA management
+    Route::apiResource('sla/policies', SlaPolicyController::class);
+    Route::get('tickets/{ticket}/sla/{clock}', [TicketSlaController::class, 'show']);
+    Route::post('tickets/{ticket}/sla/{clock}/reset', [TicketSlaController::class, 'reset'])->middleware('idempotency');
+
+    // Automation rules management
+    Route::post('automation/rules', [AutomationRuleController::class, 'store'])->middleware('idempotency');
     Route::get('automation/rules', [AutomationRuleController::class, 'index']);
     Route::get('automation/rules/{rule}', [AutomationRuleController::class, 'show']);
+    Route::patch('automation/rules/{rule}', [AutomationRuleController::class, 'update'])->middleware('idempotency');
+    Route::delete('automation/rules/{rule}', [AutomationRuleController::class, 'destroy']);
     Route::get('automation/executions', [AutomationRuleExecutionController::class, 'index']);
     Route::post('tickets/{ticket}/escalate', [TicketEscalationController::class, 'store'])->middleware('idempotency');
 

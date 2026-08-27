@@ -5,6 +5,7 @@ namespace App\Domains\Workspace\Http\Controllers;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Workspace\Actions\ChangeAgentTaskState;
 use App\Domains\Workspace\Actions\CreateAgentTask;
+use App\Domains\Workspace\Actions\UpdateAgentTask;
 use App\Domains\Workspace\Http\Requests\StoreAgentTaskRequest;
 use App\Domains\Workspace\Http\Requests\UpdateAgentTaskRequest;
 use App\Domains\Workspace\Http\Resources\AgentTaskResource;
@@ -24,6 +25,7 @@ readonly class AgentTaskController
     public function __construct(
         private CreateAgentTask $createTask,
         private ChangeAgentTaskState $changeState,
+        private UpdateAgentTask $updateTask,
     ) {}
 
     public function index(CollectionQuery $collectionQuery): JsonResponse
@@ -112,9 +114,9 @@ readonly class AgentTaskController
     {
         $this->authorize('update', $task);
 
-        $task->update($request->validated());
+        $task = $this->updateTask->handle($task, $request->validated(), $request->user());
 
-        return ApiResponse::item(new AgentTaskResource($task->refresh()))
+        return ApiResponse::item(new AgentTaskResource($task))
             ->toResponse(request());
     }
 

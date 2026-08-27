@@ -7,6 +7,8 @@ use App\Domains\Ai\Services\Provider\AiProvider;
 use App\Domains\Ai\Services\Provider\NullAiProvider;
 use App\Domains\Ai\Services\Retention\AiSuggestionPurgeHandler;
 use App\Domains\Ai\Services\Retention\AiUsagePurgeHandler;
+use App\Domains\Automation\Models\AutomationRule;
+use App\Domains\Automation\Models\AutomationRulePolicy;
 use App\Domains\Automation\Services\Actions\Handlers\AddTagAction;
 use App\Domains\Automation\Services\Actions\Handlers\AssignAction;
 use App\Domains\Automation\Services\Actions\Handlers\ChangeStatusAction;
@@ -108,6 +110,8 @@ use App\Domains\Security\Permissions\PermissionKey;
 use App\Domains\Security\Policies\AuditLogPolicy;
 use App\Domains\Security\Policies\RolePolicy;
 use App\Domains\Security\Policies\UserPolicy;
+use App\Domains\Sla\Http\Policies\SlaPolicyPolicy;
+use App\Domains\Sla\Models\SlaPolicy;
 use App\Domains\Sla\Services\SlaClockHooksBridge;
 use App\Domains\Sla\Services\SlaClockService;
 use App\Domains\Sla\Services\SlaEvaluator;
@@ -370,6 +374,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(KnowledgeArticle::class, KnowledgeArticlePolicy::class);
         Gate::policy(KnowledgeCategory::class, KnowledgeCategoryPolicy::class);
         Gate::policy(ApiToken::class, ApiTokenPolicy::class);
+        Gate::policy(SlaPolicy::class, SlaPolicyPolicy::class);
+        Gate::policy(AutomationRule::class, AutomationRulePolicy::class);
 
         $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
 
