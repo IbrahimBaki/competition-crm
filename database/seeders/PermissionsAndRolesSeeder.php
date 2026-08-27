@@ -127,6 +127,10 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
             PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
             PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
+            // reports.*
+            PermissionKey::REPORTS_VIEW_BRANCH,
+            PermissionKey::REPORTS_EXPORT_ANY,
+            PermissionKey::REPORTS_SCHEDULE_MANAGE,
         ];
 
         $role = Role::firstOrCreate(
@@ -209,6 +213,8 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
             PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
             PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
+            // reports.*
+            PermissionKey::REPORTS_VIEW_DEPARTMENT,
         ];
 
         $role = Role::firstOrCreate(
@@ -272,6 +278,8 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::AI_ASSISTANCE_USE,
             PermissionKey::AI_SUGGESTIONS_RESOLVE,
             PermissionKey::AI_USAGE_VIEW,
+            // reports.*
+            PermissionKey::REPORTS_VIEW_OWN,
         ];
 
         $role = Role::firstOrCreate(

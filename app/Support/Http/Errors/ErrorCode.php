@@ -131,6 +131,14 @@ enum ErrorCode: string
     case AiSuggestionAlreadyResolved = 'ai.suggestion_already_resolved';
     case AiSuggestionNotApproved = 'ai.suggestion_not_approved';
 
+    case ReportRangeTooLarge = 'reports.range_too_large';
+    case ReportExportTooLarge = 'reports.export_too_large';
+    case ReportExportNotReady = 'reports.export_not_ready';
+    case ReportExportExpired = 'reports.export_expired';
+    case UnknownReport = 'reports.unknown_report';
+    case UnsupportedExportFormat = 'reports.unsupported_export_format';
+    case ReportScheduleRecipientLimitExceeded = 'reports.schedule_recipient_limit_exceeded';
+
     case PortalSessionInvalid = 'portal.session_invalid';
     case PortalAccountNotVerified = 'portal.account_not_verified';
     case PortalVerificationTokenInvalid = 'portal.verification_token_invalid';
@@ -194,7 +202,11 @@ enum ErrorCode: string
             self::KnowledgeCategoryDepthExceeded,
             self::AiSuggestionNotApproved,
             self::PortalVerificationTokenInvalid,
-            self::PortalFeedbackInvitationInvalid => 422,
+            self::PortalFeedbackInvitationInvalid,
+            self::ReportRangeTooLarge,
+            self::ReportExportTooLarge,
+            self::UnsupportedExportFormat,
+            self::ReportScheduleRecipientLimitExceeded => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -207,7 +219,11 @@ enum ErrorCode: string
             self::NotFound,
             self::WebFormNotFound,
             self::WebFormInactive,
-            self::ArticleVersionNotFound => 404,
+            self::ArticleVersionNotFound,
+            self::UnknownReport => 404,
+
+            self::ReportExportExpired => 410,
+            self::ReportExportNotReady => 202,
             self::RateLimited,
             self::AiBudgetExceeded => 429,
 

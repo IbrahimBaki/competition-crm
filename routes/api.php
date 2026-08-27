@@ -26,6 +26,7 @@ use App\Domains\Portal\Http\Controllers\PortalAuthController;
 use App\Domains\Portal\Http\Controllers\PortalTicketController;
 use App\Domains\Portal\Http\Controllers\PortalTicketMessageController;
 use App\Domains\Portal\Http\Controllers\TicketFeedbackController;
+use App\Domains\Reporting\Http\Controllers\ReportController;
 use App\Domains\Security\Http\Controllers\AuditLogController;
 use App\Domains\Security\Http\Controllers\AuthController;
 use App\Domains\Security\Http\Controllers\AuthMeController;
@@ -287,4 +288,7 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::get('notifications/preferences', [NotificationPreferenceController::class, 'index']);
     Route::put('notifications/preferences', [NotificationPreferenceController::class, 'update']);
     Route::get('notifications/deliveries/failed', [NotificationDeliveryController::class, 'index']);
+
+    Route::get('reports', [ReportController::class, 'index']);
+    Route::get('reports/{report}', [ReportController::class, 'show']);
 });

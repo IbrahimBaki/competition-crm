@@ -161,6 +161,15 @@ return [
         'feedback_already_submitted' => 'تم إرسال التقييم بالفعل لهذه التذكرة',
         'feedback_invitation_invalid' => 'دعوة التقييم غير صحيحة أو انتهت صلاحيتها أو تم استخدامها بالفعل',
     ],
+    'reports' => [
+        'range_too_large' => 'نطاق تاريخ التقرير يتجاوز الحد الأقصى البالغ :max يوم',
+        'export_too_large' => 'سيحتوي التقرير على :rows صف، متجاوزًا الحد الأقصى البالغ :max',
+        'export_not_ready' => 'التقرير قيد المعالجة. يرجى المحاولة بعد قليل.',
+        'export_expired' => 'انتهت صلاحية التقرير ولم يعد متاحًا للتنزيل',
+        'unknown_report' => 'التقرير ":key" غير موجود',
+        'unsupported_export_format' => 'صيغة التصدير ":format" غير مدعومة',
+        'schedule_recipient_limit_exceeded' => 'الجدول يحتوي على :count مستقبلًا، متجاوزًا الحد الأقصى البالغ :max',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'أنت مدعو للانضمام إلى Support CRM',

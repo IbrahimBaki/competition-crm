@@ -226,6 +226,19 @@ final class PermissionKey
 
     public const AI_SETTINGS_MANAGE = 'ai.settings.manage';
 
+    // ---- reporting (module: reports) - scope-aware ----------------------
+    public const REPORTS_VIEW_OWN = 'reports.view.own';
+
+    public const REPORTS_VIEW_DEPARTMENT = 'reports.view.department';
+
+    public const REPORTS_VIEW_BRANCH = 'reports.view.branch';
+
+    public const REPORTS_VIEW_ANY = 'reports.view.any';
+
+    public const REPORTS_EXPORT_ANY = 'reports.export.any';
+
+    public const REPORTS_SCHEDULE_MANAGE = 'reports.schedule.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

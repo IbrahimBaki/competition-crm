@@ -161,6 +161,15 @@ return [
         'feedback_already_submitted' => 'Feedback has already been submitted for this ticket',
         'feedback_invitation_invalid' => 'Feedback invitation is invalid, expired, or has already been used',
     ],
+    'reports' => [
+        'range_too_large' => 'Report date range exceeds maximum of :max days',
+        'export_too_large' => 'Report would contain :rows rows, exceeding maximum of :max',
+        'export_not_ready' => 'Export is still being processed. Check back in a moment.',
+        'export_expired' => 'Export has expired and is no longer available for download',
+        'unknown_report' => 'Report ":key" does not exist',
+        'unsupported_export_format' => 'Export format ":format" is not supported',
+        'schedule_recipient_limit_exceeded' => 'Schedule has :count recipients, exceeding limit of :max',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'You are invited to join Support CRM',

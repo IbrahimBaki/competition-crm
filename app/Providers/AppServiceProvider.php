@@ -72,6 +72,14 @@ use App\Domains\Organisation\Services\DepartmentUsageChecker;
 use App\Domains\Organisation\Services\NullDepartmentUsageChecker;
 use App\Domains\Organisation\Services\WorkingTimeService;
 use App\Domains\Portal\Services\Retention\PortalTokenPurgeHandler;
+use App\Domains\Reporting\Services\Definitions\AgentPerformanceReport;
+use App\Domains\Reporting\Services\Definitions\BacklogAgingReport;
+use App\Domains\Reporting\Services\Definitions\ManagementDashboardReport;
+use App\Domains\Reporting\Services\Definitions\ReportRegistry;
+use App\Domains\Reporting\Services\Definitions\SatisfactionReport;
+use App\Domains\Reporting\Services\Definitions\SlaPerformanceReport;
+use App\Domains\Reporting\Services\Definitions\TicketVolumeReport;
+use App\Domains\Reporting\Services\Scoping\ReportScopeResolver;
 use App\Domains\Security\Models\AuditLog;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
@@ -206,6 +214,29 @@ class AppServiceProvider extends ServiceProvider
             return $registry;
         });
 
+        $this->app->singleton(ReportRegistry::class, function ($app) {
+            $registry = new ReportRegistry;
+            $registry->register($app->make(TicketVolumeReport::class));
+            $registry->register($app->make(SlaPerformanceReport::class));
+            $registry->register($app->make(AgentPerformanceReport::class));
+            $registry->register($app->make(SatisfactionReport::class));
+            $registry->register($app->make(BacklogAgingReport::class));
+            $registry->register($app->make(ManagementDashboardReport::class));
+
+            return $registry;
+        });
+
+        $this->app->singleton(ReportScopeResolver::class);
+
+        $this->app->singleton(ReportExporterRegistry::class, function ($app) {
+            $registry = new ReportExporterRegistry;
+            $registry->register($app->make(CsvReportExporter::class));
+            $registry->register($app->make(XlsxReportExporter::class));
+            $registry->register($app->make(PdfReportExporter::class));
+
+            return $registry;
+        });
+
         $this->app->singleton('automation.strategies', function ($app) {
             return [
                 'manual' => $app->make(ManualStrategy::class),
@@ -251,6 +282,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(AiSuggestionPurgeHandler::class));
             $registry->register($app->make(AiUsagePurgeHandler::class));
             $registry->register(new PortalTokenPurgeHandler);
+            $registry->register($app->make(ReportExportPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
