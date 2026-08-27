@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'chatbot' => [
+        'participant_label' => 'Automated Assistant',
+        'handoff_message' => 'I\'m connecting you with a support agent who can better assist you.',
+    ],
     'attachments' => [
         'scan_pending' => 'File is being scanned and is not yet available',
         'scan_failed' => 'File failed the malware scan and was rejected',
@@ -141,6 +145,13 @@ return [
         'article_version_not_found' => 'Article version not found',
         'duplicate_article_feedback' => 'You have already submitted identical feedback for this article',
         'category_depth_exceeded' => 'Cannot create a category at depth greater than 3',
+    ],
+    'ai' => [
+        'provider_unavailable' => 'AI service is temporarily unavailable. Please try again later.',
+        'feature_disabled' => 'This AI feature is not currently available',
+        'budget_exceeded' => 'AI usage budget has been exceeded. No more requests can be processed at this time.',
+        'suggestion_already_resolved' => 'This suggestion has already been reviewed and cannot be changed',
+        'suggestion_not_approved' => 'AI-generated content must be approved before it can be sent to customers',
     ],
     'mail' => [
         'invitation' => [

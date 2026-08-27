@@ -266,6 +266,10 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::KNOWLEDGE_ARTICLES_VIEW,
             PermissionKey::KNOWLEDGE_ARTICLES_CREATE,
             PermissionKey::KNOWLEDGE_ARTICLES_UPDATE,
+            // ai.*
+            PermissionKey::AI_ASSISTANCE_USE,
+            PermissionKey::AI_SUGGESTIONS_RESOLVE,
+            PermissionKey::AI_USAGE_VIEW,
         ];
 
         $role = Role::firstOrCreate(

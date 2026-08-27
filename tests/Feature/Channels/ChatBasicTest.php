@@ -6,7 +6,6 @@ use App\Domains\Channels\Chat\Models\ChatSession;
 use App\Domains\Channels\Chat\Models\ChatSessionState;
 use App\Domains\Channels\Chat\Models\ChatVisitorIdentity;
 use App\Domains\Channels\Chat\Services\Transcript\PersistChatTranscript;
-use App\Domains\Channels\Chat\Services\Transcript\PersistChatTranscript;
 use App\Domains\Organisation\Models\Branch;
 use App\Domains\Organisation\Models\Department;
 use Illuminate\Foundation\Testing\RefreshDatabase;

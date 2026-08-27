@@ -45,9 +45,20 @@ class PostTicketMessage
         array $attachmentUuids = [],
         ?string $templateKey = null,
         array $templateVariables = [],
+        ?int $aiSuggestionId = null,
     ): TicketMessage {
         if ($ticket->isMerged() || $ticket->isSpam()) {
             throw new TicketConversationReadOnlyException('Conversation on this ticket is read-only');
+        }
+
+        // Validate AI suggestion if provided (criterion 1 enforcement)
+        $suggestion = null;
+        if ($aiSuggestionId !== null) {
+            $suggestion = AiSuggestion::query()->find($aiSuggestionId);
+
+            if ($suggestion === null || $suggestion->ticket_id !== $ticket->id || $suggestion->state !== AiSuggestionState::Accepted || $suggestion->resolved_by_user_id === null) {
+                throw new AiSuggestionNotApprovedException('AI-generated content must be explicitly approved before sending to customers');
+            }
         }
 
         return DB::transaction(function () use ($ticket, $actor, $channel, $body, $isInternal, $bodyFormat, $attachmentUuids, $templateKey, $templateVariables) {
@@ -71,7 +82,13 @@ class PostTicketMessage
                 'body_format' => $bodyFormat,
                 'delivery_state' => $deliveryState,
                 'queued_at' => $deliveryState === MessageDeliveryState::Queued ? now() : null,
+                'ai_suggestion_id' => $aiSuggestionId,
             ]);
+
+            // Transition suggestion to Sent after message is created
+            if ($suggestion !== null) {
+                $suggestion->update(['state' => AiSuggestionState::Sent]);
+            }
 
             if ($deliveryState === MessageDeliveryState::Queued) {
                 $message->deliveryEvents()->create([

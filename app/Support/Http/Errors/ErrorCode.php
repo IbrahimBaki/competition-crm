@@ -125,6 +125,12 @@ enum ErrorCode: string
     case DuplicateArticleFeedback = 'duplicate_article_feedback';
     case KnowledgeCategoryDepthExceeded = 'knowledge_category_depth_exceeded';
 
+    case AiProviderUnavailable = 'ai.provider_unavailable';
+    case AiFeatureDisabled = 'ai.feature_disabled';
+    case AiBudgetExceeded = 'ai.budget_exceeded';
+    case AiSuggestionAlreadyResolved = 'ai.suggestion_already_resolved';
+    case AiSuggestionNotApproved = 'ai.suggestion_not_approved';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -178,7 +184,8 @@ enum ErrorCode: string
             self::ProviderMessageSendFailed,
             self::IllegalArticleTransition,
             self::ArticleNotPublished,
-            self::KnowledgeCategoryDepthExceeded => 422,
+            self::KnowledgeCategoryDepthExceeded,
+            self::AiSuggestionNotApproved => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -190,7 +197,8 @@ enum ErrorCode: string
             self::WebFormNotFound,
             self::WebFormInactive,
             self::ArticleVersionNotFound => 404,
-            self::RateLimited => 429,
+            self::RateLimited,
+            self::AiBudgetExceeded => 429,
 
             self::AccountLocked,
             self::CannotDeactivateSelf,
@@ -224,10 +232,13 @@ enum ErrorCode: string
             self::AutomationEscalationTargetUnavailable,
             self::TicketAlreadyWatched,
             self::TicketNotWatched,
-            self::DuplicateArticleFeedback => 409,
+            self::DuplicateArticleFeedback,
+            self::AiFeatureDisabled,
+            self::AiSuggestionAlreadyResolved => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,
+            self::AiProviderUnavailable => 503,
             self::TwoFactorRequired => 202,
         };
     }

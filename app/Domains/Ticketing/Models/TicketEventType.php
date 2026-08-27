@@ -37,4 +37,6 @@ enum TicketEventType: string
     case Escalated = 'escalated';
     case AutoAssigned = 'auto_assigned';
     case AutoClosed = 'auto_closed';
+    case AiClassified = 'ai_classified';
+    case AiClassificationNeedsReview = 'ai_classification_needs_review';
 }

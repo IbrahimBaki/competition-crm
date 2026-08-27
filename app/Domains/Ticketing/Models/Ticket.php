@@ -48,6 +48,9 @@ class Ticket extends Model
         'assigned_at' => 'datetime',
         'assignment_locked_at' => 'datetime',
         'version' => 'integer',
+        'ai_classification_confidence' => 'float',
+        'ai_classified_at' => 'datetime',
+        'classification_source' => ClassificationSource::class,
     ];
 
     public function getRouteKeyName(): string

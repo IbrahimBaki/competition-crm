@@ -215,6 +215,15 @@ final class PermissionKey
 
     public const KNOWLEDGE_CATEGORIES_MANAGE = 'knowledge.categories.manage';
 
+    // ---- ai (module: ai) -----------------------------------------------
+    public const AI_ASSISTANCE_USE = 'ai.assistance.use';
+
+    public const AI_SUGGESTIONS_RESOLVE = 'ai.suggestions.resolve';
+
+    public const AI_USAGE_VIEW = 'ai.usage.view';
+
+    public const AI_SETTINGS_MANAGE = 'ai.settings.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

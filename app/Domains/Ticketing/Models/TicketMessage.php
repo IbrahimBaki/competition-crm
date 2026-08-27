@@ -36,6 +36,7 @@ class TicketMessage extends Model
         'external_message_id',
         'retry_count',
         'redacted_at',
+        'ai_suggestion_id',
     ];
 
     protected $casts = [

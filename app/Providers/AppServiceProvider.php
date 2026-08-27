@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Domains\Ai\Services\Provider\AiProvider;
+use App\Domains\Ai\Services\Provider\NullAiProvider;
+use App\Domains\Ai\Services\Retention\AiSuggestionPurgeHandler;
+use App\Domains\Ai\Services\Retention\AiUsagePurgeHandler;
 use App\Domains\Channels\Chat\Services\Retention\ChatSessionPurgeHandler;
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
 use App\Domains\Channels\Messaging\Jobs\SendProviderMessageJob;
@@ -149,6 +153,12 @@ class AppServiceProvider extends ServiceProvider
             $botDriver === 'null' ? NullBotProtectionGuard::class : NullBotProtectionGuard::class
         );
 
+        $aiProvider = config('ai.provider');
+        $this->app->bind(
+            AiProvider::class,
+            $aiProvider === 'null' ? NullAiProvider::class : NullAiProvider::class
+        );
+
         $this->app->singleton(WorkingTimeService::class);
         $this->app->singleton(RequestId::class);
         $this->app->singleton(LocalizationSettings::class);
@@ -237,6 +247,8 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(ProviderInboundPurgeHandler::class));
             $registry->register($app->make(ChatSessionPurgeHandler::class));
             $registry->register($app->make(ArticleFeedbackPurgeHandler::class));
+            $registry->register($app->make(AiSuggestionPurgeHandler::class));
+            $registry->register($app->make(AiUsagePurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
