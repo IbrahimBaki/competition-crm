@@ -15,8 +15,8 @@ class PortalTicketVisibilityTest extends TestCase
 
     public function test_customer_cannot_access_other_customer_ticket(): void
     {
-        $customer1 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 1', 'status' => 'active']);
-        $customer2 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 2', 'status' => 'active']);
+        $customer1 = Customer::forceCreate(['id' => 1, 'uuid' => Str::uuid(), 'name' => 'Customer 1', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
+        $customer2 = Customer::forceCreate(['id' => 2, 'uuid' => Str::uuid(), 'name' => 'Customer 2', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
 
         $account1 = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
@@ -38,12 +38,12 @@ class PortalTicketVisibilityTest extends TestCase
 
     public function test_ticket_listing_shows_only_own_tickets(): void
     {
-        $customer1 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 1', 'status' => 'active']);
-        $customer2 = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Customer 2', 'status' => 'active']);
+        $customer1 = Customer::forceCreate(['id' => 3, 'uuid' => Str::uuid(), 'name' => 'Customer 3', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
+        $customer2 = Customer::forceCreate(['id' => 4, 'uuid' => Str::uuid(), 'name' => 'Customer 4', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
 
         $account1 = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
-            'email' => 'user1@example.com',
+            'email' => 'user2@example.com',
             'password' => bcrypt('password'),
             'customer_id' => $customer1->id,
             'email_verified_at' => now(),

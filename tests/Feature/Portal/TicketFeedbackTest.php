@@ -15,7 +15,7 @@ class TicketFeedbackTest extends TestCase
 
     public function test_feedback_accepts_score_1_to_5(): void
     {
-        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
+        $customer = Customer::forceCreate(['id' => 5, 'uuid' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
             'email' => 'test@example.com',
@@ -45,10 +45,10 @@ class TicketFeedbackTest extends TestCase
 
     public function test_feedback_rejects_score_outside_1_to_5(): void
     {
-        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
+        $customer = Customer::forceCreate(['id' => 6, 'uuid' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
-            'email' => 'test@example.com',
+            'email' => 'test2@example.com',
             'password' => bcrypt('password'),
             'customer_id' => $customer->id,
             'email_verified_at' => now(),
@@ -68,10 +68,10 @@ class TicketFeedbackTest extends TestCase
 
     public function test_second_feedback_returns_409_conflict(): void
     {
-        $customer = Customer::forceCreate(['id' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active']);
+        $customer = Customer::forceCreate(['id' => 7, 'uuid' => Str::uuid(), 'name' => 'Test Customer', 'status' => 'active', 'created_at' => now(), 'updated_at' => now()]);
         $account = PortalAccount::create([
             'uuid' => (string) Str::uuid(),
-            'email' => 'test@example.com',
+            'email' => 'test3@example.com',
             'password' => bcrypt('password'),
             'customer_id' => $customer->id,
             'email_verified_at' => now(),
