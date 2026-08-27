@@ -153,6 +153,14 @@ return [
         'suggestion_already_resolved' => 'تم مراجعة هذا الاقتراح بالفعل ولا يمكن تغييره',
         'suggestion_not_approved' => 'يجب الموافقة على محتوى الذكاء الاصطناعي قبل إرساله إلى العملاء',
     ],
+    'portal' => [
+        'session_invalid' => 'جلسة بوابة العميل غير صحيحة أو انتهت صلاحيتها',
+        'account_not_verified' => 'يجب التحقق من بريد الحساب الإلكتروني قبل تسجيل الدخول',
+        'verification_token_invalid' => 'رمز التحقق غير صحيح أو انتهت صلاحيته أو تم استخدامه بالفعل',
+        'guest_grant_expired' => 'انتهت صلاحية رابط الوصول للضيف',
+        'feedback_already_submitted' => 'تم إرسال التقييم بالفعل لهذه التذكرة',
+        'feedback_invitation_invalid' => 'دعوة التقييم غير صحيحة أو انتهت صلاحيتها أو تم استخدامها بالفعل',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'أنت مدعو للانضمام إلى Support CRM',

@@ -83,7 +83,35 @@ Route::prefix('v1')->group(function () {
     Route::get('health/ready', [HealthController::class, 'ready']);
 });
 
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+Route::prefix('v1/portal')->middleware(['throttle:portal'])->group(function () {
+    Route::post('auth/register', [PortalAuthController::class, 'register'])
+        ->middleware(['public.protect', 'bot.protect', 'throttle:portal-auth']);
+    Route::post('auth/verify', [PortalAuthController::class, 'verify'])
+        ->middleware(['public.protect', 'throttle:portal-auth']);
+    Route::post('auth/login', [PortalAuthController::class, 'login'])
+        ->middleware(['public.protect', 'bot.protect', 'throttle:portal-auth']);
+
+    Route::get('guest/tickets/{token}', [GuestTicketTrackingController::class, 'show'])
+        ->middleware(['public.protect']);
+    Route::post('guest/feedback/{token}', [TicketFeedbackController::class, 'storeByInvitation'])
+        ->middleware(['public.protect', 'idempotency']);
+
+    Route::middleware(['auth:portal', 'portal.auth'])->group(function () {
+        Route::post('auth/logout', [PortalAuthController::class, 'logout']);
+        Route::get('me', [PortalAccountController::class, 'show']);
+        Route::get('tickets', [PortalTicketController::class, 'index']);
+        Route::post('tickets', [PortalTicketController::class, 'store'])->middleware('idempotency');
+        Route::get('tickets/{ticket}', [PortalTicketController::class, 'show']);
+        Route::get('tickets/{ticket}/messages', [PortalTicketMessageController::class, 'index']);
+        Route::post('tickets/{ticket}/messages', [PortalTicketMessageController::class, 'store'])
+            ->middleware('idempotency');
+        Route::post('tickets/{ticket}/feedback', [TicketFeedbackController::class, 'store'])
+            ->middleware('idempotency');
+        Route::get('attachments/{attachment}', [PortalAttachmentController::class, 'show']);
+    });
+});
+
+Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthMeController::class, 'show']);
     Route::get('/permissions/catalogue', [PermissionCatalogueController::class, 'show']);

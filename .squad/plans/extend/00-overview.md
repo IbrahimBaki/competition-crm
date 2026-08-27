@@ -9,6 +9,7 @@ Entry point for the **extend** feature. Stories execute in order by their `NN` p
 | _add rows as stories are planned_ |
 | 25 | `25-story-472.md` | BE-25 - Knowledge Base: Authoring Workflow, Versioning, Visibility Levels and Bilingual Search | 472 | — |
 | 26 | `26-story-473.md` | BE-26 - AI Assistance and Customer Chatbot with Mandatory Human Approval and Safe Provider Failure | 473 | — |
+| 27 | `27-story-474.md` | BE-27 - Customer Portal APIs: Authentication, Guest Tracking, Visibility Allowlist and Feedback | 474 | — |
 
 ## Dependency notes
 

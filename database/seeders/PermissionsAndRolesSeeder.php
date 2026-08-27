@@ -72,6 +72,7 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::TICKETS_SPLIT,
             PermissionKey::TICKETS_LINK,
             PermissionKey::TICKETS_STATUSES_MANAGE,
+            PermissionKey::TICKETS_FEEDBACK_VIEW,
             // ticket messages.*
             PermissionKey::TICKET_MESSAGE_VIEW,
             PermissionKey::TICKET_MESSAGE_SEND,
@@ -165,6 +166,7 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::TICKETS_MERGE,
             PermissionKey::TICKETS_SPLIT,
             PermissionKey::TICKETS_LINK,
+            PermissionKey::TICKETS_FEEDBACK_VIEW,
             // ticket messages.*
             PermissionKey::TICKET_MESSAGE_VIEW,
             PermissionKey::TICKET_MESSAGE_SEND,

@@ -131,6 +131,13 @@ enum ErrorCode: string
     case AiSuggestionAlreadyResolved = 'ai.suggestion_already_resolved';
     case AiSuggestionNotApproved = 'ai.suggestion_not_approved';
 
+    case PortalSessionInvalid = 'portal.session_invalid';
+    case PortalAccountNotVerified = 'portal.account_not_verified';
+    case PortalVerificationTokenInvalid = 'portal.verification_token_invalid';
+    case PortalGuestGrantExpired = 'portal.guest_grant_expired';
+    case PortalFeedbackAlreadySubmitted = 'portal.feedback_already_submitted';
+    case PortalFeedbackInvitationInvalid = 'portal.feedback_invitation_invalid';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -185,20 +192,26 @@ enum ErrorCode: string
             self::IllegalArticleTransition,
             self::ArticleNotPublished,
             self::KnowledgeCategoryDepthExceeded,
-            self::AiSuggestionNotApproved => 422,
+            self::AiSuggestionNotApproved,
+            self::PortalVerificationTokenInvalid,
+            self::PortalFeedbackInvitationInvalid => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
             self::TicketIsReadOnly,
-            self::SlaBreachImmutable => 403,
+            self::SlaBreachImmutable,
+            self::PortalSessionInvalid => 403,
             self::Unauthenticated,
-            self::AccountDeactivated => 401,
+            self::AccountDeactivated,
+            self::PortalAccountNotVerified => 401,
             self::NotFound,
             self::WebFormNotFound,
             self::WebFormInactive,
             self::ArticleVersionNotFound => 404,
             self::RateLimited,
             self::AiBudgetExceeded => 429,
+
+            self::PortalGuestGrantExpired => 410,
 
             self::AccountLocked,
             self::CannotDeactivateSelf,
@@ -234,7 +247,8 @@ enum ErrorCode: string
             self::TicketNotWatched,
             self::DuplicateArticleFeedback,
             self::AiFeatureDisabled,
-            self::AiSuggestionAlreadyResolved => 409,
+            self::AiSuggestionAlreadyResolved,
+            self::PortalFeedbackAlreadySubmitted => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

@@ -153,6 +153,14 @@ return [
         'suggestion_already_resolved' => 'This suggestion has already been reviewed and cannot be changed',
         'suggestion_not_approved' => 'AI-generated content must be approved before it can be sent to customers',
     ],
+    'portal' => [
+        'session_invalid' => 'Portal session is invalid or has expired',
+        'account_not_verified' => 'Account email must be verified before logging in',
+        'verification_token_invalid' => 'Verification token is invalid, expired, or has already been used',
+        'guest_grant_expired' => 'Guest access link has expired',
+        'feedback_already_submitted' => 'Feedback has already been submitted for this ticket',
+        'feedback_invitation_invalid' => 'Feedback invitation is invalid, expired, or has already been used',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'You are invited to join Support CRM',

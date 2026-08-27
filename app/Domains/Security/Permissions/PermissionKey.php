@@ -93,6 +93,8 @@ final class PermissionKey
 
     public const TICKETS_STATUSES_MANAGE = 'tickets.statuses.manage';
 
+    public const TICKETS_FEEDBACK_VIEW = 'tickets.feedback.view';
+
     // ---- attachments (module: attachments) ------------------------------
     public const ATTACHMENTS_UPLOAD = 'attachments.upload';
 

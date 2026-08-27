@@ -71,6 +71,7 @@ use App\Domains\Organisation\Services\DefaultBranchUsageChecker;
 use App\Domains\Organisation\Services\DepartmentUsageChecker;
 use App\Domains\Organisation\Services\NullDepartmentUsageChecker;
 use App\Domains\Organisation\Services\WorkingTimeService;
+use App\Domains\Portal\Services\Retention\PortalTokenPurgeHandler;
 use App\Domains\Security\Models\AuditLog;
 use App\Domains\Security\Models\Role;
 use App\Domains\Security\Permissions\PermissionKey;
@@ -249,6 +250,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(ArticleFeedbackPurgeHandler::class));
             $registry->register($app->make(AiSuggestionPurgeHandler::class));
             $registry->register($app->make(AiUsagePurgeHandler::class));
+            $registry->register(new PortalTokenPurgeHandler);
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -379,6 +381,14 @@ class AppServiceProvider extends ServiceProvider
                 Limit::perMinute($maxPerMinute)->by($key),
                 Limit::perHour($maxPerHour)->by($key),
             ];
+        });
+
+        RateLimiter::for('portal', function ($request) {
+            return Limit::perMinute(120)->by($request->user()?->getAuthIdentifier() ?? $request->ip());
+        });
+
+        RateLimiter::for('portal-auth', function ($request) {
+            return Limit::perMinute(5)->by($request->ip());
         });
 
         Queue::createPayloadUsing(function () {

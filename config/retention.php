@@ -12,6 +12,7 @@ return [
         'chat_sessions' => ['days' => env('CHANNELS_CHAT_TRANSCRIPT_RETENTION_DAYS', 90)],
         'ai_suggestions' => ['days' => env('RETENTION_AI_SUGGESTIONS_DAYS', 90)],
         'ai_usage_records' => ['days' => env('RETENTION_AI_USAGE_DAYS', 180)],
+        'portal_tokens' => ['days' => env('RETENTION_PORTAL_TOKENS_DAYS', 30)],
     ],
 
     'audit_minimum_days' => env('RETENTION_AUDIT_MINIMUM_DAYS', 365),

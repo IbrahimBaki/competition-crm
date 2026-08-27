@@ -30,6 +30,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'bot.protect' => ProtectPublicEndpoint::class,
             'public.protect' => ProtectPublicEndpoint::class,
+            'portal.auth' => EnsurePortalAccount::class,
+            'portal.deny' => DenyPortalToken::class,
         ]);
 
         $middleware->appendToGroup('api', AuthenticateSession::class);
