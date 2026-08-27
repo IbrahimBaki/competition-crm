@@ -30,6 +30,17 @@ use App\Domains\Customers\Services\TextNormaliser;
 use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
 use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
 use App\Domains\Customers\Services\Timeline\TimelineRegistry;
+use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Domains\Knowledge\Models\KnowledgeCategory;
+use App\Domains\Knowledge\Policies\KnowledgeArticlePolicy;
+use App\Domains\Knowledge\Policies\KnowledgeCategoryPolicy;
+use App\Domains\Knowledge\Services\ArticleReplyRenderer;
+use App\Domains\Knowledge\Services\KnowledgeCategoryTree;
+use App\Domains\Knowledge\Services\Lifecycle\ArticleTransitionMap;
+use App\Domains\Knowledge\Services\Retention\ArticleFeedbackPurgeHandler;
+use App\Domains\Knowledge\Services\Search\ArticleSearchIndexer;
+use App\Domains\Knowledge\Services\Visibility\ArticleAudienceResolver;
+use App\Domains\Knowledge\Services\Visibility\ArticleQueryScope;
 use App\Domains\Notifications\Enums\NotificationChannel;
 use App\Domains\Notifications\Events\NotifiableEvent;
 use App\Domains\Notifications\Listeners\DispatchNotificationsListener;
@@ -225,6 +236,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(WebFormSubmissionPurgeHandler::class));
             $registry->register($app->make(ProviderInboundPurgeHandler::class));
             $registry->register($app->make(ChatSessionPurgeHandler::class));
+            $registry->register($app->make(ArticleFeedbackPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -245,6 +257,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(NotificationDispatcher::class);
 
         $this->app->singleton(QuickReplyRenderer::class);
+        $this->app->singleton(ArticleReplyRenderer::class);
+        $this->app->singleton(ArticleTransitionMap::class);
+        $this->app->singleton(ArticleQueryScope::class);
+        $this->app->singleton(ArticleAudienceResolver::class);
+        $this->app->singleton(ArticleSearchIndexer::class);
+        $this->app->singleton(KnowledgeCategoryTree::class);
     }
 
     /**
@@ -273,6 +291,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(QuickReply::class, QuickReplyPolicy::class);
         Gate::policy(WebForm::class, WebFormPolicy::class);
         Gate::policy(ProviderMessageTemplate::class, ProviderMessageTemplatePolicy::class);
+        Gate::policy(KnowledgeArticle::class, KnowledgeArticlePolicy::class);
+        Gate::policy(KnowledgeCategory::class, KnowledgeCategoryPolicy::class);
 
         $this->app->bind(InboundMailTransport::class, WebhookInboundMailTransport::class);
 

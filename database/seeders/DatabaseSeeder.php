@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             $this->call(BranchCalendarsSeeder::class);
             $this->call(SlaPolicySeeder::class);
             $this->call(TicketCatalogueSeeder::class);
+            $this->call(KnowledgeCatalogueSeeder::class);
             $this->call(NotificationTemplatesSeeder::class);
             $this->call(ProviderMessageTemplatesSeeder::class);
             $this->call(SeedAdminUserSeeder::class);

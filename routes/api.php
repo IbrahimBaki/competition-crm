@@ -70,6 +70,12 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
 
     Route::post('channels/chat/sessions', [PublicChatSessionController::class, 'store'])
         ->middleware(['public.protect', 'throttle:chat', 'idempotency']);
+
+    Route::get('public/knowledge/categories', [PublicKnowledgeArticleController::class, 'categories']);
+    Route::get('public/knowledge/articles', [PublicKnowledgeArticleController::class, 'index']);
+    Route::get('public/knowledge/articles/search', [PublicKnowledgeArticleController::class, 'search']);
+    Route::get('public/knowledge/articles/{article}', [PublicKnowledgeArticleController::class, 'show']);
+    Route::post('public/knowledge/articles/{article}/feedback', [KnowledgeArticleFeedbackController::class, 'store']);
 });
 
 Route::prefix('v1')->group(function () {
@@ -220,6 +226,20 @@ Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
     Route::patch('quick-replies/{reply}', [QuickReplyController::class, 'update'])->middleware('idempotency');
     Route::delete('quick-replies/{reply}', [QuickReplyController::class, 'destroy']);
     Route::post('quick-replies/render', [QuickReplyRenderController::class, 'store']);
+
+    Route::get('knowledge/categories', [KnowledgeCategoryController::class, 'index']);
+    Route::post('knowledge/categories', [KnowledgeCategoryController::class, 'store'])->middleware('idempotency');
+    Route::patch('knowledge/categories/{category}', [KnowledgeCategoryController::class, 'update'])->middleware('idempotency');
+
+    Route::get('knowledge/articles', [KnowledgeArticleController::class, 'index']);
+    Route::post('knowledge/articles', [KnowledgeArticleController::class, 'store'])->middleware('idempotency');
+    Route::get('knowledge/articles/search', [KnowledgeArticleSearchController::class, 'index']);
+    Route::get('knowledge/articles/{article}', [KnowledgeArticleController::class, 'show']);
+    Route::patch('knowledge/articles/{article}', [KnowledgeArticleController::class, 'update'])->middleware('idempotency');
+    Route::post('knowledge/articles/{article}/state', [KnowledgeArticleStateController::class, 'store'])->middleware('idempotency');
+    Route::get('knowledge/articles/{article}/versions', [KnowledgeArticleVersionController::class, 'index']);
+    Route::post('knowledge/articles/{article}/versions/{version}/restore', [KnowledgeArticleVersionController::class, 'store'])->middleware('idempotency');
+    Route::post('knowledge/articles/render', [KnowledgeArticleRenderController::class, 'store']);
 
     Route::get('automation/rules', [AutomationRuleController::class, 'index']);
     Route::get('automation/rules/{rule}', [AutomationRuleController::class, 'show']);

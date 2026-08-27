@@ -118,6 +118,14 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::CHANNELS_WEB_FORM_DELETE,
             PermissionKey::CHANNELS_MESSAGING_TEMPLATES_VIEW,
             PermissionKey::CHANNELS_MESSAGING_TEMPLATES_MANAGE,
+            // knowledge.*
+            PermissionKey::KNOWLEDGE_ARTICLES_VIEW,
+            PermissionKey::KNOWLEDGE_ARTICLES_CREATE,
+            PermissionKey::KNOWLEDGE_ARTICLES_UPDATE,
+            PermissionKey::KNOWLEDGE_ARTICLES_PUBLISH,
+            PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
+            PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
+            PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
         ];
 
         $role = Role::firstOrCreate(
@@ -191,6 +199,14 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED,
             PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
             PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
+            // knowledge.*
+            PermissionKey::KNOWLEDGE_ARTICLES_VIEW,
+            PermissionKey::KNOWLEDGE_ARTICLES_CREATE,
+            PermissionKey::KNOWLEDGE_ARTICLES_UPDATE,
+            PermissionKey::KNOWLEDGE_ARTICLES_PUBLISH,
+            PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
+            PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
+            PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
         ];
 
         $role = Role::firstOrCreate(
@@ -246,6 +262,10 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::WORKSPACE_TASKS_VIEW_OWN,
             PermissionKey::WORKSPACE_TICKET_WATCHERS_VIEW,
             PermissionKey::WORKSPACE_TICKET_MESSAGE_MENTION,
+            // knowledge.*
+            PermissionKey::KNOWLEDGE_ARTICLES_VIEW,
+            PermissionKey::KNOWLEDGE_ARTICLES_CREATE,
+            PermissionKey::KNOWLEDGE_ARTICLES_UPDATE,
         ];
 
         $role = Role::firstOrCreate(

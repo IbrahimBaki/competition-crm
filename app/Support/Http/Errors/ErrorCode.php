@@ -119,6 +119,12 @@ enum ErrorCode: string
     case ChatTransferTargetUnavailable = 'chat.transfer_target_unavailable';
     case ChatUnavailable = 'chat.unavailable';
 
+    case IllegalArticleTransition = 'illegal_article_transition';
+    case ArticleNotPublished = 'article_not_published';
+    case ArticleVersionNotFound = 'article_version_not_found';
+    case DuplicateArticleFeedback = 'duplicate_article_feedback';
+    case KnowledgeCategoryDepthExceeded = 'knowledge_category_depth_exceeded';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -169,7 +175,10 @@ enum ErrorCode: string
             self::SmsOptedOut,
             self::ProviderTemplateNotApproved,
             self::ProviderTemplateVariableMissing,
-            self::ProviderMessageSendFailed => 422,
+            self::ProviderMessageSendFailed,
+            self::IllegalArticleTransition,
+            self::ArticleNotPublished,
+            self::KnowledgeCategoryDepthExceeded => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -179,7 +188,8 @@ enum ErrorCode: string
             self::AccountDeactivated => 401,
             self::NotFound,
             self::WebFormNotFound,
-            self::WebFormInactive => 404,
+            self::WebFormInactive,
+            self::ArticleVersionNotFound => 404,
             self::RateLimited => 429,
 
             self::AccountLocked,
@@ -213,7 +223,8 @@ enum ErrorCode: string
             self::AutomationExecutionImmutable,
             self::AutomationEscalationTargetUnavailable,
             self::TicketAlreadyWatched,
-            self::TicketNotWatched => 409,
+            self::TicketNotWatched,
+            self::DuplicateArticleFeedback => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

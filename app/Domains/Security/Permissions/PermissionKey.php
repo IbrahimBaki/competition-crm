@@ -200,6 +200,21 @@ final class PermissionKey
 
     public const CHANNELS_CHAT_MANAGE = 'channels.chat.manage';
 
+    // ---- knowledge (module: knowledge) ----------------------------------
+    public const KNOWLEDGE_ARTICLES_VIEW = 'knowledge.articles.view';
+
+    public const KNOWLEDGE_ARTICLES_CREATE = 'knowledge.articles.create';
+
+    public const KNOWLEDGE_ARTICLES_UPDATE = 'knowledge.articles.update';
+
+    public const KNOWLEDGE_ARTICLES_PUBLISH = 'knowledge.articles.publish';
+
+    public const KNOWLEDGE_ARTICLES_ARCHIVE = 'knowledge.articles.archive';
+
+    public const KNOWLEDGE_ARTICLES_VERSIONS_RESTORE = 'knowledge.articles.versions.restore';
+
+    public const KNOWLEDGE_CATEGORIES_MANAGE = 'knowledge.categories.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);
