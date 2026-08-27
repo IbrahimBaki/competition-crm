@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #EEF1F2; -webkit-font-smoothing: antialiased; font-family: "Helvetica Neue", Helvetica, "IBM Plex Sans Arabic", Arial, sans-serif; }
+  a { color: #177B72; text-decoration: none; }
+  a:hover { color: #10605A; text-decoration: underline; }
+  input, textarea, button, select { font-family: inherit; }
+</style>
+</helmet>
+
+<div style="padding: 44px 40px 96px; display: flex; flex-direction: column; align-items: center; gap: 52px;">
+
+  <!-- ======================= COVER ======================= -->
+  <div style="width: 100%; max-width: 1180px; display: flex; flex-direction: column; gap: 22px;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap;">
+      <div style="max-width: 620px;">
+        <div style="font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 12px;">Support CRM · Module 12 · Surface: Portal</div>
+        <h1 style="margin: 0 0 12px; font-size: 40px; line-height: 1.08; letter-spacing: -0.022em; color: #14181C; font-weight: 700;">Customer Portal — shell &amp; core components</h1>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #3C444C; text-wrap: pretty;">The foundation every portal screen inherits: app shell, form primitives, badge system, attachment states, toasts and error surfaces. Auth is <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; background: #E8F3F1; color: #10605A; padding: 1px 5px; border-radius: 4px;">portalToken</span> — separate identity from staff. Customers see only their own tickets and only public messages.</p>
+      </div>
+      <div style="display: flex; gap: 28px; padding: 16px 20px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px;">
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Accent</div>
+          <div style="display: flex; gap: 5px;">
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #177B72;"></div>
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #E8F3F1; border: 1px solid #D3E7E4;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Neutrals</div>
+          <div style="display: flex; gap: 5px;">
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #14181C;"></div>
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #6B7480;"></div>
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #E3E7EA;"></div>
+            <div style="width: 26px; height: 26px; border-radius: 4px; background: #FFFFFF; border: 1px solid #E3E7EA;"></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Type</div>
+          <div style="font-size: 13px; color: #14181C; line-height: 1.35;">Helvetica Neue<br /><span style="color: #6B7480;">IBM Plex Sans Arabic</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 1. SHELL ANATOMY ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">01 — App shell</div>
+      <div style="font-size: 13px; color: #6B7480;">Minimal top nav. No sidebar, no global search, no notification bell.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(20,24,28,0.05);">
+      <!-- top nav -->
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 62px; padding: 0 24px; border-bottom: 1px solid #E3E7EA; background: #FFFFFF;">
+        <a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+          <div style="width: 26px; height: 26px; border-radius: 6px; background: #177B72;"></div>
+          <span style="font-size: 15px; font-weight: 700; color: #14181C; letter-spacing: -0.01em;">Support Center</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button style="display: flex; align-items: center; gap: 6px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; padding: 6px 10px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">
+            <span>EN</span>
+            <span style="color: #B9C0C6;">/</span>
+            <span style="color: #6B7480;">ع</span>
+          </button>
+          <button style="display: flex; align-items: center; gap: 9px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; padding: 5px 10px 5px 6px; cursor: pointer;" style-hover="border-color: #B9C0C6;">
+            <span style="width: 26px; height: 26px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SA</span>
+            <span style="font-size: 13px; font-weight: 600; color: #14181C;">Sara Almasri</span>
+            <span style="font-size: 11px; color: #6B7480;">▾</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- open account menu + content preview -->
+      <div style="position: relative; background: #F7F9F9; min-height: 262px; padding: 26px 24px;">
+        <div style="max-width: 500px;">
+          <h2 style="margin: 0 0 6px; font-size: 22px; letter-spacing: -0.015em; color: #14181C;">My tickets</h2>
+          <p style="margin: 0; font-size: 14px; color: #6B7480;">Main content area. Single column, max-width 1100px, centered. No breadcrumbs — depth never exceeds two levels.</p>
+        </div>
+
+        <div style="position: absolute; top: 8px; right: 24px; width: 232px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; box-shadow: 0 8px 24px rgba(20,24,28,0.12); padding: 6px; display: flex; flex-direction: column; gap: 2px;">
+          <div style="padding: 8px 10px 10px; border-bottom: 1px solid #EEF1F2; margin-bottom: 4px;">
+            <div style="font-size: 13px; font-weight: 600; color: #14181C;">Sara Almasri</div>
+            <div style="font-size: 12px; color: #6B7480; margin-top: 2px;">sara.almasri@example.com</div>
+          </div>
+          <a href="#" style="padding: 8px 10px; border-radius: 5px; font-size: 13px; color: #3C444C; text-decoration: none;" style-hover="background: #F2F5F5; color: #14181C; text-decoration: none;">Profile &amp; contact info</a>
+          <a href="#" style="padding: 8px 10px; border-radius: 5px; font-size: 13px; color: #3C444C; text-decoration: none;" style-hover="background: #F2F5F5; color: #14181C; text-decoration: none;">Notification preferences</a>
+          <a href="#" style="padding: 8px 10px; border-radius: 5px; font-size: 13px; color: #3C444C; text-decoration: none;" style-hover="background: #F2F5F5; color: #14181C; text-decoration: none;">Change password</a>
+          <div style="height: 1px; background: #EEF1F2; margin: 4px 0;"></div>
+          <a href="#" style="padding: 8px 10px; border-radius: 5px; font-size: 13px; color: #C0392F; text-decoration: none;" style-hover="background: #FBEBE9; color: #A22C24; text-decoration: none;">Log out</a>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;">
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Locale switch</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Writes <span style="font-family: 'IBM Plex Mono', monospace;">locale</span> on the portal profile and sets <span style="font-family: 'IBM Plex Mono', monospace;">Accept-Language</span> on every request. Flips <span style="font-family: 'IBM Plex Mono', monospace;">dir</span> on &lt;html&gt;.</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">No PermissionGate here</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Portal access is implicit for any authenticated customer. Ownership is enforced server-side — non-owner reads return 404, never 403.</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Session expiry</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Any <span style="font-family: 'IBM Plex Mono', monospace;">UNAUTHORIZED</span> response clears <span style="font-family: 'IBM Plex Mono', monospace;">portalToken</span> and redirects to <span style="font-family: 'IBM Plex Mono', monospace;">/portal/login</span> with a returnTo param.</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ======================= 2. AUTH ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">02 — Pre-auth</div>
+      <div style="font-size: 13px; color: #6B7480;">Login · Register · Verify. Centered card on canvas, 400px, no nav chrome.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+      <!-- LOGIN -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700;">Log in</div>
+        <div style="background: #F7F9F9; border: 1px solid #E3E7EA; border-radius: 10px; padding: 30px 26px; display: flex; flex-direction: column; gap: 18px;">
+          <div style="display: flex; align-items: center; gap: 9px;">
+            <div style="width: 24px; height: 24px; border-radius: 6px; background: #177B72;"></div>
+            <span style="font-size: 14px; font-weight: 700; color: #14181C;">Support Center</span>
+          </div>
+          <div>
+            <h3 style="margin: 0 0 5px; font-size: 19px; color: #14181C; letter-spacing: -0.012em;">Welcome back</h3>
+            <p style="margin: 0; font-size: 13px; color: #6B7480;">Sign in to follow your requests.</p>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 13px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Email</label>
+              <input type="email" value="sara.almasri@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+            <div>
+              <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px;">
+                <label style="font-size: 13px; font-weight: 600; color: #3C444C;">Password</label>
+                <a href="#" style="font-size: 12px;">Forgot?</a>
+              </div>
+              <input type="password" value="············" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+          </div>
+          <button style="width: 100%; padding: 11px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Log in</button>
+          <div style="font-size: 13px; color: #6B7480; text-align: center;">New here? <a href="#">Create an account</a></div>
+        </div>
+        <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 6px;">Failures return one generic message — never reveal whether the account exists. Lockout after 5 failures in 15 min surfaces the rate-limit banner (see gallery).</div>
+        </sc-if>
+      </div>
+
+      <!-- REGISTER -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700;">Register — with field errors</div>
+        <div style="background: #F7F9F9; border: 1px solid #E3E7EA; border-radius: 10px; padding: 30px 26px; display: flex; flex-direction: column; gap: 16px;">
+          <div>
+            <h3 style="margin: 0 0 5px; font-size: 19px; color: #14181C; letter-spacing: -0.012em;">Create your account</h3>
+            <p style="margin: 0; font-size: 13px; color: #6B7480;">You'll verify your email in the next step.</p>
+          </div>
+
+          <div style="display: flex; gap: 10px; padding: 11px 13px; background: #FBEBE9; border: 1px solid #F1CFCA; border-radius: 6px;">
+            <div style="width: 16px; height: 16px; border-radius: 50%; background: #C0392F; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">!</div>
+            <div>
+              <div style="font-size: 13px; font-weight: 600; color: #8E241D;">The given data was invalid.</div>
+              <div style="font-size: 12px; color: #A22C24; margin-top: 3px; line-height: 1.45;">Email must be unique · Password must be at least 8 characters</div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Full name</label>
+              <input type="text" value="Sara Almasri" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Email</label>
+              <input type="email" value="sara.almasri@example.com" style="width: 100%; padding: 10px 12px; border: 1px solid #C0392F; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="outline: none; box-shadow: 0 0 0 3px rgba(192,57,47,0.13);" />
+              <div style="font-size: 12px; color: #C0392F; margin-top: 5px;">Email must be unique</div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Password</label>
+              <input type="password" value="·····" style="width: 100%; padding: 10px 12px; border: 1px solid #C0392F; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="outline: none; box-shadow: 0 0 0 3px rgba(192,57,47,0.13);" />
+              <div style="font-size: 12px; color: #C0392F; margin-top: 5px;">Password must be at least 8 characters</div>
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Preferred language</label>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                <button style="padding: 9px 12px; background: #E8F3F1; border: 1px solid #177B72; border-radius: 6px; font-size: 13px; font-weight: 600; color: #10605A; cursor: pointer;">English</button>
+                <button style="padding: 9px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #B9C0C6;">العربية</button>
+              </div>
+            </div>
+          </div>
+          <button style="width: 100%; padding: 11px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Create account</button>
+        </div>
+        <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 6px;">422 <span style="font-family: 'IBM Plex Mono', monospace;">VALIDATION_FAILED</span> renders twice: a summary banner and per-field callouts keyed off <span style="font-family: 'IBM Plex Mono', monospace;">field_errors</span>.</div>
+        </sc-if>
+      </div>
+
+      <!-- VERIFY -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700;">Verify email</div>
+        <div style="background: #F7F9F9; border: 1px solid #E3E7EA; border-radius: 10px; padding: 30px 26px; display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <h3 style="margin: 0 0 5px; font-size: 19px; color: #14181C; letter-spacing: -0.012em;">Check your inbox</h3>
+            <p style="margin: 0; font-size: 13px; line-height: 1.55; color: #6B7480;">We sent a 6-digit code to <span style="color: #14181C; font-weight: 600;">sara.almasri@example.com</span>.</p>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 8px;">Verification code</label>
+            <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px;">
+              <div style="height: 50px; border: 1px solid #D6DBDF; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #14181C; font-family: 'IBM Plex Mono', monospace;">4</div>
+              <div style="height: 50px; border: 1px solid #D6DBDF; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #14181C; font-family: 'IBM Plex Mono', monospace;">9</div>
+              <div style="height: 50px; border: 1px solid #D6DBDF; border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #14181C; font-family: 'IBM Plex Mono', monospace;">2</div>
+              <div style="height: 50px; border: 1px solid #177B72; box-shadow: 0 0 0 3px rgba(23,123,114,0.13); border-radius: 6px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 600; color: #14181C; font-family: 'IBM Plex Mono', monospace;">1</div>
+              <div style="height: 50px; border: 1px solid #D6DBDF; border-radius: 6px; background: #FFFFFF;"></div>
+              <div style="height: 50px; border: 1px solid #D6DBDF; border-radius: 6px; background: #FFFFFF;"></div>
+            </div>
+          </div>
+          <button style="width: 100%; padding: 11px 16px; background: #A9CCC8; color: #FFFFFF; border: 1px solid #A9CCC8; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: not-allowed;">Verify</button>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 4px; border-top: 1px solid #E3E7EA;">
+            <span style="font-size: 13px; color: #6B7480; padding-top: 14px;">Didn't get it?</span>
+            <button style="margin-top: 14px; padding: 7px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">Resend code</button>
+          </div>
+        </div>
+        <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480; padding: 10px 12px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 6px;">Submit stays disabled until all six digits are entered. Resend is idempotent — throttle client-side to one call per 30s.</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 3. MY TICKETS ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">03 — My tickets</div>
+      <div style="font-size: 13px; color: #6B7480;"><span style="font-family: 'IBM Plex Mono', monospace;">GET /portal/tickets</span> — scoped to owner, paginated, sortable, filterable.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(20,24,28,0.05);">
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 62px; padding: 0 24px; border-bottom: 1px solid #E3E7EA;">
+        <a href="#" style="display: flex; align-items: center; gap: 10px; text-decoration: none;">
+          <div style="width: 26px; height: 26px; border-radius: 6px; background: #177B72;"></div>
+          <span style="font-size: 15px; font-weight: 700; color: #14181C;">Support Center</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SA</span>
+          <span style="font-size: 13px; font-weight: 600; color: #14181C;">Sara Almasri</span>
+          <span style="font-size: 11px; color: #6B7480;">▾</span>
+        </div>
+      </div>
+
+      <div style="padding: 28px 24px 24px; background: #F7F9F9;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 18px;">
+          <div>
+            <h2 style="margin: 0 0 4px; font-size: 24px; letter-spacing: -0.018em; color: #14181C;">My tickets</h2>
+            <p style="margin: 0; font-size: 13px; color: #6B7480;">6 requests · 2 awaiting your reply</p>
+          </div>
+          <button style="padding: 10px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">New request</button>
+        </div>
+
+        <!-- filter bar -->
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+          <div style="display: flex; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; overflow: hidden;">
+            <button style="padding: 8px 14px; background: #14181C; color: #FFFFFF; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">All</button>
+            <button style="padding: 8px 14px; background: #FFFFFF; color: #3C444C; border: none; border-left: 1px solid #E3E7EA; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #F2F5F5;">Open</button>
+            <button style="padding: 8px 14px; background: #FFFFFF; color: #3C444C; border: none; border-left: 1px solid #E3E7EA; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #F2F5F5;">Closed</button>
+          </div>
+          <button style="display: flex; align-items: center; gap: 7px; padding: 8px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #B9C0C6;">Any date <span style="color: #6B7480; font-size: 10px;">▾</span></button>
+          <div style="flex: 1; min-width: 180px; max-width: 300px; position: relative;">
+            <input type="text" placeholder="Search your tickets" style="width: 100%; padding: 8px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; padding: 6px 10px; background: #E8F3F1; border: 1px solid #D3E7E4; border-radius: 999px; font-size: 12px; font-weight: 600; color: #10605A;">
+            <span>Status: Open</span>
+            <span style="cursor: pointer; color: #17877C; font-size: 13px;">×</span>
+          </div>
+        </div>
+
+        <!-- table -->
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; overflow: hidden;">
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; padding: 11px 18px; background: #FAFBFB; border-bottom: 1px solid #E3E7EA;">
+            <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; cursor: pointer;">Ref</div>
+            <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; cursor: pointer;">Subject</div>
+            <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; cursor: pointer;">Status</div>
+            <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; cursor: pointer;">Created</div>
+            <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #14181C; cursor: pointer;">Last update <span style="color: #177B72;">↓</span></div>
+            <div></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2; cursor: pointer;" style-hover="background: #FAFBFB;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A;">TKT-042</div>
+            <div style="display: flex; align-items: center; gap: 9px; min-width: 0;">
+              <span style="font-size: 14px; font-weight: 600; color: #14181C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Cannot reset my password</span>
+              <span style="flex-shrink: 0; padding: 1px 7px; background: #E8F3F1; color: #10605A; border-radius: 999px; font-size: 11px; font-weight: 700;">2 new</span>
+            </div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>Open</span></div>
+            <div style="font-size: 13px; color: #6B7480;">2 days ago</div>
+            <div style="font-size: 13px; color: #3C444C;">2 hours ago</div>
+            <div style="text-align: right;"><a href="#" style="font-size: 13px; font-weight: 600;">View</a></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2; cursor: pointer;" style-hover="background: #FAFBFB;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A;">TKT-041</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Duplicate charge on invoice #8821</div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #FBF1E3; color: #8A5314; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #A8681B;"></span>Pending</span></div>
+            <div style="font-size: 13px; color: #6B7480;">5 days ago</div>
+            <div style="font-size: 13px; color: #3C444C;">1 day ago</div>
+            <div style="text-align: right;"><a href="#" style="font-size: 13px; font-weight: 600;">View</a></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2; cursor: pointer;" style-hover="background: #FAFBFB;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A;">TKT-039</div>
+            <div style="display: flex; align-items: center; gap: 9px; min-width: 0;">
+              <span style="font-size: 14px; font-weight: 600; color: #14181C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Request: add a second contact to my account</span>
+              <span style="flex-shrink: 0; padding: 1px 7px; background: #FBF1E3; color: #8A5314; border-radius: 999px; font-size: 11px; font-weight: 700;">Rate us</span>
+            </div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E9F2EC; color: #285C3D; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2F6B47;"></span>Resolved</span></div>
+            <div style="font-size: 13px; color: #6B7480;">1 week ago</div>
+            <div style="font-size: 13px; color: #3C444C;">6 days ago</div>
+            <div style="text-align: right;"><a href="#" style="font-size: 13px; font-weight: 600;">View</a></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2; cursor: pointer;" style-hover="background: #FAFBFB;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A;">TKT-036</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Mobile app crashes when uploading a photo</div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #EFF1F2; color: #55606B; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8C959D;"></span>Closed</span></div>
+            <div style="font-size: 13px; color: #6B7480;">3 weeks ago</div>
+            <div style="font-size: 13px; color: #3C444C;">2 weeks ago</div>
+            <div style="text-align: right;"><a href="#" style="font-size: 13px; font-weight: 600;">View</a></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 128px 76px; gap: 16px; align-items: center; padding: 14px 18px; cursor: pointer;" style-hover="background: #FAFBFB;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A;">TKT-031</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">How do I export my billing history?</div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #EFF1F2; color: #55606B; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8C959D;"></span>Closed</span></div>
+            <div style="font-size: 13px; color: #6B7480;">2 months ago</div>
+            <div style="font-size: 13px; color: #3C444C;">2 months ago</div>
+            <div style="text-align: right;"><a href="#" style="font-size: 13px; font-weight: 600;">View</a></div>
+          </div>
+        </div>
+
+        <!-- pagination -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px;">
+          <div style="font-size: 13px; color: #6B7480;">Showing <span style="color: #14181C; font-weight: 600;">1–5</span> of <span style="color: #14181C; font-weight: 600;">6</span></div>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <button style="padding: 7px 12px; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 6px; font-size: 13px; font-weight: 600; color: #B9C0C6; cursor: not-allowed;">Previous</button>
+            <button style="width: 32px; height: 32px; background: #14181C; border: 1px solid #14181C; border-radius: 6px; font-size: 13px; font-weight: 600; color: #FFFFFF; cursor: pointer;">1</button>
+            <button style="width: 32px; height: 32px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">2</button>
+            <button style="padding: 7px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- empty + loading -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Empty state</div>
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 48px 32px; text-align: center;">
+          <div style="width: 44px; height: 44px; border-radius: 10px; background: #F2F5F5; border: 1px solid #E3E7EA; margin: 0 auto 16px;"></div>
+          <h3 style="margin: 0 0 6px; font-size: 17px; color: #14181C;">No tickets yet</h3>
+          <p style="margin: 0 auto 20px; font-size: 13px; line-height: 1.55; color: #6B7480; max-width: 320px;">When you send us a request it'll appear here, with every reply in one thread.</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button style="padding: 9px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">New request</button>
+            <button style="padding: 9px 16px; background: #FFFFFF; color: #3C444C; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="border-color: #B9C0C6;">Browse help center</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Loading skeleton</div>
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; overflow: hidden;">
+          <div style="display: grid; grid-template-columns: 100px 1fr 110px 100px; gap: 16px; padding: 11px 18px; background: #FAFBFB; border-bottom: 1px solid #E3E7EA;">
+            <div style="height: 8px; border-radius: 4px; background: #E3E7EA;"></div>
+            <div style="height: 8px; border-radius: 4px; background: #E3E7EA;"></div>
+            <div style="height: 8px; border-radius: 4px; background: #E3E7EA;"></div>
+            <div style="height: 8px; border-radius: 4px; background: #E3E7EA;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 100px 1fr 110px 100px; gap: 16px; padding: 17px 18px; border-bottom: 1px solid #EEF1F2;">
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 70%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 80%;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 100px 1fr 110px 100px; gap: 16px; padding: 17px 18px; border-bottom: 1px solid #EEF1F2;">
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 84%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 60%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 74%;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 100px 1fr 110px 100px; gap: 16px; padding: 17px 18px; border-bottom: 1px solid #EEF1F2;">
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 64%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 70%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 62%;"></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 100px 1fr 110px 100px; gap: 16px; padding: 17px 18px;">
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 90%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 55%;"></div>
+            <div style="height: 10px; border-radius: 5px; background: #EEF1F2; width: 68%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 4. TICKET DETAIL ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">04 — Ticket detail</div>
+      <div style="font-size: 13px; color: #6B7480;">Thread is filtered to <span style="font-family: 'IBM Plex Mono', monospace;">visibility: public</span> — staff internal notes never reach this surface.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(20,24,28,0.05);">
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 62px; padding: 0 24px; border-bottom: 1px solid #E3E7EA;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 26px; height: 26px; border-radius: 6px; background: #177B72;"></div>
+          <span style="font-size: 15px; font-weight: 700; color: #14181C;">Support Center</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">SA</span>
+          <span style="font-size: 13px; font-weight: 600; color: #14181C;">Sara Almasri</span>
+          <span style="font-size: 11px; color: #6B7480;">▾</span>
+        </div>
+      </div>
+
+      <div style="padding: 22px 24px 26px; background: #F7F9F9;">
+        <a href="#" style="font-size: 13px; font-weight: 600; display: inline-block; margin-bottom: 14px;">← All tickets</a>
+
+        <!-- ticket header -->
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px 22px; margin-bottom: 16px;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;">
+            <div style="min-width: 0;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 7px;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; color: #10605A; background: #E8F3F1; padding: 2px 7px; border-radius: 4px;">TKT-042</span>
+                <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+              </div>
+              <h2 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.014em; color: #14181C; text-wrap: pretty;">Cannot reset my password</h2>
+              <div style="display: flex; align-items: center; gap: 16px; font-size: 13px; color: #6B7480; flex-wrap: wrap;">
+                <span>Opened 25 Aug 2026, 09:14</span>
+                <span style="width: 1px; height: 12px; background: #D6DBDF;"></span>
+                <span>Last update 2 hours ago</span>
+                <span style="width: 1px; height: 12px; background: #D6DBDF;"></span>
+                <span>4 messages</span>
+              </div>
+            </div>
+            <div style="text-align: right; flex-shrink: 0;">
+              <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; margin-bottom: 5px;">Handled by</div>
+              <div style="font-size: 14px; font-weight: 600; color: #14181C;">Support Team</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- thread -->
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+
+          <!-- customer -->
+          <div style="display: flex; gap: 12px;">
+            <span style="width: 32px; height: 32px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">SA</span>
+            <div style="flex: 1; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 15px 17px;">
+              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: #14181C;">You</span>
+                <span style="font-size: 12px; color: #6B7480;">25 Aug 2026, 09:14</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; line-height: 1.62; color: #3C444C; text-wrap: pretty;">The reset link in your email takes me to a page that says "token expired" every time, even seconds after I request it. I've tried Chrome and Safari on two devices. Screenshot attached.</p>
+              <div style="display: flex; gap: 10px; margin-top: 13px;">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 8px 11px; background: #FAFBFB; border: 1px solid #E3E7EA; border-radius: 6px;">
+                  <div style="width: 30px; height: 30px; border-radius: 4px; background: repeating-linear-gradient(135deg, #E3E7EA 0 5px, #EEF1F2 5px 10px);"></div>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 600; color: #14181C;">token-expired.png</div>
+                    <div style="display: flex; align-items: center; gap: 5px; margin-top: 2px;">
+                      <span style="width: 5px; height: 5px; border-radius: 50%; background: #2F6B47;"></span>
+                      <span style="font-size: 11px; color: #6B7480;">248 KB · Scanned</span>
+                    </div>
+                  </div>
+                  <a href="#" style="font-size: 12px; font-weight: 600; margin-left: 4px;">Download</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- staff -->
+          <div style="display: flex; gap: 12px;">
+            <span style="width: 32px; height: 32px; border-radius: 50%; background: #14181C; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">ST</span>
+            <div style="flex: 1; background: #FFFFFF; border: 1px solid #D3E7E4; border-left: 3px solid #177B72; border-radius: 8px; padding: 15px 17px;">
+              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: #14181C;">Support Team</span>
+                <span style="padding: 1px 7px; background: #E8F3F1; color: #10605A; border-radius: 999px; font-size: 11px; font-weight: 700;">Staff</span>
+                <span style="font-size: 12px; color: #6B7480;">25 Aug 2026, 11:02</span>
+              </div>
+              <p style="margin: 0 0 10px; font-size: 14px; line-height: 1.62; color: #3C444C; text-wrap: pretty;">Thanks for the screenshot, Sara — that's exactly what we needed. The expiry is being triggered by a caching proxy on our side, not by anything you did. Our engineers have a fix going out today.</p>
+              <p style="margin: 0; font-size: 14px; line-height: 1.62; color: #3C444C; text-wrap: pretty;">In the meantime, could you confirm whether you're clicking the link from the email app or copying it into the browser?</p>
+            </div>
+          </div>
+
+          <!-- customer reply -->
+          <div style="display: flex; gap: 12px;">
+            <span style="width: 32px; height: 32px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">SA</span>
+            <div style="flex: 1; background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 15px 17px;">
+              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: #14181C;">You</span>
+                <span style="font-size: 12px; color: #6B7480;">25 Aug 2026, 11:40</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; line-height: 1.62; color: #3C444C;">Clicking straight from the Mail app on iOS. Happy to test again once the fix is out.</p>
+              <div style="display: flex; gap: 10px; margin-top: 13px;">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 8px 11px; background: #FAFBFB; border: 1px solid #E3E7EA; border-radius: 6px;">
+                  <div style="width: 30px; height: 30px; border-radius: 4px; background: #F2F5F5; display: flex; align-items: center; justify-content: center;">
+                    <div style="width: 12px; height: 12px; border: 2px solid #D6DBDF; border-top-color: #6B7480; border-radius: 50%;"></div>
+                  </div>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 600; color: #14181C;">mail-headers.txt</div>
+                    <div style="font-size: 11px; color: #A8681B; margin-top: 2px;">Scanning for viruses…</div>
+                  </div>
+                  <span style="font-size: 12px; font-weight: 600; color: #B9C0C6; margin-left: 4px; cursor: not-allowed;">Download</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 8px 11px; background: #FBEBE9; border: 1px solid #F1CFCA; border-radius: 6px;">
+                  <div style="width: 30px; height: 30px; border-radius: 4px; background: #F5D9D5; display: flex; align-items: center; justify-content: center; color: #C0392F; font-size: 15px; font-weight: 700;">×</div>
+                  <div>
+                    <div style="font-size: 12px; font-weight: 600; color: #8E241D;">debug-tool.docx</div>
+                    <div style="font-size: 11px; color: #A22C24; margin-top: 2px;">Blocked — malware detected</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- staff latest -->
+          <div style="display: flex; gap: 12px;">
+            <span style="width: 32px; height: 32px; border-radius: 50%; background: #14181C; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">ST</span>
+            <div style="flex: 1; background: #FFFFFF; border: 1px solid #D3E7E4; border-left: 3px solid #177B72; border-radius: 8px; padding: 15px 17px;">
+              <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 8px;">
+                <span style="font-size: 13px; font-weight: 700; color: #14181C;">Support Team</span>
+                <span style="padding: 1px 7px; background: #E8F3F1; color: #10605A; border-radius: 999px; font-size: 11px; font-weight: 700;">Staff</span>
+                <span style="font-size: 12px; color: #6B7480;">2 hours ago</span>
+              </div>
+              <p style="margin: 0; font-size: 14px; line-height: 1.62; color: #3C444C; text-wrap: pretty;">The fix is live. Please request a new reset link and let us know if it works — we'll keep this ticket open until you confirm.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- composer -->
+        <div style="background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 8px; overflow: hidden;">
+          <div style="padding: 14px 16px 10px;">
+            <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 10px;">Reply to Support Team</div>
+            <textarea rows="4" style="width: 100%; border: none; resize: vertical; font-size: 14px; line-height: 1.6; color: #14181C; padding: 0;" style-focus="outline: none;">Just tested — the new link worked on the first try. Thank you for the quick turnaround!</textarea>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 11px 16px; background: #FAFBFB; border-top: 1px solid #E3E7EA;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <button style="display: flex; align-items: center; gap: 7px; padding: 7px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">Attach file</button>
+              <span style="font-size: 12px; color: #6B7480;">Max 5 files · 10 MB each · PDF, PNG, JPG, TXT, CSV, DOCX, XLSX</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="font-size: 12px; color: #6B7480; font-family: 'IBM Plex Mono', monospace;">94 / 5000</span>
+              <button style="padding: 9px 18px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Send reply</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;">
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Attachment lifecycle</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Three terminal states rendered above: clean (download enabled), pending (409 on fetch — poll until resolved), infected (422, download removed entirely).</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Idempotent send</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Composer mints a UUID <span style="font-family: 'IBM Plex Mono', monospace;">Idempotency-Key</span> on first keystroke, appends the message optimistically, reconciles on response.</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Plain text only</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">No rich-text toolbar — the API accepts plain text. Line breaks preserved; pasted HTML is stripped on paste, not on submit.</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ======================= 5. CLOSED + FEEDBACK ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">05 — Closed ticket &amp; feedback</div>
+      <div style="font-size: 13px; color: #6B7480;">Composer is replaced, not disabled-in-place, once the 14-day reopen window closes.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Closed — reply blocked</div>
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 22px;">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #55606B; background: #EFF1F2; padding: 2px 7px; border-radius: 4px;">TKT-036</span>
+            <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #EFF1F2; color: #55606B; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8C959D;"></span>Closed</span>
+          </div>
+          <div style="padding: 20px; background: #FAFBFB; border: 1px dashed #D6DBDF; border-radius: 6px; text-align: center;">
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; margin-bottom: 5px;">This ticket is closed</div>
+            <p style="margin: 0 auto 16px; font-size: 13px; line-height: 1.55; color: #6B7480; max-width: 330px;">Replies are no longer accepted. If the problem returns, open a new request and we'll link it to this history.</p>
+            <button style="padding: 9px 16px; background: #FFFFFF; color: #3C444C; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">Open a new request</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #6B7480; font-weight: 700; margin-bottom: 8px;">Feedback survey</div>
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 22px;">
+          <h3 style="margin: 0 0 6px; font-size: 17px; color: #14181C; letter-spacing: -0.012em;">How satisfied are you with our support?</h3>
+          <p style="margin: 0 0 18px; font-size: 13px; color: #6B7480;">Ticket TKT-039 · resolved 6 days ago</p>
+          <div style="display: flex; gap: 8px; margin-bottom: 18px;">
+            <button style="width: 46px; height: 46px; border-radius: 8px; background: #E8F3F1; border: 1px solid #177B72; color: #10605A; font-size: 20px; cursor: pointer;">★</button>
+            <button style="width: 46px; height: 46px; border-radius: 8px; background: #E8F3F1; border: 1px solid #177B72; color: #10605A; font-size: 20px; cursor: pointer;">★</button>
+            <button style="width: 46px; height: 46px; border-radius: 8px; background: #E8F3F1; border: 1px solid #177B72; color: #10605A; font-size: 20px; cursor: pointer;">★</button>
+            <button style="width: 46px; height: 46px; border-radius: 8px; background: #E8F3F1; border: 1px solid #177B72; color: #10605A; font-size: 20px; cursor: pointer;">★</button>
+            <button style="width: 46px; height: 46px; border-radius: 8px; background: #FFFFFF; border: 1px solid #D6DBDF; color: #C4CACF; font-size: 20px; cursor: pointer;" style-hover="border-color: #177B72; color: #A9CCC8;">★</button>
+            <div style="display: flex; align-items: center; margin-inline-start: 6px; font-size: 13px; font-weight: 600; color: #10605A;">4 of 5 — Satisfied</div>
+          </div>
+          <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Anything we could do better? <span style="color: #6B7480; font-weight: 400;">(optional)</span></label>
+          <textarea rows="3" placeholder="Your comments help us improve." style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; line-height: 1.55; color: #14181C; resize: vertical;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);"></textarea>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 14px;">
+            <span style="font-size: 12px; color: #6B7480; font-family: 'IBM Plex Mono', monospace;">0 / 1000</span>
+            <button style="padding: 10px 18px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Submit feedback</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 6. ACCOUNT SETTINGS ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">06 — Account settings</div>
+      <div style="font-size: 13px; color: #6B7480;">Profile · notifications · password · deletion. One column, sectioned, save per section.</div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; padding: 28px; display: flex; flex-direction: column; gap: 26px; box-shadow: 0 1px 3px rgba(20,24,28,0.05);">
+
+      <div>
+        <h2 style="margin: 0 0 4px; font-size: 22px; letter-spacing: -0.016em; color: #14181C;">Account settings</h2>
+        <p style="margin: 0; font-size: 13px; color: #6B7480;">Changes apply to notifications and to the language of every email we send you.</p>
+      </div>
+
+      <div style="height: 1px; background: #E3E7EA;"></div>
+
+      <!-- profile -->
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 40px;">
+        <div>
+          <div style="font-size: 14px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Profile</div>
+          <div style="font-size: 13px; line-height: 1.55; color: #6B7480;">Your email is the identifier for this account and can't be changed here.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 16px; max-width: 520px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Full name</label>
+              <input type="text" value="Sara Almasri" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Phone <span style="color: #6B7480; font-weight: 400;">(optional)</span></label>
+              <input type="text" value="+966 55 214 8890" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Email</label>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <input type="email" value="sara.almasri@example.com" readonly="readonly" style="flex: 1; padding: 10px 12px; border: 1px solid #E3E7EA; border-radius: 6px; font-size: 14px; color: #6B7480; background: #FAFBFB;" />
+              <a href="#" style="font-size: 13px; font-weight: 600; white-space: nowrap;">Contact support</a>
+            </div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Preferred language</label>
+            <div style="display: flex; gap: 8px;">
+              <button style="flex: 1; padding: 11px 14px; background: #E8F3F1; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; color: #10605A; cursor: pointer; text-align: start;">English <span style="font-weight: 400; color: #17877C; font-size: 12px;">— LTR</span></button>
+              <button style="flex: 1; padding: 11px 14px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; font-weight: 600; color: #3C444C; cursor: pointer; text-align: start; font-family: 'IBM Plex Sans Arabic', sans-serif;" style-hover="border-color: #B9C0C6;">العربية <span style="font-weight: 400; color: #6B7480; font-size: 12px;">— RTL</span></button>
+            </div>
+          </div>
+          <div>
+            <button style="padding: 9px 18px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Save profile</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E3E7EA;"></div>
+
+      <!-- notifications -->
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 40px;">
+        <div>
+          <div style="font-size: 14px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Email notifications</div>
+          <div style="font-size: 13px; line-height: 1.55; color: #6B7480;">Ticket updates can't be fully disabled — you'd miss replies on open requests.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; max-width: 520px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; border: 1px solid #E3E7EA; border-radius: 6px; background: #FAFBFB;">
+            <div style="width: 17px; height: 17px; border-radius: 4px; background: #177B72; border: 1px solid #177B72; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">✓</div>
+            <div>
+              <div style="font-size: 14px; font-weight: 600; color: #14181C;">Ticket updates</div>
+              <div style="font-size: 12px; color: #6B7480; margin-top: 2px;">When our team replies or your ticket status changes.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; border: 1px solid #E3E7EA; border-radius: 6px; margin-top: 8px;">
+            <div style="width: 17px; height: 17px; border-radius: 4px; background: #177B72; border: 1px solid #177B72; color: #FFFFFF; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">✓</div>
+            <div>
+              <div style="font-size: 14px; font-weight: 600; color: #14181C;">Feedback requests</div>
+              <div style="font-size: 12px; color: #6B7480; margin-top: 2px;">A single reminder once a ticket is resolved.</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 14px; border: 1px solid #E3E7EA; border-radius: 6px; margin-top: 8px;">
+            <div style="width: 17px; height: 17px; border-radius: 4px; background: #FFFFFF; border: 1px solid #D6DBDF; flex-shrink: 0; margin-top: 1px;"></div>
+            <div>
+              <div style="font-size: 14px; font-weight: 600; color: #14181C;">Product news</div>
+              <div style="font-size: 12px; color: #6B7480; margin-top: 2px;">Occasional updates. Unsubscribing here also honours email footer links.</div>
+            </div>
+          </div>
+          <div style="margin-top: 14px;">
+            <button style="padding: 9px 18px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Save preferences</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E3E7EA;"></div>
+
+      <!-- password -->
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 40px;">
+        <div>
+          <div style="font-size: 14px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Password</div>
+          <div style="font-size: 13px; line-height: 1.55; color: #6B7480;">Minimum 8 characters. Changing it signs you out of other devices.</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 14px; max-width: 520px;">
+          <div>
+            <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Current password</label>
+            <input type="password" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">New password</label>
+              <input type="password" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 13px; font-weight: 600; color: #3C444C; margin-bottom: 6px;">Confirm new password</label>
+              <input type="password" style="width: 100%; padding: 10px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; color: #14181C; background: #FFFFFF;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            </div>
+          </div>
+          <div>
+            <button style="padding: 9px 18px; background: #FFFFFF; color: #3C444C; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="border-color: #177B72; color: #10605A;">Change password</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="height: 1px; background: #E3E7EA;"></div>
+
+      <!-- deletion -->
+      <div style="display: grid; grid-template-columns: 240px 1fr; gap: 40px;">
+        <div>
+          <div style="font-size: 14px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Delete account</div>
+          <div style="font-size: 13px; line-height: 1.55; color: #6B7480;">Anonymises your profile. Ticket history is retained for compliance.</div>
+        </div>
+        <div style="max-width: 520px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 15px 16px; background: #FBEBE9; border: 1px solid #F1CFCA; border-radius: 6px;">
+            <div style="font-size: 13px; line-height: 1.55; color: #8E241D;">This can't be undone. You'll lose portal access to all past conversations.</div>
+            <button style="flex-shrink: 0; padding: 9px 16px; background: #FFFFFF; color: #C0392F; border: 1px solid #E0A9A2; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #C0392F; color: #FFFFFF; border-color: #C0392F;">Delete my account</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= 7. GUEST TRACKING ======================= -->
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">07 — Guest tracking</div>
+      <div style="font-size: 13px; color: #6B7480;">No auth, token-scoped, read-only. <span style="font-family: 'IBM Plex Mono', monospace;">GET /portal/guest/tickets/{token}</span></div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start;">
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(20,24,28,0.05);">
+        <div style="display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 22px; border-bottom: 1px solid #E3E7EA;">
+          <div style="width: 24px; height: 24px; border-radius: 6px; background: #177B72;"></div>
+          <span style="font-size: 14px; font-weight: 700; color: #14181C;">Support Center</span>
+          <span style="margin-inline-start: auto; font-size: 12px; color: #6B7480;">Tracking a request as a guest</span>
+        </div>
+        <div style="padding: 26px 22px; background: #F7F9F9;">
+          <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 24px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #10605A; background: #E8F3F1; padding: 2px 7px; border-radius: 4px;">TKT-047</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+            </div>
+            <h3 style="margin: 0 0 18px; font-size: 19px; letter-spacing: -0.012em; color: #14181C;">Delivery arrived damaged</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 0; border-top: 1px solid #EEF1F2; border-bottom: 1px solid #EEF1F2; margin-bottom: 18px;">
+              <div>
+                <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; margin-bottom: 4px;">Submitted</div>
+                <div style="font-size: 14px; color: #14181C;">2 days ago</div>
+              </div>
+              <div>
+                <div style="font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; color: #6B7480; margin-bottom: 4px;">Last update</div>
+                <div style="font-size: 14px; color: #14181C;">2 hours ago</div>
+              </div>
+            </div>
+            <p style="margin: 0 0 20px; font-size: 14px; line-height: 1.62; color: #3C444C; text-wrap: pretty;">Your request is being reviewed by our support team. We'll email you at the address you provided as soon as there's an update.</p>
+            <div style="padding: 15px 16px; background: #E8F3F1; border: 1px solid #D3E7E4; border-radius: 6px;">
+              <div style="font-size: 13px; font-weight: 700; color: #10605A; margin-bottom: 4px;">Want to reply?</div>
+              <div style="font-size: 13px; line-height: 1.55; color: #147067; margin-bottom: 12px;">Create an account with this email to reply in-thread and see your full history.</div>
+              <button style="padding: 9px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Create an account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+            <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 5px;">No thread, deliberately</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #6B7480;">The token grants status only — never message bodies or attachments. Anything richer requires an account, which is also the conversion path.</div>
+          </div>
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+            <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Token lifetime</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #6B7480;">Valid for the ticket's life plus 30 days after closure, so the guest feedback link keeps working. Expired or unknown tokens render the same neutral "not found" page — never "expired", which would confirm the token once existed.</div>
+          </div>
+          <div style="padding: 14px 16px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+            <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 5px;">Guest feedback</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #6B7480;">Same survey component as section 05, mounted at <span style="font-family: 'IBM Plex Mono', monospace;">/portal/guest/feedback/{token}</span> with the shell stripped to the card.</div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </div>
+
+  <!-- ======================= 8. RTL ======================= -->
+  <sc-if value="{{ showRtl }}" hint-placeholder-val="{{ true }}">
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">08 — Arabic / RTL</div>
+      <div style="font-size: 13px; color: #6B7480;">Same components under <span style="font-family: 'IBM Plex Mono', monospace;">dir="rtl"</span>. Every offset above uses logical properties, so this is a mirror, not a rebuild.</div>
+    </div>
+
+    <div dir="rtl" style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 3px rgba(20,24,28,0.05); font-family: 'IBM Plex Sans Arabic', 'Helvetica Neue', sans-serif;">
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 62px; padding: 0 24px; border-bottom: 1px solid #E3E7EA;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 26px; height: 26px; border-radius: 6px; background: #177B72;"></div>
+          <span style="font-size: 15px; font-weight: 700; color: #14181C;">مركز الدعم</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px;">
+          <span style="width: 28px; height: 28px; border-radius: 50%; background: #E8F3F1; color: #10605A; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;">س</span>
+          <span style="font-size: 13px; font-weight: 600; color: #14181C;">سارة المصري</span>
+          <span style="font-size: 11px; color: #6B7480;">▾</span>
+        </div>
+      </div>
+
+      <div style="padding: 26px 24px; background: #F7F9F9;">
+        <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 18px;">
+          <div>
+            <h2 style="margin: 0 0 4px; font-size: 24px; color: #14181C;">تذاكري</h2>
+            <p style="margin: 0; font-size: 13px; color: #6B7480;">٦ طلبات · طلبان بانتظار ردّك</p>
+          </div>
+          <button style="padding: 10px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">طلب جديد</button>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 14px;">
+          <div style="display: flex; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; overflow: hidden;">
+            <button style="padding: 8px 16px; background: #14181C; color: #FFFFFF; border: none; font-size: 13px; font-weight: 600; cursor: pointer;">الكل</button>
+            <button style="padding: 8px 16px; background: #FFFFFF; color: #3C444C; border: none; border-inline-start: 1px solid #E3E7EA; font-size: 13px; font-weight: 600; cursor: pointer;">مفتوحة</button>
+            <button style="padding: 8px 16px; background: #FFFFFF; color: #3C444C; border: none; border-inline-start: 1px solid #E3E7EA; font-size: 13px; font-weight: 600; cursor: pointer;">مغلقة</button>
+          </div>
+          <input type="text" placeholder="ابحث في تذاكرك" style="flex: 1; max-width: 280px; padding: 8px 12px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; color: #14181C; background: #FFFFFF; font-family: inherit;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+        </div>
+
+        <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; overflow: hidden;">
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 76px; gap: 16px; padding: 11px 18px; background: #FAFBFB; border-bottom: 1px solid #E3E7EA;">
+            <div style="font-size: 11px; font-weight: 700; color: #6B7480;">المرجع</div>
+            <div style="font-size: 11px; font-weight: 700; color: #6B7480;">الموضوع</div>
+            <div style="font-size: 11px; font-weight: 700; color: #6B7480;">الحالة</div>
+            <div style="font-size: 11px; font-weight: 700; color: #14181C;">آخر تحديث <span style="color: #177B72;">↓</span></div>
+            <div></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #10605A; direction: ltr; text-align: start;">TKT-042</div>
+            <div style="display: flex; align-items: center; gap: 9px;">
+              <span style="font-size: 14px; font-weight: 600; color: #14181C;">لا أستطيع إعادة تعيين كلمة المرور</span>
+              <span style="padding: 1px 7px; background: #E8F3F1; color: #10605A; border-radius: 999px; font-size: 11px; font-weight: 700;">٢ جديد</span>
+            </div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>مفتوحة</span></div>
+            <div style="font-size: 13px; color: #3C444C;">قبل ساعتين</div>
+            <div style="text-align: end;"><a href="#" style="font-size: 13px; font-weight: 600;">عرض</a></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 76px; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid #EEF1F2;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #10605A; direction: ltr; text-align: start;">TKT-041</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C;">رسم مكرر على الفاتورة ٨٨٢١</div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #FBF1E3; color: #8A5314; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #A8681B;"></span>قيد الانتظار</span></div>
+            <div style="font-size: 13px; color: #3C444C;">قبل يوم</div>
+            <div style="text-align: end;"><a href="#" style="font-size: 13px; font-weight: 600;">عرض</a></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 108px 1fr 128px 118px 76px; gap: 16px; align-items: center; padding: 14px 18px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #10605A; direction: ltr; text-align: start;">TKT-039</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C;">إضافة جهة اتصال ثانية إلى حسابي</div>
+            <div><span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E9F2EC; color: #285C3D; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2F6B47;"></span>تم الحل</span></div>
+            <div style="font-size: 13px; color: #3C444C;">قبل ٦ أيام</div>
+            <div style="text-align: end;"><a href="#" style="font-size: 13px; font-weight: 600;">عرض</a></div>
+          </div>
+        </div>
+
+        <!-- rtl composer -->
+        <div style="background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 8px; overflow: hidden; margin-top: 16px;">
+          <div style="padding: 14px 16px 10px;">
+            <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 10px;">الرد على فريق الدعم</div>
+            <textarea rows="2" style="width: 100%; border: none; resize: vertical; font-size: 14px; line-height: 1.7; color: #14181C; padding: 0; font-family: inherit;" style-focus="outline: none;">جرّبت الرابط الجديد وعمل من المحاولة الأولى، شكرًا على السرعة.</textarea>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 11px 16px; background: #FAFBFB; border-top: 1px solid #E3E7EA;">
+            <button style="padding: 7px 12px; background: #FFFFFF; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; color: #3C444C; cursor: pointer; font-family: inherit;">إرفاق ملف</button>
+            <button style="padding: 9px 18px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;" style-hover="background: #10605A; border-color: #10605A;">إرسال الرد</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <sc-if value="{{ showAnnotations }}" hint-placeholder-val="{{ true }}">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 14px;">
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Logical properties only</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">No hardcoded left/right anywhere: <span style="font-family: 'IBM Plex Mono', monospace;">margin-inline-start</span>, <span style="font-family: 'IBM Plex Mono', monospace;">border-inline-start</span>, <span style="font-family: 'IBM Plex Mono', monospace;">text-align: start/end</span>.</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">LTR islands</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">References, emails, URLs and monospace values keep <span style="font-family: 'IBM Plex Mono', monospace;">direction: ltr</span> inside RTL text so TKT-042 never renders as 042-TKT.</div>
+        </div>
+        <div style="padding: 12px 14px; background: #FFFFFF; border: 1px solid #E3E7EA; border-left: 3px solid #177B72; border-radius: 6px;">
+          <div style="font-size: 12px; font-weight: 700; color: #14181C; margin-bottom: 4px;">Bilingual data</div>
+          <div style="font-size: 12px; line-height: 1.5; color: #6B7480;">Status and category names arrive as <span style="font-family: 'IBM Plex Mono', monospace;">{ar, en}</span> from the API — the portal renders the negotiated locale and never composes its own.</div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+  </sc-if>
+
+  <!-- ======================= 9. GALLERY ======================= -->
+  <sc-if value="{{ showGallery }}" hint-placeholder-val="{{ true }}">
+  <div style="width: 100%; max-width: 1180px;">
+    <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px;">
+      <div style="font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #14181C; font-weight: 700;">09 — Core components</div>
+      <div style="font-size: 13px; color: #6B7480;">Defined once, reused across every portal screen and shared with the staff CRM where shape allows.</div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+      <!-- badges -->
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px;">
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">StatusBadge</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 16px;">Lifecycle-type driven. Dot carries the colour so the label survives greyscale printing.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #FBF1E3; color: #8A5314; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #A8681B;"></span>Pending</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E9F2EC; color: #285C3D; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #2F6B47;"></span>Resolved</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #EFF1F2; color: #55606B; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #8C959D;"></span>Closed</span>
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">Sizes</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 12px;">sm in tables, md in headers, lg only on the guest tracker.</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 11px; font-weight: 600;"><span style="width: 5px; height: 5px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 12px; font-weight: 600;"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; background: #E8F1F9; color: #1A5C97; border-radius: 999px; font-size: 14px; font-weight: 600;"><span style="width: 7px; height: 7px; border-radius: 50%; background: #1D6FB8;"></span>Open</span>
+        </div>
+      </div>
+
+      <!-- attachment -->
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px;">
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">AttachmentStatusBadge</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 16px;">The download affordance is present, disabled, or absent — never present-but-failing.</div>
+        <div style="display: flex; flex-direction: column; gap: 9px;">
+          <div style="display: flex; align-items: center; gap: 11px; padding: 9px 12px; background: #FAFBFB; border: 1px solid #E3E7EA; border-radius: 6px;">
+            <div style="width: 30px; height: 30px; border-radius: 4px; background: repeating-linear-gradient(135deg, #E3E7EA 0 5px, #EEF1F2 5px 10px);"></div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 600; color: #14181C;">receipt-aug.pdf</div>
+              <div style="font-size: 11px; color: #6B7480; margin-top: 2px;">1.2 MB · Scanned, safe</div>
+            </div>
+            <a href="#" style="font-size: 12px; font-weight: 600;">Download</a>
+          </div>
+          <div style="display: flex; align-items: center; gap: 11px; padding: 9px 12px; background: #FAFBFB; border: 1px solid #E3E7EA; border-radius: 6px;">
+            <div style="width: 30px; height: 30px; border-radius: 4px; background: #F2F5F5; display: flex; align-items: center; justify-content: center;">
+              <div style="width: 12px; height: 12px; border: 2px solid #D6DBDF; border-top-color: #6B7480; border-radius: 50%;"></div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 600; color: #14181C;">screenshot.png</div>
+              <div style="font-size: 11px; color: #A8681B; margin-top: 2px;">Scanning for viruses…</div>
+            </div>
+            <span style="font-size: 12px; font-weight: 600; color: #B9C0C6; cursor: not-allowed;">Download</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 11px; padding: 9px 12px; background: #FBEBE9; border: 1px solid #F1CFCA; border-radius: 6px;">
+            <div style="width: 30px; height: 30px; border-radius: 4px; background: #F5D9D5; display: flex; align-items: center; justify-content: center; color: #C0392F; font-size: 15px; font-weight: 700;">×</div>
+            <div style="flex: 1;">
+              <div style="font-size: 12px; font-weight: 600; color: #8E241D;">invoice.docx</div>
+              <div style="font-size: 11px; color: #A22C24; margin-top: 2px;">Blocked — malware detected</div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 11px; padding: 9px 12px; background: #FFFFFF; border: 1px dashed #D6DBDF; border-radius: 6px;">
+            <div style="flex: 1; font-size: 12px; color: #6B7480;">Drop files here or <a href="#">browse</a> — max 10 MB each</div>
+            <div style="width: 90px; height: 5px; border-radius: 3px; background: #EEF1F2; overflow: hidden;"><div style="width: 62%; height: 100%; background: #177B72;"></div></div>
+            <span style="font-size: 11px; font-family: 'IBM Plex Mono', monospace; color: #6B7480;">62%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- bilingual input -->
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px;">
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">BilingualInput</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 16px;">Staff-side component, shown here because the portal renders its output. The fallback badge tells an editor the English was mirrored, not authored.</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+              <label style="font-size: 12px; font-weight: 700; color: #3C444C; font-family: 'IBM Plex Sans Arabic', sans-serif;">العربية</label>
+              <span style="font-size: 10px; font-weight: 700; color: #10605A; background: #E8F3F1; padding: 1px 6px; border-radius: 999px;">SOURCE</span>
+            </div>
+            <input type="text" dir="rtl" value="لا أستطيع إعادة تعيين كلمة المرور" style="width: 100%; padding: 9px 11px; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; color: #14181C; background: #FFFFFF; font-family: 'IBM Plex Sans Arabic', sans-serif;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px;">
+              <label style="font-size: 12px; font-weight: 700; color: #3C444C;">English</label>
+              <span style="font-size: 10px; font-weight: 700; color: #8A5314; background: #FBF1E3; padding: 1px 6px; border-radius: 999px;">MIRRORED</span>
+            </div>
+            <input type="text" value="لا أستطيع إعادة تعيين كلمة المرور" style="width: 100%; padding: 9px 11px; border: 1px solid #E3E7EA; border-radius: 6px; font-size: 13px; color: #6B7480; background: #FAFBFB;" style-focus="border-color: #177B72; outline: none; box-shadow: 0 0 0 3px rgba(23,123,114,0.13);" />
+            <div style="font-size: 11px; color: #8A5314; margin-top: 5px;">Auto-copied from Arabic · <a href="#">write an English version</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- buttons + toasts -->
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px;">
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">Buttons</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 14px;">One primary per view. Destructive actions are outlined until hover.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+          <button style="padding: 9px 16px; background: #177B72; color: #FFFFFF; border: 1px solid #177B72; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #10605A; border-color: #10605A;">Primary</button>
+          <button style="padding: 9px 16px; background: #FFFFFF; color: #3C444C; border: 1px solid #D6DBDF; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="border-color: #B9C0C6;">Secondary</button>
+          <button style="padding: 9px 16px; background: transparent; color: #10605A; border: 1px solid transparent; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #E8F3F1;">Quiet</button>
+          <button style="padding: 9px 16px; background: #FFFFFF; color: #C0392F; border: 1px solid #E0A9A2; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;" style-hover="background: #C0392F; color: #FFFFFF; border-color: #C0392F;">Destructive</button>
+          <button style="padding: 9px 16px; background: #A9CCC8; color: #FFFFFF; border: 1px solid #A9CCC8; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: not-allowed;">Disabled</button>
+          <button style="display: flex; align-items: center; gap: 8px; padding: 9px 16px; background: #10605A; color: #FFFFFF; border: 1px solid #10605A; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: wait;">
+            <span style="width: 12px; height: 12px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #FFFFFF; border-radius: 50%; display: inline-block;"></span>
+            Sending
+          </button>
+        </div>
+
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">Toasts</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 12px;">Bottom-end corner. Success auto-dismisses at 3s; errors are sticky.</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 11px 13px; background: #FFFFFF; border: 1px solid #E3E7EA; border-inline-start: 3px solid #2F6B47; border-radius: 6px; box-shadow: 0 4px 12px rgba(20,24,28,0.07);">
+            <div style="flex: 1; font-size: 13px; font-weight: 600; color: #14181C;">Reply sent to Support Team</div>
+            <span style="font-size: 14px; color: #B9C0C6; cursor: pointer;">×</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 11px 13px; background: #FFFFFF; border: 1px solid #E3E7EA; border-inline-start: 3px solid #C0392F; border-radius: 6px; box-shadow: 0 4px 12px rgba(20,24,28,0.07);">
+            <div style="flex: 1;">
+              <div style="font-size: 13px; font-weight: 600; color: #14181C;">Couldn't send your reply</div>
+              <div style="font-size: 12px; color: #6B7480; margin-top: 2px;">Your draft is saved. <a href="#">Try again</a></div>
+            </div>
+            <span style="font-size: 14px; color: #B9C0C6; cursor: pointer;">×</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- error surfaces -->
+      <div style="background: #FFFFFF; border: 1px solid #E3E7EA; border-radius: 8px; padding: 20px; grid-column: span 2;">
+        <div style="font-size: 13px; font-weight: 700; color: #14181C; margin-bottom: 3px;">Error surfaces</div>
+        <div style="font-size: 12px; color: #6B7480; margin-bottom: 16px;">Mapped from the envelope's <span style="font-family: 'IBM Plex Mono', monospace;">error.code</span>. The portal never shows "Access denied" — unauthorised reads are indistinguishable from missing ones.</div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;">
+          <div style="padding: 16px; background: #FBF1E3; border: 1px solid #EDD9B4; border-radius: 6px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #8A5314; margin-bottom: 7px;">TOO_MANY_REQUESTS · 429</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; margin-bottom: 4px;">Too many attempts</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #8A5314;">Please wait <span style="font-weight: 700; font-family: 'IBM Plex Mono', monospace;">2:41</span> before trying again.</div>
+          </div>
+          <div style="padding: 16px; background: #EFF1F2; border: 1px solid #DCE0E3; border-radius: 6px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #55606B; margin-bottom: 7px;">NOT_FOUND · 404</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; margin-bottom: 4px;">We couldn't find that</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #55606B;">The ticket may have moved, or the link may be incomplete. <a href="#">Back to my tickets</a></div>
+          </div>
+          <div style="padding: 16px; background: #FBEBE9; border: 1px solid #F1CFCA; border-radius: 6px;">
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: #A22C24; margin-bottom: 7px;">SERVICE_UNAVAILABLE · 503</div>
+            <div style="font-size: 14px; font-weight: 600; color: #14181C; margin-bottom: 4px;">We're briefly offline</div>
+            <div style="font-size: 12px; line-height: 1.55; color: #A22C24;">Maintenance in progress. Your ticket history is safe — try again in a few minutes.</div>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 11px 14px; background: #FAFBFB; border: 1px solid #E3E7EA; border-radius: 6px;">
+          <span style="font-size: 12px; font-weight: 700; color: #14181C;">Every error surface carries</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #10605A; background: #E8F3F1; padding: 2px 7px; border-radius: 4px;">request_id</span>
+          <span style="font-size: 12px; color: #6B7480;">— copyable, shown in small print, so support can trace the exact call the customer hit.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showAnnotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Spec sheet&quot;},&quot;showRtl&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Spec sheet&quot;},&quot;showGallery&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Spec sheet&quot;}}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      showAnnotations: this.props.showAnnotations ?? true,
+      showRtl: this.props.showRtl ?? true,
+      showGallery: this.props.showGallery ?? true,
+    };
+  }
+}
+</script>
+</body>
+</html>

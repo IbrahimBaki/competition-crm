@@ -31,6 +31,12 @@ test-security: ## تستات الصلاحيات والـ Audit فقط
 hooks: ## يتأكد إن الـ hooks شغالة فعلاً (smoke test بسيط)
 	bash scripts/test-hooks.sh
 
+api-lint: ## Lint OpenAPI spec
+	npm run api:lint
+
+api-client: ## Generate TypeScript client from OpenAPI spec
+	npm run api:client
+
 sh: ## يفتح shell جوه كونتينر الـ PHP
 	docker exec -it -w $(APP_PATH) $(PHP_CONTAINER) bash
 

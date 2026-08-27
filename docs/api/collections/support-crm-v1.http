@@ -1,0 +1,281 @@
+### Support CRM v1 API Collection
+### Primary flow: auth → create customer → create ticket → reply → assign → status change → SLA view → portal view
+###
+### Prerequisites: php artisan migrate:fresh --seed
+### Base URL: http://localhost:8000/api/v1
+### Language: en
+
+@baseUrl = http://localhost:8000/api/v1
+@contentType = application/json
+@accept = en
+
+# ===================================
+# 1. Staff Login
+# ===================================
+
+POST {{ @baseUrl }}/auth/login HTTP/1.1
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+
+{
+  "email": "admin@support.local",
+  "password": "password"
+}
+
+@name staffLogin
+@responseVar tokenResponse
+
+###
+
+# Extract bearer token
+@staffToken = {{ staffLogin.response.body.data.token }}
+
+# ===================================
+# 2. Create Customer
+# ===================================
+
+POST {{ @baseUrl }}/customers HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440001
+
+{
+  "name": "Acme Corp",
+  "email": "contact@acme.local"
+}
+
+@name createCustomer
+
+###
+
+@customerId = {{ createCustomer.response.body.data.id }}
+
+# ===================================
+# 3. Create Ticket
+# ===================================
+
+POST {{ @baseUrl }}/tickets HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440002
+
+{
+  "customer_id": "{{ @customerId }}",
+  "subject": "Integration issue with API",
+  "message": "We're experiencing timeout issues when calling the webhooks endpoint."
+}
+
+@name createTicket
+
+###
+
+@ticketId = {{ createTicket.response.body.data.id }}
+@ticketRef = {{ createTicket.response.body.data.reference }}
+
+# ===================================
+# 4. Post Public Reply
+# ===================================
+
+POST {{ @baseUrl }}/tickets/{{ @ticketId }}/messages HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440003
+
+{
+  "body": "Thank you for reporting this. We've escalated to our engineering team. Expected resolution within 24 hours.",
+  "visibility": "public"
+}
+
+@name createPublicMessage
+
+###
+
+# ===================================
+# 5. Post Internal Note
+# ===================================
+
+POST {{ @baseUrl }}/tickets/{{ @ticketId }}/messages HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440004
+
+{
+  "body": "Customer is on enterprise plan. Prioritize: P1",
+  "visibility": "internal"
+}
+
+@name createInternalNote
+
+###
+
+# ===================================
+# 6. Assign Ticket
+# ===================================
+
+POST {{ @baseUrl }}/tickets/{{ @ticketId }}/assign HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440005
+
+{
+  "user_id": "1"
+}
+
+###
+
+# ===================================
+# 7. Transfer to Department
+# ===================================
+
+POST {{ @baseUrl }}/tickets/{{ @ticketId }}/transfer/department HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440006
+
+{
+  "department_id": "1"
+}
+
+###
+
+# ===================================
+# 8. Get Ticket Detail (with SLA info)
+# ===================================
+
+GET {{ @baseUrl }}/tickets/{{ @ticketId }} HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Accept-Language: {{ @accept }}
+
+@name ticketDetail
+
+###
+
+# ===================================
+# 9. Change Status to In Progress
+# ===================================
+
+POST {{ @baseUrl }}/tickets/{{ @ticketId }}/status HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440007
+
+{
+  "status_id": "2"
+}
+
+###
+
+# ===================================
+# 10. Portal: Customer Login
+# ===================================
+
+POST {{ @baseUrl }}/portal/auth/login HTTP/1.1
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+
+{
+  "email": "contact@acme.local",
+  "password": "acme-portal-pass"
+}
+
+@name portalLogin
+
+###
+
+@portalToken = {{ portalLogin.response.body.data.token }}
+
+# ===================================
+# 11. Portal: Get My Tickets
+# ===================================
+
+GET {{ @baseUrl }}/portal/tickets HTTP/1.1
+Authorization: Bearer {{ @portalToken }}
+Accept-Language: {{ @accept }}
+
+###
+
+# ===================================
+# 12. Portal: Get Ticket Detail (should NOT show internal notes)
+# ===================================
+
+GET {{ @baseUrl }}/portal/tickets/{{ @ticketId }} HTTP/1.1
+Authorization: Bearer {{ @portalToken }}
+Accept-Language: {{ @accept }}
+
+###
+
+# ===================================
+# 13. Portal: Get Ticket Messages (public only)
+# ===================================
+
+GET {{ @baseUrl }}/portal/tickets/{{ @ticketId }}/messages HTTP/1.1
+Authorization: Bearer {{ @portalToken }}
+Accept-Language: {{ @accept }}
+
+###
+
+# ===================================
+# 14. Public: Submit Web Form
+# ===================================
+
+POST {{ @baseUrl }}/channels/public/web-forms/demo-form/submissions HTTP/1.1
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440008
+
+{
+  "name": "Web Form Submitter",
+  "email": "form@example.local",
+  "subject": "Web form submission",
+  "message": "This is a test submission from the public web form."
+}
+
+###
+
+# ===================================
+# 15. Get Management Dashboard Report
+# ===================================
+
+GET {{ @baseUrl }}/reports/management-dashboard HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Accept-Language: {{ @accept }}
+
+###
+
+# ===================================
+# 16. Issue Integration API Token
+# ===================================
+
+POST {{ @baseUrl }}/integration/tokens HTTP/1.1
+Authorization: Bearer {{ @staffToken }}
+Content-Type: {{ @contentType }}
+Accept-Language: {{ @accept }}
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440009
+
+{
+  "name": "Integration Test Token",
+  "scopes": ["tickets.read", "customers.read"]
+}
+
+@name issueToken
+
+###
+
+@apiToken = {{ issueToken.response.body.data.token }}
+
+# ===================================
+# 17. Call Integration Endpoint with API Token
+# ===================================
+
+GET {{ @baseUrl }}/tickets?page=1&per_page=10 HTTP/1.1
+Authorization: Bearer {{ @apiToken }}
+Accept-Language: {{ @accept }}
+
+###
