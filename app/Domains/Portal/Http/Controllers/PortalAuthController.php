@@ -103,7 +103,9 @@ class PortalAuthController
 
     public function logout(Request $request): JsonResponse
     {
-        $request->user('portal')->tokens()->delete();
+        /** @var PortalAccount|null $user */
+        $user = $request->user('portal');
+        $user?->tokens()->delete();
 
         return response()->json(['message' => 'Logged out']);
     }
