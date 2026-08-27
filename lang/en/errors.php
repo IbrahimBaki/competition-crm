@@ -170,6 +170,12 @@ return [
         'unsupported_export_format' => 'Export format ":format" is not supported',
         'schedule_recipient_limit_exceeded' => 'Schedule has :count recipients, exceeding limit of :max',
     ],
+    'integrations' => [
+        'insufficient_token_scope' => 'Missing required scope: :scope',
+        'dependency_unavailable' => 'External integration is temporarily unavailable. Please try again later.',
+        'import_validation_failed' => 'Import validation failed. Check the error report for details.',
+        'import_file_unreadable' => 'Import file could not be read. Ensure it is a valid CSV with a header row.',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'You are invited to join Support CRM',

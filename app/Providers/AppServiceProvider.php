@@ -79,6 +79,7 @@ use App\Domains\Reporting\Services\Definitions\ReportRegistry;
 use App\Domains\Reporting\Services\Definitions\SatisfactionReport;
 use App\Domains\Reporting\Services\Definitions\SlaPerformanceReport;
 use App\Domains\Reporting\Services\Definitions\TicketVolumeReport;
+use App\Domains\Reporting\Services\Retention\ReportExportPurgeHandler;
 use App\Domains\Reporting\Services\Scoping\ReportScopeResolver;
 use App\Domains\Security\Models\AuditLog;
 use App\Domains\Security\Models\Role;

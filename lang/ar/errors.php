@@ -170,6 +170,12 @@ return [
         'unsupported_export_format' => 'صيغة التصدير ":format" غير مدعومة',
         'schedule_recipient_limit_exceeded' => 'الجدول يحتوي على :count مستقبلًا، متجاوزًا الحد الأقصى البالغ :max',
     ],
+    'integrations' => [
+        'insufficient_token_scope' => 'النطاق المطلوب مفقود: :scope',
+        'dependency_unavailable' => 'التكامل الخارجي غير متاح حاليًا. يرجى المحاولة لاحقًا.',
+        'import_validation_failed' => 'فشل التحقق من الاستيراد. تحقق من تقرير الأخطاء للحصول على التفاصيل.',
+        'import_file_unreadable' => 'لم يتمكن من قراءة ملف الاستيراد. تأكد من أنها ملف CSV صحيح برأس.',
+    ],
     'mail' => [
         'invitation' => [
             'subject' => 'أنت مدعو للانضمام إلى Support CRM',

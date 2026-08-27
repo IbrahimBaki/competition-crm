@@ -5,32 +5,23 @@ declare(strict_types=1);
 namespace App\Domains\Reporting\Services\Retention;
 
 use App\Domains\Reporting\Models\ReportExport;
-use App\Support\Attachments\AttachmentStorage;
 use App\Support\Retention\PurgeHandler;
-use Carbon\CarbonImmutable;
+use App\Support\Retention\RetentionPolicy;
 
 class ReportExportPurgeHandler implements PurgeHandler
 {
-    public function __construct(
-        private AttachmentStorage $attachmentStorage,
-    ) {}
-
-    public function purge(): int
+    public function dataClass(): string
     {
-        $expired = ReportExport::where('expires_at', '<', CarbonImmutable::now())
-            ->get();
+        return 'reports';
+    }
 
-        $count = 0;
-        foreach ($expired as $export) {
-            // Delete attachment blob if exists
-            if ($export->attachment_id) {
-                $export->attachment()->delete();
-            }
-
-            $export->delete();
-            $count++;
+    public function purge(RetentionPolicy $policy): int
+    {
+        if ($policy->days === null) {
+            return 0;
         }
 
-        return $count;
+        return ReportExport::where('expires_at', '<', $policy->cutoff)
+            ->delete();
     }
 }

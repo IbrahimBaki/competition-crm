@@ -146,6 +146,11 @@ enum ErrorCode: string
     case PortalFeedbackAlreadySubmitted = 'portal.feedback_already_submitted';
     case PortalFeedbackInvitationInvalid = 'portal.feedback_invitation_invalid';
 
+    case InsufficientTokenScope = 'integrations.insufficient_token_scope';
+    case IntegrationDependencyUnavailable = 'integrations.dependency_unavailable';
+    case ImportValidationFailed = 'integrations.import_validation_failed';
+    case ImportFileUnreadable = 'integrations.import_file_unreadable';
+
     public function httpStatus(): int
     {
         return match ($this) {
@@ -206,13 +211,16 @@ enum ErrorCode: string
             self::ReportRangeTooLarge,
             self::ReportExportTooLarge,
             self::UnsupportedExportFormat,
-            self::ReportScheduleRecipientLimitExceeded => 422,
+            self::ReportScheduleRecipientLimitExceeded,
+            self::ImportValidationFailed,
+            self::ImportFileUnreadable => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
             self::TicketIsReadOnly,
             self::SlaBreachImmutable,
-            self::PortalSessionInvalid => 403,
+            self::PortalSessionInvalid,
+            self::InsufficientTokenScope => 403,
             self::Unauthenticated,
             self::AccountDeactivated,
             self::PortalAccountNotVerified => 401,
@@ -268,7 +276,8 @@ enum ErrorCode: string
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,
-            self::AiProviderUnavailable => 503,
+            self::AiProviderUnavailable,
+            self::IntegrationDependencyUnavailable => 503,
             self::TwoFactorRequired => 202,
         };
     }

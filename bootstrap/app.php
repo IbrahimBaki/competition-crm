@@ -1,5 +1,7 @@
 <?php
 
+use App\Domains\Integrations\Http\Middleware\AuthenticateApiToken;
+use App\Domains\Integrations\Http\Middleware\RequireTokenScope;
 use App\Domains\Portal\Http\Middleware\DenyPortalToken;
 use App\Domains\Portal\Http\Middleware\EnsurePortalAccount;
 use App\Domains\Security\Http\Middleware\EnforceTwoFactorPolicy;
@@ -34,6 +36,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'public.protect' => ProtectPublicEndpoint::class,
             'portal.auth' => EnsurePortalAccount::class,
             'portal.deny' => DenyPortalToken::class,
+            'api.auth' => AuthenticateApiToken::class,
+            'api.scope' => RequireTokenScope::class,
         ]);
 
         $middleware->appendToGroup('api', AuthenticateSession::class);

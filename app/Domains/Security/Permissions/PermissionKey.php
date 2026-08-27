@@ -239,6 +239,13 @@ final class PermissionKey
 
     public const REPORTS_SCHEDULE_MANAGE = 'reports.schedule.manage';
 
+    // ---- integrations (module: integrations) ----------------------------
+    public const INTEGRATIONS_API_TOKENS_MANAGE = 'integrations.api_tokens.manage';
+
+    public const INTEGRATIONS_WEBHOOKS_MANAGE = 'integrations.webhooks.manage';
+
+    public const INTEGRATIONS_IMPORT_MANAGE = 'integrations.import.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);
