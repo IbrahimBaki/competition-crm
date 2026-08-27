@@ -12,9 +12,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ticket_message_id')->constrained('ticket_messages')->cascadeOnDelete();
             $table->foreignId('mentioned_user_id')->constrained('users')->cascadeOnDelete();
-            $table->createdAt();
+            $table->timestamps();
 
-            $table->unique(['ticket_message_id', 'mentioned_user_id']);
+            $table->unique(['ticket_message_id', 'mentioned_user_id'], 'mentions_msg_user');
         });
     }
 

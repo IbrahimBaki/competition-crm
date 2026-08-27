@@ -9,6 +9,7 @@ return [
         'audit' => ['days' => env('RETENTION_AUDIT_DAYS', 2555)],
         'provider_inbound_messages' => ['days' => env('CHANNELS_WHATSAPP_RAW_RETENTION_DAYS', 90)],
         'provider_inbound_messages_sms' => ['days' => env('CHANNELS_SMS_RAW_RETENTION_DAYS', 90)],
+        'chat_sessions' => ['days' => env('CHANNELS_CHAT_TRANSCRIPT_RETENTION_DAYS', 90)],
     ],
 
     'audit_minimum_days' => env('RETENTION_AUDIT_MINIMUM_DAYS', 365),

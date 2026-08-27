@@ -14,7 +14,8 @@ return new class extends Migration
             $table->string('key')->unique()->index();
             $table->json('title');
             $table->json('description')->nullable();
-            $table->foreignId('department_id')->constrained('departments');
+            $table->uuid('department_id');
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->foreignId('ticket_category_id')->nullable()->constrained('ticket_categories')->nullOnDelete();
             $table->string('default_priority');
             $table->string('acknowledgement_template_key')->nullable();

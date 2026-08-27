@@ -126,6 +126,14 @@ return [
         'provider_message' => [
             'send_failed' => 'فشل إرسال الرسالة عبر المزود',
         ],
+        'chat' => [
+            'illegal_transition' => 'انتقال حالة جلسة الدردشة هذا غير مسموح',
+            'session_not_reconnectable' => 'لا يمكن إعادة الاتصال بهذه الجلسة؛ انتهت النافذة أو انتهت الجلسة',
+            'session_already_ended' => 'جلسة الدردشة هذه انتهت بالفعل',
+            'transfer_reason_required' => 'يجب تقديم سبب عند نقل جلسة الدردشة',
+            'transfer_target_unavailable' => 'هدف النقل غير متاح',
+            'unavailable' => 'الدردشة غير متاحة في الوقت الحالي. يرجى المحاولة لاحقًا أو استخدام نموذج الاتصال.',
+        ],
     ],
     'mail' => [
         'invitation' => [

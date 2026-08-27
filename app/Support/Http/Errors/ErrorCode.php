@@ -112,6 +112,13 @@ enum ErrorCode: string
     case ProviderTemplateVariableMissing = 'channels.provider_template.variable_missing';
     case ProviderMessageSendFailed = 'channels.provider_message.send_failed';
 
+    case ChatIllegalTransition = 'chat.illegal_transition';
+    case ChatSessionNotReconnectable = 'chat.session_not_reconnectable';
+    case ChatSessionAlreadyEnded = 'chat.session_already_ended';
+    case ChatTransferReasonRequired = 'chat.transfer_reason_required';
+    case ChatTransferTargetUnavailable = 'chat.transfer_target_unavailable';
+    case ChatUnavailable = 'chat.unavailable';
+
     public function httpStatus(): int
     {
         return match ($this) {

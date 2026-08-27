@@ -59,6 +59,35 @@ return [
         'raw_retention_days' => env('CHANNELS_SMS_RAW_RETENTION_DAYS', 90),
     ],
 
+    'chat' => [
+        // Behaviour when no agent can take the chat: 'queue', 'offline_form' or 'both'.
+        'no_agent_behaviour' => env('CHANNELS_CHAT_NO_AGENT_BEHAVIOUR', 'both'),
+
+        // Maximum visitors allowed to wait before new requests fall back to the offline form.
+        'max_queue_length' => env('CHANNELS_CHAT_MAX_QUEUE_LENGTH', 20),
+
+        // Concurrent active sessions a single agent may hold.
+        'max_concurrent_per_agent' => env('CHANNELS_CHAT_MAX_CONCURRENT_PER_AGENT', 3),
+
+        // Window in which a dropped visitor may rejoin the same session.
+        'reconnect_window_seconds' => env('CHANNELS_CHAT_RECONNECT_WINDOW_SECONDS', 300),
+
+        // Silence after which a queued or active session is swept to 'abandoned'.
+        'abandon_after_seconds' => env('CHANNELS_CHAT_ABANDON_AFTER_SECONDS', 900),
+
+        // Dedicated rate limiter for the public visitor endpoints.
+        'rate_limit' => [
+            'max_per_minute' => env('CHANNELS_CHAT_MAX_PER_MINUTE', 30),
+            'max_per_hour' => env('CHANNELS_CHAT_MAX_PER_HOUR', 300),
+        ],
+
+        // Hard ceiling on a single chat turn, in characters.
+        'max_message_length' => env('CHANNELS_CHAT_MAX_MESSAGE_LENGTH', 4000),
+
+        // Retention for buffered chat rows after the transcript has been persisted, in days.
+        'transcript_retention_days' => env('CHANNELS_CHAT_TRANSCRIPT_RETENTION_DAYS', 90),
+    ],
+
     // Characters taken from an inbound body when the channel carries no subject.
     'derived_subject_length' => env('CHANNELS_DERIVED_SUBJECT_LENGTH', 80),
 ];

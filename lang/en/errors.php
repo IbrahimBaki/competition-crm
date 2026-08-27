@@ -126,6 +126,14 @@ return [
         'provider_message' => [
             'send_failed' => 'Failed to send message through provider',
         ],
+        'chat' => [
+            'illegal_transition' => 'This chat session state transition is not allowed',
+            'session_not_reconnectable' => 'This session cannot be reconnected; the window has closed or the session has ended',
+            'session_already_ended' => 'This chat session has already ended',
+            'transfer_reason_required' => 'A reason is required when transferring a chat session',
+            'transfer_target_unavailable' => 'The transfer target is unavailable',
+            'unavailable' => 'Chat is not available at this time. Please try again later or use the contact form.',
+        ],
     ],
     'mail' => [
         'invitation' => [

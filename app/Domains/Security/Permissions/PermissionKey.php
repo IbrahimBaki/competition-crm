@@ -189,6 +189,17 @@ final class PermissionKey
 
     public const CHANNELS_MESSAGING_TEMPLATES_MANAGE = 'channels.messaging.templates.manage';
 
+    // ---- channels (module: channels) - live chat ----------------------------
+    public const CHANNELS_CHAT_VIEW = 'channels.chat.view';
+
+    public const CHANNELS_CHAT_CREATE = 'channels.chat.create';
+
+    public const CHANNELS_CHAT_ACCEPT = 'channels.chat.accept';
+
+    public const CHANNELS_CHAT_TRANSFER = 'channels.chat.transfer';
+
+    public const CHANNELS_CHAT_MANAGE = 'channels.chat.manage';
+
     public static function all(): array
     {
         $reflection = new ReflectionClass(self::class);

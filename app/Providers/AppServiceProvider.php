@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domains\Channels\Chat\Services\Retention\ChatSessionPurgeHandler;
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
 use App\Domains\Channels\Messaging\Jobs\SendProviderMessageJob;
 use App\Domains\Channels\Messaging\Services\Retention\ProviderInboundPurgeHandler;
@@ -223,6 +224,7 @@ class AppServiceProvider extends ServiceProvider
             $registry->register($app->make(InboundEmailPurgeHandler::class));
             $registry->register($app->make(WebFormSubmissionPurgeHandler::class));
             $registry->register($app->make(ProviderInboundPurgeHandler::class));
+            $registry->register($app->make(ChatSessionPurgeHandler::class));
             $registry->register(new NullPurgeHandler('tickets'));
             $registry->register(new NullPurgeHandler('logs'));
 
@@ -329,6 +331,17 @@ class AppServiceProvider extends ServiceProvider
             $maxPerHour = (int) config('channels.web_form.rate_limit.max_per_hour', 30);
             $formKey = $request->route('formKey') ?? '';
             $key = hash('sha256', ($request->ip() ?? '').$formKey);
+
+            return [
+                Limit::perMinute($maxPerMinute)->by($key),
+                Limit::perHour($maxPerHour)->by($key),
+            ];
+        });
+
+        RateLimiter::for('chat', function ($request) {
+            $maxPerMinute = (int) config('channels.chat.rate_limit.max_per_minute', 30);
+            $maxPerHour = (int) config('channels.chat.rate_limit.max_per_hour', 300);
+            $key = hash('sha256', ($request->ip() ?? ''));
 
             return [
                 Limit::perMinute($maxPerMinute)->by($key),

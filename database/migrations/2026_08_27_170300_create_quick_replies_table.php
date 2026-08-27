@@ -13,7 +13,8 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->string('scope'); // personal, shared
             $table->foreignId('owner_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('department_id')->nullable()->constrained('departments')->nullOnDelete();
+            $table->uuid('department_id')->nullable();
+            $table->foreign('department_id')->references('id')->on('departments')->nullOnDelete();
             $table->json('title'); // {ar, en}
             $table->json('body'); // {ar, en}
             $table->boolean('is_active')->default(true);

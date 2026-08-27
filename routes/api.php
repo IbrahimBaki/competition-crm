@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\Channels\Chat\Http\Controllers\PublicChatSessionController;
 use App\Domains\Channels\Messaging\Http\Controllers\ProviderDeliveryReceiptController;
 use App\Domains\Channels\Messaging\Http\Controllers\ProviderInboundWebhookController;
 use App\Domains\Channels\Messaging\Http\Controllers\ProviderMessageTemplateController;
@@ -66,6 +67,9 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::post('channels/web-forms/{formKey}/submissions', [PublicWebFormController::class, 'store'])
         ->middleware(['public.protect', 'throttle:web-form', 'idempotency']);
     Route::get('channels/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
+
+    Route::post('channels/chat/sessions', [PublicChatSessionController::class, 'store'])
+        ->middleware(['public.protect', 'throttle:chat', 'idempotency']);
 });
 
 Route::prefix('v1')->group(function () {

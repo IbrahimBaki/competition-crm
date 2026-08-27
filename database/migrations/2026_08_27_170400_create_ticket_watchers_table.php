@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('ticket_id')->constrained('tickets')->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            $table->createdAt();
+            $table->timestamps();
 
             $table->unique(['ticket_id', 'user_id']);
         });
