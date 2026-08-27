@@ -90,7 +90,7 @@ class SlaClockHooksBridge implements SlaClockHooks
             $newTarget = $this->policyResolver->resolveTarget($policy, $ticket, $targetType);
 
             if ($newTarget && $newTarget->id !== $clock->sla_target_id) {
-                $this->clockService->retarget($clock, $newTarget, $at);
+                $this->clockService->retarget($clock, $policy, $newTarget, $at);
             }
 
             $this->evaluator->evaluate($clock, $at);

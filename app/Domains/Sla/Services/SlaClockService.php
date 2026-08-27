@@ -144,6 +144,7 @@ class SlaClockService
 
     public function retarget(
         TicketSlaClock $clock,
+        SlaPolicy $policy,
         SlaTarget $target,
         CarbonImmutable $at,
     ): void {
@@ -162,6 +163,7 @@ class SlaClockService
             : $at;
 
         $clock->update([
+            'sla_policy_id' => $policy->id,
             'sla_target_id' => $target->id,
             'target_minutes' => $target->minutes,
             'due_at' => $newDueAt,

@@ -7,6 +7,8 @@ use App\Domains\Ai\Models\AiSuggestion;
 use App\Domains\Ai\Models\AiSuggestionState;
 use App\Domains\Channels\Messaging\Exceptions\WhatsappFreeFormWindowClosedException;
 use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
+use App\Domains\Notifications\Events\TicketMentionedNotification;
+use App\Domains\Notifications\Events\TicketWatchedUpdateNotification;
 use App\Domains\Ticketing\Exceptions\TicketConversationReadOnlyException;
 use App\Domains\Ticketing\Models\MessageAuthorType;
 use App\Domains\Ticketing\Models\MessageChannel;
@@ -16,6 +18,7 @@ use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Models\TicketMessage;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
+use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Exceptions\AttachmentInfectedException;
@@ -38,6 +41,7 @@ class PostTicketMessage
 
     /**
      * @param  list<string>  $attachmentUuids
+     * @param  list<string>  $mentionedUserUuids
      */
     public function handle(
         Ticket $ticket,
@@ -50,6 +54,7 @@ class PostTicketMessage
         ?string $templateKey = null,
         array $templateVariables = [],
         ?int $aiSuggestionId = null,
+        array $mentionedUserUuids = [],
     ): TicketMessage {
         if ($ticket->isMerged() || $ticket->isSpam()) {
             throw new TicketConversationReadOnlyException('Conversation on this ticket is read-only');
@@ -140,6 +145,37 @@ class PostTicketMessage
             if (! $isInternal && $message->direction === MessageDirection::Outbound) {
                 $this->slaHooks->firstAgentReplySent($ticket, CarbonImmutable::now('UTC'));
             }
+
+            // Handle mentions (internal notes only)
+            if ($isInternal && ! empty($mentionedUserUuids)) {
+                $mentionedUsers = User::query()
+                    ->whereIn('uuid', $mentionedUserUuids)
+                    ->get();
+
+                foreach ($mentionedUsers as $user) {
+                    $message->mentions()->attach($user->id);
+                    Event::dispatch(new TicketMentionedNotification($ticket, $message, $user));
+                }
+            }
+
+            // Dispatch notifications to watchers (internal notes only, exclude author and mentioned users)
+            if ($isInternal) {
+                $mentionedUserIds = User::query()
+                    ->whereIn('uuid', $mentionedUserUuids)
+                    ->pluck('id')
+                    ->toArray();
+
+                $watchers = $ticket->watchers()
+                    ->where('user_id', '!=', $actor->id)
+                    ->whereNotIn('user_id', $mentionedUserIds)
+                    ->get();
+
+                foreach ($watchers as $watcher) {
+                    Event::dispatch(new TicketWatchedUpdateNotification($ticket, $message, $watcher->user));
+                }
+            }
+
+            app(TicketAutomationHooks::class)->messagePosted($ticket->fresh(), $message);
 
             return $message;
         });

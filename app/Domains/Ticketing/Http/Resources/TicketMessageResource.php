@@ -32,6 +32,12 @@ class TicketMessageResource extends JsonResource
             'failed_at' => $this->failed_at?->toIso8601String(),
             'created_at' => $this->created_at?->toIso8601String(),
             'attachments' => AttachmentResource::collection($this->attachments),
+            'mentions' => $this->when($this->is_internal, function () {
+                return $this->mentionedUsers->map(fn ($user) => [
+                    'uuid' => $user->uuid,
+                    'display_name' => $user->name,
+                ]);
+            }),
         ];
     }
 }

@@ -10,6 +10,7 @@ use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Services\Concurrency\TicketVersionGuard;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
 use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
+use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +20,7 @@ class TransferTicketToDepartment
         private readonly RecordTicketEvent $recordEvent,
         private readonly TicketVersionGuard $versionGuard,
         private readonly DepartmentTransferEvaluator $evaluator,
+        private readonly SlaClockHooks $slaHooks,
     ) {}
 
     public function handle(Ticket $ticket, Department $department, ?User $actor = null, bool $keepAssignee = false, ?int $expectedVersion = null): Ticket
@@ -69,6 +71,11 @@ class TransferTicketToDepartment
         }
 
         DB::transaction(fn () => $this->evaluator->evaluate($ticket, $fromDepartment, $department));
+
+        $now = CarbonImmutable::now('UTC');
+        $this->slaHooks->classificationChanged($ticket, $now);
+
+        app(TicketAutomationHooks::class)->departmentChanged($ticket->fresh(), $fromDepartment, $department, $actor);
 
         return $ticket->fresh();
     }

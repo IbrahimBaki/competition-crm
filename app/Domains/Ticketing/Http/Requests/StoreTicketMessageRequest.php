@@ -19,6 +19,8 @@ class StoreTicketMessageRequest extends FormRequest
             'attachment_uuids.*' => ['uuid'],
             'template_key' => ['nullable', 'string', 'max:100'],
             'template_variables' => ['nullable', 'array'],
+            'mentions' => ['sometimes', 'array'],
+            'mentions.*' => ['uuid', 'exists:users,uuid'],
         ];
     }
 

@@ -64,6 +64,8 @@ class TicketResource extends JsonResource
             'assigned_at' => $this->assigned_at?->toIso8601String(),
             'reopen_deadline_at' => $this->reopen_deadline_at?->toIso8601String(),
             'reopened_count' => $this->reopened_count,
+            'is_watched' => $request->user() ? $this->watchers()->where('user_id', $request->user()->id)->exists() : false,
+            'watcher_count' => $this->whenCounted('watchers'),
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'sla' => $this->computeSlaBlock(),

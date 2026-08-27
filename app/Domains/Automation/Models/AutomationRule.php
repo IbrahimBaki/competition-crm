@@ -46,6 +46,11 @@ class AutomationRule extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
