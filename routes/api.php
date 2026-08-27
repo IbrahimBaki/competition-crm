@@ -1,5 +1,8 @@
 <?php
 
+use App\Domains\Ai\Http\Controllers\AiSuggestionController;
+use App\Domains\Ai\Http\Controllers\AiUsageController;
+use App\Domains\Ai\Http\Controllers\TicketAiAssistController;
 use App\Domains\Channels\Chat\Http\Controllers\PublicChatSessionController;
 use App\Domains\Channels\Messaging\Http\Controllers\ProviderDeliveryReceiptController;
 use App\Domains\Channels\Messaging\Http\Controllers\ProviderInboundWebhookController;
@@ -14,6 +17,10 @@ use App\Domains\Customers\Http\Controllers\CustomerMergeController;
 use App\Domains\Customers\Http\Controllers\CustomerNoteController;
 use App\Domains\Customers\Http\Controllers\CustomerTimelineController;
 use App\Domains\Integrations\Http\Controllers\ApiTokenController;
+use App\Domains\Integrations\Http\Controllers\CustomerErpContextController;
+use App\Domains\Integrations\Http\Controllers\ImportRunController;
+use App\Domains\Integrations\Http\Controllers\WebhookDeliveryController;
+use App\Domains\Integrations\Http\Controllers\WebhookSubscriptionController;
 use App\Domains\Organisation\Http\Controllers\BranchController;
 use App\Domains\Organisation\Http\Controllers\BranchHolidayController;
 use App\Domains\Organisation\Http\Controllers\BranchWorkingHourController;
@@ -28,6 +35,8 @@ use App\Domains\Portal\Http\Controllers\PortalTicketController;
 use App\Domains\Portal\Http\Controllers\PortalTicketMessageController;
 use App\Domains\Portal\Http\Controllers\TicketFeedbackController;
 use App\Domains\Reporting\Http\Controllers\ReportController;
+use App\Domains\Reporting\Http\Controllers\ReportExportController;
+use App\Domains\Reporting\Http\Controllers\ReportScheduleController;
 use App\Domains\Security\Http\Controllers\AuditLogController;
 use App\Domains\Security\Http\Controllers\AuthController;
 use App\Domains\Security\Http\Controllers\AuthMeController;
@@ -294,6 +303,15 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::get('automation/executions', [AutomationRuleExecutionController::class, 'index']);
     Route::post('tickets/{ticket}/escalate', [TicketEscalationController::class, 'store'])->middleware('idempotency');
 
+    // AI assistance
+    Route::post('tickets/{ticket}/ai/summary', [TicketAiAssistController::class, 'summary'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/ai/suggested-reply', [TicketAiAssistController::class, 'suggestedReply'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/ai/classify', [TicketAiAssistController::class, 'classify'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/ai/suggested-articles', [TicketAiAssistController::class, 'suggestedArticles'])->middleware('idempotency');
+    Route::get('ai/suggestions', [AiSuggestionController::class, 'index']);
+    Route::post('ai/suggestions/{suggestion}/resolve/{decision}', [AiSuggestionController::class, 'resolve'])->middleware('idempotency');
+    Route::get('ai/usage', [AiUsageController::class, 'index']);
+
     Route::get('notifications', [NotificationController::class, 'index']);
     Route::post('notifications/{notification}/read', [NotificationController::class, 'markRead']);
     Route::post('notifications/read-all', [NotificationController::class, 'markAllRead']);
@@ -303,6 +321,16 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
 
     Route::get('reports', [ReportController::class, 'index']);
     Route::get('reports/{report}', [ReportController::class, 'show']);
+    Route::post('reports/{report}/export', [ReportExportController::class, 'store'])->middleware('idempotency');
+
+    // Report scheduling
+    Route::apiResource('report-schedules', ReportScheduleController::class);
+
+    // Webhooks (machine-to-machine)
+    Route::apiResource('webhooks/subscriptions', WebhookSubscriptionController::class);
+    Route::get('webhooks/deliveries', [WebhookDeliveryController::class, 'index']);
+    Route::get('customers/{customer}/erp-context', [CustomerErpContextController::class, 'show']);
+    Route::apiResource('import-runs', ImportRunController::class)->only(['index', 'show', 'store']);
 
     // API tokens (staff management)
     Route::apiResource('integration/tokens', ApiTokenController::class)->only(['index', 'store', 'destroy']);
