@@ -6,6 +6,7 @@ use App\Domains\Ai\Http\Controllers\TicketAiAssistController;
 use App\Domains\Automation\Http\Controllers\AutomationRuleController;
 use App\Domains\Automation\Http\Controllers\AutomationRuleExecutionController;
 use App\Domains\Automation\Http\Controllers\TicketEscalationController;
+use App\Domains\Channels\Chat\Http\Controllers\ChatSessionController;
 use App\Domains\Channels\Chat\Http\Controllers\PublicChatSessionController;
 use App\Domains\Channels\Email\Http\Controllers\InboundEmailReplayController;
 use App\Domains\Channels\Email\Http\Controllers\InboundEmailWebhookController;
@@ -75,6 +76,7 @@ use App\Domains\Ticketing\Http\Controllers\TicketLinkController;
 use App\Domains\Ticketing\Http\Controllers\TicketMergeController;
 use App\Domains\Ticketing\Http\Controllers\TicketMessageController;
 use App\Domains\Ticketing\Http\Controllers\TicketQueueController;
+use App\Domains\Ticketing\Http\Controllers\TicketSavedViewController;
 use App\Domains\Ticketing\Http\Controllers\TicketStatusController;
 use App\Domains\Ticketing\Http\Controllers\TicketWatcherController;
 use App\Domains\Workspace\Http\Controllers\AgentTaskController;
@@ -113,6 +115,16 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::get('channels/public/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
 
     Route::post('channels/chat/sessions', [PublicChatSessionController::class, 'store'])
+        ->middleware(['public.protect', 'throttle:chat']);
+
+    // Visitor-facing sub-actions live under channels/public/chat/* — they
+    // share a path shape with the staff console routes below (messages, end)
+    // and would otherwise collide on method+path, leaving one side unreachable
+    // (the same bug class fixed for web-forms). The staff routes stay bare.
+    Route::get('channels/public/chat/sessions/{session}/messages', [PublicChatSessionController::class, 'messages']);
+    Route::post('channels/public/chat/sessions/{session}/messages', [PublicChatSessionController::class, 'storeMessage'])
+        ->middleware(['public.protect', 'throttle:chat']);
+    Route::post('channels/public/chat/sessions/{session}/end', [PublicChatSessionController::class, 'end'])
         ->middleware(['public.protect', 'throttle:chat']);
 
     Route::get('public/knowledge/categories', [PublicKnowledgeArticleController::class, 'categories']);
@@ -276,6 +288,11 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update']);
     Route::delete('ticket-categories/{category}', [TicketCategoryController::class, 'destroy']);
 
+    Route::get('ticket-saved-views', [TicketSavedViewController::class, 'index']);
+    Route::post('ticket-saved-views', [TicketSavedViewController::class, 'store']);
+    Route::patch('ticket-saved-views/{savedView}', [TicketSavedViewController::class, 'update']);
+    Route::delete('ticket-saved-views/{savedView}', [TicketSavedViewController::class, 'destroy']);
+
     Route::get('agent-tasks', [AgentTaskController::class, 'index']);
     Route::post('agent-tasks', [AgentTaskController::class, 'store']);
     Route::get('agent-tasks/{task}', [AgentTaskController::class, 'show']);
@@ -287,6 +304,13 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay']);
 
     Route::apiResource('channels/web-forms', WebFormController::class)->parameters(['web-forms' => 'webForm']);
+
+    Route::get('channels/chat/sessions', [ChatSessionController::class, 'index']);
+    Route::get('channels/chat/sessions/{session}/messages', [ChatSessionController::class, 'messages']);
+    Route::post('channels/chat/sessions/{session}/messages', [ChatSessionController::class, 'storeMessage']);
+    Route::post('channels/chat/sessions/{session}/accept', [ChatSessionController::class, 'accept']);
+    Route::post('channels/chat/sessions/{session}/transfer', [ChatSessionController::class, 'transfer']);
+    Route::post('channels/chat/sessions/{session}/end', [ChatSessionController::class, 'end']);
 
     Route::get('messaging/templates', [ProviderMessageTemplateController::class, 'index']);
 

@@ -26,7 +26,11 @@ final class PersistChatTranscript
         DB::transaction(function () use ($session) {
             if (! $session->ticket_id) {
                 $department = $session->department ?? $session->visitor->customer?->department;
-                if (! $department) {
+                // No agent ever engaged this session (it was abandoned/ended
+                // before accept), so there is nobody to prompt for contact
+                // info — skip ticket creation exactly like the missing-
+                // department case above, rather than crash on a null customer.
+                if (! $department || ! $session->visitor->customer) {
                     return;
                 }
 

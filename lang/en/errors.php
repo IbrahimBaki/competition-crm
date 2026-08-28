@@ -138,6 +138,8 @@ return [
             'transfer_reason_required' => 'A reason is required when transferring a chat session',
             'transfer_target_unavailable' => 'The transfer target is unavailable',
             'unavailable' => 'Chat is not available at this time. Please try again later or use the contact form.',
+            'agent_at_capacity' => 'You already have the maximum number of concurrent chat sessions',
+            'visitor_contact_required' => 'This chat has no way to reach the visitor back (no email or phone on file), so it cannot be turned into a ticket',
         ],
     ],
     'knowledge' => [

@@ -46,7 +46,7 @@ final class RuleEngine
      */
     public function run(RuleTrigger $trigger, Ticket $ticket, ?User $actor = null, array $extraFacts = []): array
     {
-        $ticket->load(['branch', 'currentDepartment']);
+        $ticket->load(['branch', 'department']);
         $facts = $this->factProvider->provide($ticket);
         $facts = array_merge($facts, $extraFacts);
 

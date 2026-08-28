@@ -4,11 +4,14 @@ namespace App\Domains\Portal\Models;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Ticketing\Models\Ticket;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketFeedback extends Model
 {
+    use GeneratesUuid;
+
     protected $fillable = [
         'uuid',
         'ticket_id',

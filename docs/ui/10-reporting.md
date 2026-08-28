@@ -1,5 +1,11 @@
 # 10. Reporting
 
+> **Backend availability — read before building.**
+> There is no dedicated dashboard route. The management dashboard is a report
+> like any other: `GET /reports/{report}` (`report` = `management_dashboard`). Available report keys are
+> `ticket_volume`, `sla_performance`, `agent_performance`, `backlog_aging`,
+> `satisfaction`, `management_dashboard`.
+
 **Domains**: Reporting  
 **Surface**: Staff CRM only  
 **Permissions**: `reports.view.*`, `reports.export.any`, `reports.schedule.manage`
@@ -79,7 +85,7 @@ SLA Status This Week
 - Implement staged rendering: KPI cards load first, charts second, detailed tables last
 
 **Related endpoints**:
-- `GET /reports/dashboard` (fetch all dashboard data)
+- `GET /reports/{report}` (`report` = `management_dashboard`) (fetch all dashboard data)
 
 ---
 

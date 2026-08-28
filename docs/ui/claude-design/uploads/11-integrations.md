@@ -1,5 +1,10 @@
 # 11. Integrations
 
+> **Backend availability — read before building.**
+> Import preview and commit are **one endpoint**: `POST /import-runs` with
+> `mode: "dry_run"` or `mode: "commit"` in the body. There are no
+> `/import/preview` or `/import/commit` routes.
+
 **Domains**: Integrations  
 **Surface**: Staff CRM only  
 **Permissions**: `integrations.*`
@@ -109,7 +114,7 @@ Token: [full token displayed here — copy immediately]
 | Edit | Modal to update target URL, event type, etc. | (PUT webhook) | (same) | N/A |
 | Enable/Disable | Toggle active flag | (PATCH webhook) | (same) | Yes |
 | Delivery Log | Navigate to detailed log (filtered by subscription) | `/admin/integrations/webhook-deliveries?filter[subscription_id]={id}` | (same) | N/A |
-| Delete | DELETE | `DELETE /webhook-subscriptions/{subscription}` | (same) | Yes |
+| Delete | DELETE | `DELETE /webhooks/subscriptions/{subscription}` | (same) | Yes |
 
 **Create Subscription Button**:
 
@@ -125,14 +130,14 @@ Token: [full token displayed here — copy immediately]
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Create | POST webhook | `POST /webhook-subscriptions` | (same) | No |
+| Create | POST webhook | `POST /webhooks/subscriptions` | (same) | No |
 
 **Related endpoints**:
-- `GET /webhook-subscriptions` (list)
-- `POST /webhook-subscriptions` (create)
-- `PATCH /webhook-subscriptions/{subscription}` (enable/disable)
-- `PUT /webhook-subscriptions/{subscription}` (update)
-- `DELETE /webhook-subscriptions/{subscription}` (delete)
+- `GET /webhooks/subscriptions` (list)
+- `POST /webhooks/subscriptions` (create)
+- `PATCH /webhooks/subscriptions/{subscription}` (enable/disable)
+- `PUT /webhooks/subscriptions/{subscription}` (update)
+- `DELETE /webhooks/subscriptions/{subscription}` (delete)
 
 **Webhook Delivery Log**:
 - URL: `/admin/integrations/webhook-deliveries`
@@ -215,8 +220,8 @@ Ahmed Ali   | ahmed@company.com  | +966501234567
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Preview (Dry-Run) | Show what would be imported (no changes) | `POST /import/preview` (dry_run=true) | (same) | Yes |
-| Commit | Actually import data | `POST /import/commit` (dry_run=false) | (same) | No (but idempotent by design via deduping) |
+| Preview (Dry-Run) | Show what would be imported (no changes) | `POST /import-runs` (body `mode: "dry_run"`) | (same) | Yes |
+| Commit | Actually import data | `POST /import-runs` (body `mode: "commit"`) | (same) | No (but idempotent by design via deduping) |
 
 **Step 4: Progress & Results**
 
@@ -249,8 +254,8 @@ Row 315: Missing required field (skipped)
 ```
 
 **Related endpoints**:
-- `POST /import/preview` (validate + dry-run preview)
-- `POST /import/commit` (actual import)
+- `POST /import-runs` with `mode: "dry_run"` (validate + preview)
+- `POST /import-runs` with `mode: "commit"` (actual import)
 - (Response includes ImportRun object with `ImportRunRow` entries for each row + status)
 
 **Notes**:

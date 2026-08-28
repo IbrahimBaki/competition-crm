@@ -4,11 +4,14 @@ namespace App\Domains\Channels\WebForm\Models;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Ticketing\Models\Ticket;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WebFormSubmission extends Model
 {
+    use GeneratesUuid;
+
     protected $fillable = ['web_form_id', 'ticket_id', 'customer_id', 'state', 'fingerprint', 'tracking_token', 'payload', 'submitter_ip_hash', 'user_agent', 'duplicate_of_id'];
 
     protected $casts = [

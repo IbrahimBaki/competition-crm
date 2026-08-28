@@ -1,5 +1,10 @@
 # 13. Public Surfaces
 
+> **Backend availability — read before building.**
+> The chat widget can only **open** a session (`POST /channels/chat/sessions`).
+> Sending messages, fetching the transcript and ending a session have no routes,
+> so a working widget cannot be built yet.
+
 **Domains**: Channels (WebForm, Chat), Knowledge (public), Portal (guest)  
 **Surface**: Public/Anonymous (no auth required)  
 **Access**: Token-based (for guest tracking) or no authentication  
@@ -260,8 +265,8 @@ Agent: "Let me help with that..."
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Start Session | POST session | `POST /channels/chat/sessions` (no auth) | (none) | No |
-| Send Message | POST message | `POST /channels/chat/sessions/{session}/messages` | (none) | No (needs Idempotency-Key) |
-| End Session | POST end | `POST /channels/chat/sessions/{session}/end` | (none) | Yes |
+| Send Message | POST message | `POST /channels/chat/sessions/{session}/messages` ⚠️ **NOT IMPLEMENTED** | (none) | No (needs Idempotency-Key) |
+| End Session | POST end | `POST /channels/chat/sessions/{session}/end` ⚠️ **NOT IMPLEMENTED** | (none) | Yes |
 | Transfer | (triggered by agent) | (internal) | (none) | N/A |
 
 **States**:
@@ -273,9 +278,9 @@ Agent: "Let me help with that..."
 
 **Related endpoints**:
 - `POST /channels/chat/sessions` (initiate session, returns session_id)
-- `GET /channels/chat/sessions/{session}/messages` (get transcript)
-- `POST /channels/chat/sessions/{session}/messages` (send message)
-- `POST /channels/chat/sessions/{session}/end` (close session)
+- `GET /channels/chat/sessions/{session}/messages` ⚠️ **NOT IMPLEMENTED** (get transcript)
+- `POST /channels/chat/sessions/{session}/messages` ⚠️ **NOT IMPLEMENTED** (send message)
+- `POST /channels/chat/sessions/{session}/end` ⚠️ **NOT IMPLEMENTED** (close session)
 
 **Notes**:
 - Queue management: max 20 sessions queued, max 3 concurrent per agent

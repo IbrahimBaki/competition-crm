@@ -3,12 +3,14 @@
 namespace App\Domains\Channels\WebForm\Models;
 
 use App\Support\I18n\Casts\BilingualStringCast;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WebFormField extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     protected $fillable = ['web_form_id', 'key', 'type', 'is_required', 'label', 'options', 'validation', 'maps_to', 'position'];

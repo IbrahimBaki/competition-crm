@@ -5,13 +5,20 @@
  * Support CRM platform API with integrated automation, reporting, and external integrations
  * OpenAPI spec version: 1.0.0
  */
+import type { WebhookSubscriptionDisabledAt } from './webhookSubscriptionDisabledAt';
+import type { WebhookSubscriptionLastFailureAt } from './webhookSubscriptionLastFailureAt';
+import type { WebhookSubscriptionLastSuccessAt } from './webhookSubscriptionLastSuccessAt';
 
 export interface WebhookSubscription {
+  /** Resets on success; the subscription is disabled once it passes the configured threshold. */
+  consecutive_failures?: number;
   created_at?: string;
+  disabled_at?: WebhookSubscriptionDisabledAt;
   event_types?: string[];
   id?: string;
   is_active?: boolean;
+  last_failure_at?: WebhookSubscriptionLastFailureAt;
+  last_success_at?: WebhookSubscriptionLastSuccessAt;
   name?: string;
   target_url?: string;
-  updated_at?: string;
 }

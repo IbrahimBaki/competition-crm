@@ -4,12 +4,15 @@ namespace App\Domains\Sla\Models;
 
 use App\Domains\Organisation\Models\Branch;
 use App\Support\I18n\Casts\BilingualStringCast;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SlaPolicy extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['uuid', 'branch_id', 'name', 'is_default', 'is_active', 'warning_threshold_percent'];

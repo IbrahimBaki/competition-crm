@@ -119,6 +119,10 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::CHANNELS_WEB_FORM_DELETE,
             PermissionKey::CHANNELS_MESSAGING_TEMPLATES_VIEW,
             PermissionKey::CHANNELS_MESSAGING_TEMPLATES_MANAGE,
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
+            PermissionKey::CHANNELS_CHAT_MANAGE,
             // knowledge.*
             PermissionKey::KNOWLEDGE_ARTICLES_VIEW,
             PermissionKey::KNOWLEDGE_ARTICLES_CREATE,
@@ -203,6 +207,11 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::AUTOMATION_RULES_VIEW,
             PermissionKey::AUTOMATION_EXECUTIONS_VIEW,
             PermissionKey::TICKETS_ESCALATE,
+            // channels.*
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
+            PermissionKey::CHANNELS_CHAT_MANAGE,
             // workspace.*
             PermissionKey::WORKSPACE_TASKS_CREATE,
             PermissionKey::WORKSPACE_TASKS_VIEW_OWN,
@@ -277,6 +286,10 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::SLA_POLICIES_VIEW,
             // automation.*
             PermissionKey::TICKETS_ESCALATE,
+            // channels.*
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
             // workspace.*
             PermissionKey::WORKSPACE_TASKS_CREATE,
             PermissionKey::WORKSPACE_TASKS_VIEW_OWN,

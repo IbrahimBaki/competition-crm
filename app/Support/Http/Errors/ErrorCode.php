@@ -119,6 +119,8 @@ enum ErrorCode: string
     case ChatTransferReasonRequired = 'chat.transfer_reason_required';
     case ChatTransferTargetUnavailable = 'chat.transfer_target_unavailable';
     case ChatUnavailable = 'chat.unavailable';
+    case ChatAgentAtCapacity = 'chat.agent_at_capacity';
+    case ChatVisitorContactRequired = 'chat.visitor_contact_required';
 
     case IllegalArticleTransition = 'illegal_article_transition';
     case ArticleNotPublished = 'article_not_published';
@@ -216,7 +218,10 @@ enum ErrorCode: string
             self::UnsupportedExportFormat,
             self::ReportScheduleRecipientLimitExceeded,
             self::ImportValidationFailed,
-            self::ImportFileUnreadable => 422,
+            self::ImportFileUnreadable,
+            self::ChatIllegalTransition,
+            self::ChatTransferReasonRequired,
+            self::ChatVisitorContactRequired => 422,
 
             self::Unauthorized,
             self::CustomerBlocked,
@@ -276,12 +281,17 @@ enum ErrorCode: string
             self::DuplicateArticleFeedback,
             self::AiFeatureDisabled,
             self::AiSuggestionAlreadyResolved,
-            self::PortalFeedbackAlreadySubmitted => 409,
+            self::PortalFeedbackAlreadySubmitted,
+            self::ChatTransferTargetUnavailable,
+            self::ChatSessionAlreadyEnded,
+            self::ChatSessionNotReconnectable,
+            self::ChatAgentAtCapacity => 409,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,
             self::AiProviderUnavailable,
-            self::IntegrationDependencyUnavailable => 503,
+            self::IntegrationDependencyUnavailable,
+            self::ChatUnavailable => 503,
             self::TwoFactorRequired => 202,
         };
     }

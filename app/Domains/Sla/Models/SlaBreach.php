@@ -4,11 +4,14 @@ namespace App\Domains\Sla\Models;
 
 use App\Domains\Sla\Exceptions\SlaBreachImmutableException;
 use App\Domains\Ticketing\Models\Ticket;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SlaBreach extends Model
 {
+    use GeneratesUuid;
+
     const UPDATED_AT = null;
 
     protected $guarded = ['*'];

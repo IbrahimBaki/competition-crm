@@ -2,6 +2,8 @@
 
 namespace App\Domains\Channels\Chat\Actions;
 
+use App\Domains\Channels\Chat\Exceptions\ChatTransferReasonRequiredException;
+use App\Domains\Channels\Chat\Exceptions\ChatTransferTargetUnavailableException;
 use App\Domains\Channels\Chat\Models\ChatSession;
 use App\Domains\Channels\Chat\Models\ChatSessionState;
 use App\Domains\Channels\Chat\Models\ChatTransferTargetType;
@@ -12,7 +14,11 @@ final class TransferChatSession
     public function handle(ChatSession $session, ChatTransferTargetType $targetType, ?string $reason, ?User $targetAgent = null): ChatSession
     {
         if (! $reason || trim($reason) === '') {
-            throw new \Exception('Transfer reason required');
+            throw new ChatTransferReasonRequiredException;
+        }
+
+        if ($targetType === ChatTransferTargetType::Agent && ! $targetAgent) {
+            throw new ChatTransferTargetUnavailableException;
         }
 
         $session->update(['state' => ChatSessionState::Transferred->value, 'transferred_at' => now()]);

@@ -23,10 +23,10 @@
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Edit | Navigate to policy edit | `/admin/sla/policies/{id}` | (same) | N/A |
-| Delete | DELETE | `DELETE /sla-policies/{policy}` | (same) | Yes (if no tickets use it) |
+| Delete | DELETE | `DELETE /sla/policies/{policy}` | (same) | Yes (if no tickets use it) |
 
 **Related endpoints**:
-- `GET /sla-policies` (list)
+- `GET /sla/policies` (list)
 
 ---
 
@@ -73,11 +73,11 @@ General      4320      2880     1440
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save Policy | PATCH policy | `PATCH /sla-policies/{policy}` | (same) | No |
+| Save Policy | PATCH policy | `PATCH /sla/policies/{policy}` | (same) | No |
 | Reset to Defaults | Populate matrix with standard values | (modal confirm) | (same) | No |
 
 **Related endpoints**:
-- `PATCH /sla-policies/{policy}` (update policy + targets)
+- `PATCH /sla/policies/{policy}` (update policy + targets)
 
 **Notes**:
 - Business hours applied per ticket's branch (branch.timezone, branch.working_hours, branch.holidays)
@@ -150,8 +150,8 @@ General      4320      2880     1440
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Edit | Navigate to rule edit | `/admin/automation/rules/{id}` | (same) | N/A |
-| Enable/Disable | Toggle active flag | `PATCH /automation-rules/{rule}` (set is_active) | (same) | No |
-| Delete | DELETE | `DELETE /automation-rules/{rule}` | (same) | Yes |
+| Enable/Disable | Toggle active flag | `PATCH /automation/rules/{rule}` (set is_active) | (same) | No |
+| Delete | DELETE | `DELETE /automation/rules/{rule}` | (same) | Yes |
 | View Executions | Link to rule execution log (filtered by rule) | `/admin/automation/executions?filter[rule_id]={id}` | (same) | N/A |
 
 **Related endpoints**:
@@ -260,12 +260,12 @@ Action 3:  [Type: Change Status]  [Status: pending]  [remove]  [↑][↓]
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save Rule | POST/PATCH rule | `POST /automation-rules` or `PATCH /automation-rules/{rule}` | (same) | No |
+| Save Rule | POST/PATCH rule | `POST /automation/rules` or `PATCH /automation/rules/{rule}` | (same) | No |
 | Test Rule | Dry-run: show tickets that would match | (modal) | (same) | N/A |
 | Cancel | Go back | — | N/A | N/A |
 
 **Related endpoints**:
-- `POST /automation-rules`, `PATCH /automation-rules/{rule}` (create/update)
+- `POST /automation/rules`, `PATCH /automation/rules/{rule}` (create/update)
 - (Condition/action JSON stored in `conditions` and `actions` columns per `docs/contracts/automation-rules.md`)
 
 **Notes**:

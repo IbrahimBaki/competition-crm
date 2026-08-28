@@ -68,6 +68,10 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ATTACHMENTS_DOWNLOAD,
             PermissionKey::NOTIFICATIONS_VIEW_OWN,
             PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
+            PermissionKey::CHANNELS_CHAT_MANAGE,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $managerPermissions);
@@ -107,6 +111,10 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ATTACHMENTS_DOWNLOAD,
             PermissionKey::NOTIFICATIONS_VIEW_OWN,
             PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
+            PermissionKey::CHANNELS_CHAT_MANAGE,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $supervisorPermissions);
@@ -135,6 +143,9 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::ATTACHMENTS_DOWNLOAD,
             PermissionKey::NOTIFICATIONS_VIEW_OWN,
             PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
+            PermissionKey::CHANNELS_CHAT_VIEW,
+            PermissionKey::CHANNELS_CHAT_ACCEPT,
+            PermissionKey::CHANNELS_CHAT_TRANSFER,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $agentPermissions);

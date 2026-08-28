@@ -3,11 +3,14 @@
 namespace App\Domains\Sla\Models;
 
 use App\Domains\Ticketing\Models\TicketCategory;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SlaTarget extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = [

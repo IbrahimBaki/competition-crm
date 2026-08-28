@@ -2,12 +2,14 @@
 
 namespace App\Domains\Ticketing\Models;
 
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class TicketTag extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     protected $guarded = ['*'];

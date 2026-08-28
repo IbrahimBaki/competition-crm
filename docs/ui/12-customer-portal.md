@@ -1,5 +1,11 @@
 # 12. Customer Portal
 
+> **Backend availability — read before building.**
+> The portal account is **read-only**: only `GET /portal/me` exists. There is no
+> profile update, no portal notification-preferences endpoint and no portal
+> password-change endpoint. (`/notifications/preferences` is a staff route and
+> is blocked for portal tokens.) Build these screens only after the endpoints land.
+
 **Domains**: Portal  
 **Surface**: Customer Self-Service Only  
 **Auth**: `portalToken` (separate from staff `bearer` token)
@@ -274,7 +280,7 @@ Optional comment:
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save | PATCH profile | `PATCH /portal/me` (or similar) | (implicit) | No |
+| Save | PATCH profile | `PATCH /portal/me` ⚠️ **NOT IMPLEMENTED** (or similar) | (implicit) | No |
 
 ### Notification Preferences
 **Checkboxes** (which notifications to receive via email):
@@ -285,7 +291,7 @@ Optional comment:
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save | PATCH preferences | `PATCH /portal/notifications/preferences` or similar | (implicit) | No |
+| Save | PATCH preferences | `PATCH /portal/notifications/preferences` ⚠️ **NOT IMPLEMENTED** or similar | (implicit) | No |
 
 ### Change Password
 **Fields**:
@@ -306,7 +312,7 @@ Optional comment:
 
 **Related endpoints**:
 - `GET /portal/me` (fetch current profile)
-- `PATCH /portal/me` (update profile)
+- `PATCH /portal/me` ⚠️ **NOT IMPLEMENTED** (update profile)
 - (Password change endpoint TBD)
 
 ---

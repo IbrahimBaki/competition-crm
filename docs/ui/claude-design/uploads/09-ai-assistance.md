@@ -48,7 +48,7 @@ onLearnMore: callback (optional)
 **User Actions**:
 | Label | Behavior | Permission | Notes |
 |---|---|---|---|
-| Accept | Use suggestion + record acceptance | `ai.suggestions.resolve` | On accept: `POST /ai/suggestions/{id}` with state=accepted |
+| Accept | Use suggestion + record acceptance | `ai.suggestions.resolve` | On accept: `POST /ai/suggestions/{suggestion}/resolve/{decision}` (`decision` = `accepted`) |
 | Discard | Reject suggestion + record rejection | (same) | On discard: POST with state=discarded; show alternative suggestions (if any) |
 | Learn More | Navigate to detailed explanation (if applicable) | (same) | For classifications: show "Why this category?" with confidence breakdown |
 
@@ -83,7 +83,7 @@ onLearnMore: callback (optional)
 |---|---|---|---|---|
 | Get AI Suggestion | POST generate suggestion | (internal, likely returns suggestion in response shape) | `ai.assistance.use` | Yes (same ticket + prompt = same suggestion, cached) |
 | Accept Suggestion | (fills compose box, no API call yet) | — | (same) | N/A |
-| Send Reply | POST message + resolve suggestion as accepted | `POST /tickets/{ticket}/messages` + `POST /ai/suggestions/{id}` resolve | (same) | No (message needs Idempotency-Key) |
+| Send Reply | POST message + resolve suggestion as accepted | `POST /tickets/{ticket}/messages` + `POST /ai/suggestions/{suggestion}/resolve/{decision}` | (same) | No (message needs Idempotency-Key) |
 
 **Related endpoints**:
 - (AI suggestion generated server-side, returned with ticket context or via separate POST)
@@ -262,7 +262,7 @@ Agent: "Hi, I'm Ahmed from Support. How can I help?"
 |---|---|---|---|---|
 | Auto-Answer | Customer message + high confidence (≥75%) | (chatbot model call) | `ai.assistance.use` | No |
 | Offer Alternatives | Confidence medium (50–74%) | (return 2–3 article links + human option) | (same) | N/A |
-| Escalate | Low confidence (<50%) OR 2 failed attempts | `POST /channels/chat/sessions/{session}/transfer` (to queue) | (same) | Yes |
+| Escalate | Low confidence (<50%) OR 2 failed attempts | `POST /channels/chat/sessions/{session}/transfer` ⚠️ **NOT IMPLEMENTED** (to queue) | (same) | Yes |
 
 **Configuration** (in AI Settings):
 - Max failed attempts: 2 (before mandatory escalation)

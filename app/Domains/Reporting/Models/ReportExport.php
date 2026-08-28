@@ -6,11 +6,14 @@ namespace App\Domains\Reporting\Models;
 
 use App\Models\User;
 use App\Support\Attachments\Attachment;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReportExport extends Model
 {
+    use GeneratesUuid;
+
     protected $table = 'report_exports';
 
     protected $fillable = [

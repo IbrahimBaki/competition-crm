@@ -1,5 +1,13 @@
 # 04. Tickets (Core Workbench)
 
+> **Backend availability — read before building.**
+> **Saved views have no API.** A `ticket_saved_views` table and a
+> `TicketSavedView` model exist, but no routes are registered, so the Saved
+> Views screens cannot be built yet.
+> Queues expose only `GET /tickets/queues/mine` and
+> `GET /tickets/queues/department/{department}` — there is **no team queue**.
+> Ticket statuses cannot be deleted (categories can).
+
 **Domains**: Ticketing  
 **Surface**: Staff CRM only  
 **Permissions**: `tickets.*`, `ticket.*`
@@ -39,7 +47,7 @@ All Tickets       [shows if: tickets.view.any]
 
 **Related endpoints**:
 - `GET /tickets/queues/mine` (my tickets)
-- `GET /tickets/queues/team/{team}` (team tickets, if applicable)
+- `GET /tickets/queues/team/{team}` ⚠️ **NOT IMPLEMENTED** (team tickets, if applicable)
 - `GET /tickets/queues/department/{department}` (department tickets)
 - (implicit queue for all tickets via `GET /tickets?filter[status]=open` etc.)
 
@@ -97,7 +105,7 @@ All Tickets       [shows if: tickets.view.any]
 - `GET /tickets` (list with pagination/filter/sort)
 - `POST /tickets/{ticket}/assign` (bulk assign, loop)
 - `POST /tickets/{ticket}/status` (bulk status, loop)
-- `GET /ticket-saved-views` (list saved views)
+- `GET /ticket-saved-views` ⚠️ **NOT IMPLEMENTED** (list saved views)
 
 **Notes**:
 - Empty state: "No tickets match your filters" + clear-all-filters button
@@ -311,7 +319,7 @@ Sales
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Edit | Modal to edit bilingual name, lifecycle type | `PATCH /ticket-statuses/{status}` | (same) | No |
-| Delete | (only custom statuses) | `DELETE /ticket-statuses/{status}` | (same) | Yes |
+| Delete | (only custom statuses) | `DELETE /ticket-statuses/{status}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 
 **Status Edit Modal**:
 **Fields**:
@@ -326,7 +334,7 @@ Sales
 - `GET /ticket-statuses` (list)
 - `POST /ticket-statuses` (create)
 - `PATCH /ticket-statuses/{status}` (update)
-- `DELETE /ticket-statuses/{status}` (delete)
+- `DELETE /ticket-statuses/{status}` ⚠️ **NOT IMPLEMENTED** (delete)
 
 ---
 
@@ -347,8 +355,8 @@ Sales
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Load View | Navigate to ticket list with filters applied | (navigation) | (same) | N/A |
-| Edit | Modal to update filters | `PATCH /ticket-saved-views/{view}` | (same) | No |
-| Delete | DELETE | `DELETE /ticket-saved-views/{view}` | (same) | Yes |
+| Edit | Modal to update filters | `PATCH /ticket-saved-views/{view}` ⚠️ **NOT IMPLEMENTED** | (same) | No |
+| Delete | DELETE | `DELETE /ticket-saved-views/{view}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 
 **Create/Edit View Modal**:
 **Fields**:

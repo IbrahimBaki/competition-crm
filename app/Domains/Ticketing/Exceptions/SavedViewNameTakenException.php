@@ -8,6 +8,11 @@ use Exception;
 
 class SavedViewNameTakenException extends Exception implements HasApiErrorCode
 {
+    public function __construct(string $message = '')
+    {
+        parent::__construct($message ?: __('errors.tickets.saved_view_name_taken'));
+    }
+
     public function errorCode(): ErrorCode
     {
         return ErrorCode::SavedViewNameTaken;

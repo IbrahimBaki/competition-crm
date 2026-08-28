@@ -1,5 +1,14 @@
 # 06. Channels
 
+> **Backend availability — read before building.**
+> **The agent chat console has no API.** The only chat route is
+> `POST /channels/chat/sessions` (a visitor opening a session). The domain
+> actions exist (`PostChatMessage`, `EndChatSession`, `AbandonChatSession`)
+> but no HTTP layer sits on top of them, so accept / transfer / end / list /
+> transcript cannot be called. Do not build the console until those routes exist.
+> Message templates are **read-only** (`GET /messaging/templates`); there is no
+> create, update or delete.
+
 **Domains**: Channels (Email, WebForm, Messaging, Chat sub-domains)  
 **Surface**: Staff CRM only  
 **Permissions**: `channels.*`
@@ -106,7 +115,7 @@ Field 6:  [Label: Priority]  [Type: select]  [Required: —]  [Delete] [↑↓]
 | 2026-08-26 | Sarah | sarah@co.com | Billing Query | Pending | ⏳ Duplicate |
 
 **Related endpoints**:
-- `GET /channels/web-forms/{form}/submissions` (list)
+- `GET /channels/web-forms/{form}/submissions` ⚠️ **NOT IMPLEMENTED** (list)
 
 ---
 
@@ -157,7 +166,7 @@ Field 6:  [Label: Priority]  [Type: select]  [Required: —]  [Delete] [↑↓]
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Edit | Navigate to template editor | `/admin/channels/messaging/templates/{id}` | (same) | N/A |
-| Delete | DELETE | `DELETE /provider-message-templates/{template}` | (same) | Yes |
+| Delete | DELETE | `DELETE /provider-message-templates/{template}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 
 **Related endpoints**:
 - `GET /messaging/templates` (list)
@@ -189,12 +198,12 @@ Field 6:  [Label: Priority]  [Type: select]  [Required: —]  [Delete] [↑↓]
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save | POST/PATCH template | `POST /messaging/templates` or `PATCH /messaging/templates/{id}` | (same) | No |
+| Save | POST/PATCH template | `POST /messaging/templates` ⚠️ **NOT IMPLEMENTED** or `PATCH /messaging/templates/{id}` ⚠️ **NOT IMPLEMENTED** | (same) | No |
 | Test | Modal to preview with sample variables | (no API call) | (same) | N/A |
 | Cancel | Go back | — | N/A | N/A |
 
 **Related endpoints**:
-- `POST /messaging/templates`, `PATCH /messaging/templates/{id}`, `GET /messaging/templates`
+- `POST /messaging/templates` ⚠️ **NOT IMPLEMENTED**, `PATCH /messaging/templates/{id}` ⚠️ **NOT IMPLEMENTED**, `GET /messaging/templates`
 
 ---
 
@@ -226,17 +235,17 @@ Field 6:  [Label: Priority]  [Type: select]  [Required: —]  [Delete] [↑↓]
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Accept Session | POST accept | `POST /channels/chat/sessions/{session}/accept` | `channels.chat.accept` | Yes |
-| Send Message | POST message | `POST /channels/chat/sessions/{session}/messages` | `channels.chat.view` | No (needs Idempotency-Key) |
-| Transfer to Agent | Modal to select agent | `POST /channels/chat/sessions/{session}/transfer` | `channels.chat.transfer` | Yes |
+| Accept Session | POST accept | `POST /channels/chat/sessions/{session}/accept` ⚠️ **NOT IMPLEMENTED** | `channels.chat.accept` | Yes |
+| Send Message | POST message | `POST /channels/chat/sessions/{session}/messages` ⚠️ **NOT IMPLEMENTED** | `channels.chat.view` | No (needs Idempotency-Key) |
+| Transfer to Agent | Modal to select agent | `POST /channels/chat/sessions/{session}/transfer` ⚠️ **NOT IMPLEMENTED** | `channels.chat.transfer` | Yes |
 | Transfer to Queue | Back to queue | (implicit) | (same) | N/A |
-| End Session | POST end | `POST /channels/chat/sessions/{session}/end` | (same) | Yes |
+| End Session | POST end | `POST /channels/chat/sessions/{session}/end` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 
 **Related endpoints**:
 - `POST /channels/chat/sessions` (start session — public, no auth needed)
-- `GET /channels/chat/sessions` (list queued/active)
-- `GET /channels/chat/sessions/{session}/messages` (transcript)
-- `POST /channels/chat/sessions/{session}/accept`, `/transfer`, `/end`
+- `GET /channels/chat/sessions` ⚠️ **NOT IMPLEMENTED** (list queued/active)
+- `GET /channels/chat/sessions/{session}/messages` ⚠️ **NOT IMPLEMENTED** (transcript)
+- `POST /channels/chat/sessions/{session}/accept` ⚠️ **NOT IMPLEMENTED**, `/transfer`, `/end`
 
 **Notes**:
 - Queue length config: max 20 sessions waiting

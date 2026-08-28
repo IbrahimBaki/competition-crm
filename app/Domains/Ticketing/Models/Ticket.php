@@ -4,22 +4,37 @@ namespace App\Domains\Ticketing\Models;
 
 use App\Domains\Ai\Models\ClassificationSource;
 use App\Domains\Customers\Models\Customer;
+use App\Domains\Organisation\Models\Branch;
 use App\Domains\Organisation\Models\Department;
 use App\Domains\Sla\Models\TicketSlaClock;
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 
 class Ticket extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     protected $guarded = ['*'];
 
     protected $fillable = [
+        // These 6 were missing, so CreateTicket::handle() silently dropped
+        // them from every insert — including `reference`, which is a NOT
+        // NULL unique column with no default, so ticket creation always
+        // crashed. No ticket has ever been created through that action.
+        'customer_id',
+        'created_by_user_id',
+        'reference',
+        'subject_normalised',
+        'body_normalised',
+        'status',
+        'custom_fields',
         'subject',
         'body',
         'priority',
@@ -70,6 +85,24 @@ class Ticket extends Model
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * The ticket has no branch_id of its own — only department_id — so this
+     * reaches the branch through the department. RuleEngine/TicketFactProvider
+     * both call $ticket->load(['branch', ...]) for working-hours-aware
+     * automation conditions, which requires a real Eloquent relation here.
+     */
+    public function branch(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Branch::class,
+            Department::class,
+            'id',
+            'id',
+            'department_id',
+            'branch_id',
+        );
     }
 
     public function category(): BelongsTo

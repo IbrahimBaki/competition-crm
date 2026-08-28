@@ -426,10 +426,19 @@ components:
             type: string
         is_active:
           type: boolean
-        created_at:
-          type: string
+        last_success_at:
+          type: [string, 'null']
           format: date-time
-        updated_at:
+        last_failure_at:
+          type: [string, 'null']
+          format: date-time
+        consecutive_failures:
+          type: integer
+          description: Resets on success; the subscription is disabled once it passes the configured threshold.
+        disabled_at:
+          type: [string, 'null']
+          format: date-time
+        created_at:
           type: string
           format: date-time
 
@@ -503,6 +512,30 @@ components:
           enum: [dry_run, commit]
         state:
           type: string
+          enum: [pending, validating, importing, completed, failed]
+        source_attachment_id:
+          type: [string, 'null']
+          format: uuid
+        total_rows:
+          type: integer
+        valid_rows:
+          type: integer
+        imported_rows:
+          type: integer
+        failed_rows:
+          type: integer
+        error_report:
+          type: [object, 'null']
+          description: Per-row validation failures produced by a dry run.
+        started_at:
+          type: [string, 'null']
+          format: date-time
+        finished_at:
+          type: [string, 'null']
+          format: date-time
+        created_by_user_id:
+          type: [string, 'null']
+          format: uuid
         created_at:
           type: string
           format: date-time

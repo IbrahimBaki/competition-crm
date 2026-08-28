@@ -5,12 +5,14 @@ namespace App\Domains\Ai\Models;
 use App\Domains\Channels\Chat\Models\ChatMessage;
 use App\Domains\Channels\Chat\Models\ChatSession;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ChatbotTurn extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     protected $fillable = [

@@ -3,11 +3,13 @@
 namespace App\Domains\Ticketing\Models;
 
 use App\Support\I18n\Casts\BilingualStringCast;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TicketStatusDefinition extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     // The table is `ticket_statuses`; without this Laravel infers

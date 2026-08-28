@@ -1,5 +1,9 @@
 # 08. Workspace & Notifications
 
+> **Backend availability — read before building.**
+> Notifications cannot be deleted; they can only be marked read
+> (`POST /notifications/{notification}/read`, `POST /notifications/read-all`).
+
 **Domains**: Workspace, Notifications  
 **Surface**: Staff CRM only  
 **Permissions**: `workspace.*`, `notifications.*`
@@ -161,7 +165,7 @@
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Mark as Read | PATCH notification | `POST /notifications/{notification}/read` | (same) | Yes |
-| Delete | DELETE | `DELETE /notifications/{notification}` | (same) | Yes |
+| Delete | DELETE | `DELETE /notifications/{notification}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 | Go to Source | Navigate to ticket/resource | (navigation) | (same) | N/A |
 
 **Mark All as Read**:

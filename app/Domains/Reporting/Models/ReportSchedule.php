@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\Reporting\Models;
 
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Carbon\CarbonImmutable;
 use DateTimeZone;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ReportSchedule extends Model
 {
+    use GeneratesUuid;
+
     protected $table = 'report_schedules';
 
     protected $fillable = [

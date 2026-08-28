@@ -2,11 +2,14 @@
 
 namespace App\Domains\Integrations\Models;
 
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class WebhookDelivery extends Model
 {
+    use GeneratesUuid;
+
     protected $fillable = [
         'webhook_subscription_id', 'event_type', 'event_uuid',
         'payload', 'state', 'attempt_count', 'last_status_code',

@@ -3,11 +3,14 @@
 namespace App\Domains\Ticketing\Models;
 
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketEvent extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['ticket_id', 'type', 'actor_user_id', 'payload', 'occurred_at'];

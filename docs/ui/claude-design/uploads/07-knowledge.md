@@ -1,5 +1,11 @@
 # 07. Knowledge
 
+> **Backend availability — read before building.**
+> Knowledge articles and categories **cannot be deleted** — articles move
+> through states instead (`POST /knowledge/articles/{article}/state`, including
+> `archived`). Article feedback is a public-surface endpoint only:
+> `POST /public/knowledge/articles/{article}/feedback`.
+
 **Domains**: Knowledge  
 **Surface**: Staff (authoring/management) + Public (help center view)  
 **Permissions**: `knowledge.*`
@@ -28,7 +34,7 @@ Billing & Accounts
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
 | Edit | Modal to edit category | `/admin/knowledge/categories/{id}` | (same) | N/A |
-| Delete | DELETE (if no articles in category) | `DELETE /knowledge-categories/{category}` | (same) | Yes |
+| Delete | DELETE (if no articles in category) | `DELETE /knowledge-categories/{category}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 | Add Sub-Category | Link | — | (same) | N/A |
 
 **Category Edit Modal**:
@@ -40,7 +46,7 @@ Billing & Accounts
 
 **Related endpoints**:
 - `GET /knowledge/categories` (hierarchy)
-- `POST /knowledge/categories`, `PATCH /knowledge/categories/{id}`, `DELETE /knowledge/categories/{category}`
+- `POST /knowledge/categories`, `PATCH /knowledge/categories/{id}`, `DELETE /knowledge/categories/{category}` ⚠️ **NOT IMPLEMENTED**
 
 ---
 
@@ -77,7 +83,7 @@ Billing & Accounts
 | Edit | Navigate to editor | `/knowledge/articles/{id}/edit` | `knowledge.articles.update` | N/A |
 | Publish | Change state to published | `POST /knowledge/articles/{article}/state` (state=published) | `knowledge.articles.publish` | Yes |
 | Archive | Change state to archived | `POST /knowledge/articles/{article}/state` (state=archived) | `knowledge.articles.archive` | Yes |
-| Delete | DELETE | `DELETE /knowledge/articles/{article}` | (same) | Yes |
+| Delete | DELETE | `DELETE /knowledge/articles/{article}` ⚠️ **NOT IMPLEMENTED** | (same) | Yes |
 
 **Related endpoints**:
 - `GET /knowledge/articles` (list with filter/sort)
@@ -185,7 +191,7 @@ Browse by Category
 - Full article content (ar/en language picker at top)
 - Breadcrumb: Help > Category > Article Title
 - Feedback section: "Was this helpful?" with 👍👎 buttons
-  - On click: `POST /knowledge/articles/{article}/feedback` with helpful: true/false
+  - On click: `POST /public/knowledge/articles/{article}/feedback` with helpful: true/false
   - Shows count of helpful/not helpful
 
 **Related endpoints**:

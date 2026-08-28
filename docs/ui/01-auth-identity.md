@@ -1,5 +1,13 @@
 # 01. Auth & Identity
 
+> **Backend availability — read before building.**
+> There is **no direct user CRUD**. Users are created by invitation
+> (`POST /users/invite`) and managed with `POST /users/{user}/activate` /
+> `deactivate`. There is no create, update or fetch-by-id route for users —
+> no POST or PATCH on the users collection, and no users/{id} detail route.
+> The create/edit form below must be built as an *invite* form plus the
+> placement endpoints (`/users/{user}/branches/...`, `/users/{user}/departments/...`).
+
 **Domains**: Security  
 **Surface**: Staff CRM only  
 **Permissions**: `admin.users.*`, `admin.roles.manage`, `admin.audit.view`, `dataprotection.*`
@@ -187,7 +195,7 @@
 
 **Related endpoints**:
 - `GET /users` (list with filtering/sorting/pagination)
-- `GET /users/{id}` (detail, not exposed as separate screen, used on edit)
+- `GET /users/{id}` ⚠️ **NOT IMPLEMENTED** (detail, not exposed as separate screen, used on edit)
 - `POST /users/{user}/activate`, `POST /users/{user}/deactivate`
 - `POST /users/{user}/erase-personal-data`
 
@@ -218,7 +226,7 @@
 **Actions**:
 | Label | Action | Endpoint | Permission | Idempotent |
 |---|---|---|---|---|
-| Save | POST create/PATCH update | `POST /users` or `PATCH /users/{user}` | (same) | No |
+| Save | POST create/PATCH update | `POST /users` ⚠️ **NOT IMPLEMENTED** or `PATCH /users/{user}` ⚠️ **NOT IMPLEMENTED** | (same) | No |
 | Invite User | POST invite | `POST /users/invite` (instead of save if password not set) | (same) | No |
 | Cancel | Go back | — | N/A | N/A |
 
@@ -229,8 +237,8 @@
 - **Success**: toast "User created/updated", redirect to list
 
 **Related endpoints**:
-- `POST /users` (create)
-- `PATCH /users/{user}` (update)
+- `POST /users` ⚠️ **NOT IMPLEMENTED** (create)
+- `PATCH /users/{user}` ⚠️ **NOT IMPLEMENTED** (update)
 - `POST /users/invite` (send invite email if password not initially set)
 - `POST /users/{user}/branches/{branch}` (attach to branch)
 - `DELETE /users/{user}/branches/{branch}` (detach)

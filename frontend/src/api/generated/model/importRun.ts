@@ -5,13 +5,29 @@
  * Support CRM platform API with integrated automation, reporting, and external integrations
  * OpenAPI spec version: 1.0.0
  */
+import type { ImportRunCreatedByUserId } from './importRunCreatedByUserId';
+import type { ImportRunErrorReport } from './importRunErrorReport';
+import type { ImportRunFinishedAt } from './importRunFinishedAt';
 import type { ImportRunMode } from './importRunMode';
+import type { ImportRunSourceAttachmentId } from './importRunSourceAttachmentId';
+import type { ImportRunStartedAt } from './importRunStartedAt';
+import type { ImportRunState } from './importRunState';
 
 export interface ImportRun {
   created_at?: string;
+  created_by_user_id?: ImportRunCreatedByUserId;
+  /** Per-row validation failures produced by a dry run. */
+  error_report?: ImportRunErrorReport;
+  failed_rows?: number;
+  finished_at?: ImportRunFinishedAt;
   id?: string;
+  imported_rows?: number;
   kind?: string;
   mode?: ImportRunMode;
-  state?: string;
+  source_attachment_id?: ImportRunSourceAttachmentId;
+  started_at?: ImportRunStartedAt;
+  state?: ImportRunState;
+  total_rows?: number;
   updated_at?: string;
+  valid_rows?: number;
 }

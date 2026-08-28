@@ -4,12 +4,15 @@ namespace App\Domains\Integrations\Models;
 
 use App\Models\User;
 use App\Support\Attachments\Attachment;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class ImportRun extends Model
 {
+    use GeneratesUuid;
+
     protected $fillable = [
         'kind', 'mode', 'state', 'source_attachment_id',
         'total_rows', 'valid_rows', 'imported_rows', 'failed_rows',

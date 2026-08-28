@@ -3,11 +3,14 @@
 namespace App\Domains\Ticketing\Models;
 
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketLink extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['source_ticket_id', 'target_ticket_id', 'relation', 'created_by_user_id'];

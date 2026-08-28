@@ -5,6 +5,7 @@ namespace App\Domains\Workspace\Models;
 use App\Domains\Organisation\Models\Branch;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class AgentTask extends Model
 {
+    use GeneratesUuid;
     use HasFactory;
 
     protected $guarded = ['*'];

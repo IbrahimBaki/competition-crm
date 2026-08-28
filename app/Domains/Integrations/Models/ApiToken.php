@@ -3,11 +3,14 @@
 namespace App\Domains\Integrations\Models;
 
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class ApiToken extends Model
 {
+    use GeneratesUuid;
+
     protected $fillable = ['name', 'token_hash', 'token_prefix', 'scopes', 'expires_at', 'created_by_user_id'];
 
     protected $hidden = ['token_hash', 'id'];
