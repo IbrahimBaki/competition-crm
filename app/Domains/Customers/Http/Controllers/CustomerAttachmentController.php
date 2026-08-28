@@ -8,8 +8,11 @@ use App\Domains\Customers\Http\Resources\CustomerAttachmentResource;
 use App\Domains\Customers\Models\Customer;
 use App\Support\Attachments\Attachment;
 use App\Support\Http\ApiResponse;
+use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class CustomerAttachmentController extends Controller

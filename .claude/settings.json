@@ -26,6 +26,12 @@
           { "type": "command", "command": "bash .claude/hooks/lint_and_format.sh" },
           { "type": "command", "command": "bash .claude/hooks/run_related_tests.sh" }
         ]
+      },
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/remind_gap_logging.sh" }
+        ]
       }
     ],
     "Stop": [

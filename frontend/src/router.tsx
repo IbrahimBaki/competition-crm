@@ -3,6 +3,7 @@ import { LoginPage } from './pages/LoginPage';
 import { TwoFactorPage } from './pages/TwoFactorPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { TicketsPage } from './pages/TicketsPage';
+import { TicketDetailPage } from './pages/TicketDetailPage';
 import { NotFoundState } from './shell/states/NotFoundState';
 import { AppLayout } from './shell/AppLayout';
 import { ProtectedRoute } from './auth/ProtectedRoute';
@@ -36,6 +37,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute permission={PERMISSIONS.TICKETS_VIEW_ANY}>
             <TicketsPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'tickets/:ticketId',
+        element: (
+          <ProtectedRoute permission={PERMISSIONS.TICKETS_VIEW_ANY}>
+            <TicketDetailPage />
           </ProtectedRoute>
         ),
       },

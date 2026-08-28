@@ -87,6 +87,7 @@ return [
         'invitation_already_accepted' => 'تم قبول الدعوة بالفعل',
         'invitation_already_pending' => 'دعوة معلقة بالفعل لـ :email',
         'invitation_expired' => 'انتهت صلاحية الدعوة',
+        'password_reset_token_invalid' => 'رمز إعادة تعيين كلمة المرور غير صحيح أو منتهي الصلاحية',
         'system_role_immutable' => 'لا يمكن تعديل أدوار النظام',
         'two_factor_already_enabled' => 'المصادقة الثنائية مفعلة بالفعل',
         'two_factor_required' => 'المصادقة الثنائية مطلوبة',

@@ -6,8 +6,7 @@ export function usePermissions() {
 
   return {
     can: (permission: PermissionKey) => hasPermission(permissions, permission),
-    canAny: (permissions: readonly PermissionKey[]) =>
-      hasAnyPermission(permissions, permissions),
+    canAny: (required: readonly PermissionKey[]) => hasAnyPermission(permissions, required),
     canAll: (required: readonly PermissionKey[]) =>
       hasAllPermissions(permissions, required),
   };

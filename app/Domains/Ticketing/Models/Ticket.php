@@ -2,6 +2,7 @@
 
 namespace App\Domains\Ticketing\Models;
 
+use App\Domains\Ai\Models\ClassificationSource;
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Organisation\Models\Department;
 use App\Domains\Sla\Models\TicketSlaClock;

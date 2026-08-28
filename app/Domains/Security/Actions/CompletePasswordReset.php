@@ -2,6 +2,7 @@
 
 namespace App\Domains\Security\Actions;
 
+use App\Domains\Security\Exceptions\InvalidPasswordResetTokenException;
 use App\Domains\Security\Services\AuditLogger;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +17,7 @@ class CompletePasswordReset
         $user = User::where('email', $email)->first();
 
         if (! $user || ! $user->isActive()) {
-            throw new \InvalidArgumentException('Invalid reset token.');
+            throw new InvalidPasswordResetTokenException;
         }
 
         $status = Password::reset(
@@ -33,7 +34,7 @@ class CompletePasswordReset
         if ($status === Password::PASSWORD_RESET) {
             $this->auditLogger->record(null, 'password.reset_completed', $user, null, ['email' => $email]);
         } else {
-            throw new \InvalidArgumentException('Invalid or expired reset token.');
+            throw new InvalidPasswordResetTokenException;
         }
     }
 }

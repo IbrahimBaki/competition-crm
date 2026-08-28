@@ -115,9 +115,6 @@ class TicketController extends Controller
 
         $events = $ticket->events()->paginate(25);
 
-        return ApiResponse::collection(
-            $events,
-            collectionQuery: new CollectionQuery(request(), new CollectionQuerySpec)
-        )->toResponse(request());
+        return ApiResponse::collection($events)->toResponse(request());
     }
 }

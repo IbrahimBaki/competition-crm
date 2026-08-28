@@ -31,6 +31,11 @@ final class ApiResponse implements Responsable
         ]));
     }
 
+    public static function created(mixed $data, array $meta = []): self
+    {
+        return self::item($data, 201, $meta);
+    }
+
     public static function collection(LengthAwarePaginator $page, array $meta = [], array $filters = [], ?string $sort = null): self
     {
         $baseMeta = [

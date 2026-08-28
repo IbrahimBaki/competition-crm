@@ -19,6 +19,7 @@ enum ErrorCode: string
     case SystemRoleImmutable = 'system_role_immutable';
     case InvitationExpired = 'invitation_expired';
     case InvitationInvalid = 'invitation_invalid';
+    case PasswordResetTokenInvalid = 'password_reset_token_invalid';
     case InvitationAlreadyPending = 'invitation_already_pending';
     case AccountLocked = 'account_locked';
     case AccountDeactivated = 'account_deactivated';
@@ -161,6 +162,7 @@ enum ErrorCode: string
             self::InvitationExpired,
             self::InvitationInvalid,
             self::InvitationAlreadyPending,
+            self::PasswordResetTokenInvalid,
             self::InvalidTwoFactorCode,
             self::TwoFactorAlreadyEnabled,
             self::UserAlreadyAnonymised,

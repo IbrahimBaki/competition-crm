@@ -20,8 +20,6 @@ class AuthController extends Controller
 
         $token = $user->createToken('web')->plainTextToken;
 
-        $request->session()->regenerate();
-
         return (new UserResource($user))->additional([
             'meta' => [
                 'token' => $token,
@@ -32,8 +30,6 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $request->user()?->currentAccessToken()?->delete();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
         return response()->json(status: 204);
     }

@@ -87,6 +87,7 @@ return [
         'invitation_already_accepted' => 'Invitation has already been accepted',
         'invitation_already_pending' => 'An invitation is already pending for :email',
         'invitation_expired' => 'Invitation has expired',
+        'password_reset_token_invalid' => 'Password reset token is invalid or has expired',
         'system_role_immutable' => 'System roles cannot be modified',
         'two_factor_already_enabled' => 'Two-factor authentication is already enabled',
         'two_factor_required' => 'Two-factor authentication is required',

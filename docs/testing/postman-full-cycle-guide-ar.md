@@ -8,9 +8,10 @@
 1. [المقدمة والإعداد](#المقدمة-والإعداد)
 2. [جدول الأدوار والصلاحيات](#جدول-الأدوار-والصلاحيات)
 3. [إنشاء مستخدمي اختبار](#إنشاء-مستخدمي-اختبار)
-4. [الدورة الكاملة خطوة بخطوة](#الدورة-الكاملة-خطوة-بخطوة)
-5. [اختبار الصلاحيات (Negative Testing)](#اختبار-الصلاحيات--negative-testing)
-6. [ملحق: الأخطاء الشائعة](#ملحق-الأخطاء-الشائعة)
+4. [نسيت كلمة المرور وإعادة التعيين](#نسيت-كلمة-المرور-وإعادة-التعيين-forgot--reset-password)
+5. [الدورة الكاملة خطوة بخطوة](#الدورة-الكاملة-خطوة-بخطوة)
+6. [اختبار الصلاحيات (Negative Testing)](#اختبار-الصلاحيات--negative-testing)
+7. [ملحق: الأخطاء الشائعة](#ملحق-الأخطاء-الشائعة)
 
 ---
 
@@ -223,6 +224,95 @@ Authorization: Bearer {{manager_token}}
 ```
 
 **Response:** يجب أن تظهر `permission_keys` تحتوي على صلاحيات Manager (automation.rules.manage, sla.policies.view, إلخ).
+
+---
+
+## نسيت كلمة المرور وإعادة التعيين (Forgot / Reset Password)
+
+هذه الدورة (`forgot` → قراءة الإيميل من Mailpit → `reset`) لا تحتاج توثيق (bearer token)، وتم اختبارها فعليًا end-to-end عبر Postman/curl + Mailpit API قبل كتابة هذا القسم.
+
+### 4.1 تشغيل Mailpit (سيرفر البريد التجريبي)
+
+المشروع يستخدم [Mailpit](https://github.com/axllent/mailpit) كسيرفر SMTP وهمي بدل إرسال بريد حقيقي في بيئة التطوير (خدمة `mailpit` في `docker-compose.yml` الرئيسي، الحاوية `azm-mailpit`، على نفس شبكة Docker الخاصة بـ `azm-php82`).
+
+- **واجهة الويب (لقراءة الإيميلات بالعين):** افتح المتصفح على `http://localhost:8025`
+- **REST API (لأتمتة القراءة من Postman/سكربت):**
+  - قائمة أحدث الرسائل: `GET http://localhost:8025/api/v1/messages?limit=5`
+  - محتوى رسالة معيّنة: `GET http://localhost:8025/api/v1/message/{ID}` (الحقل `Text` يحتوي على رابط إعادة التعيين كامل)
+
+> إعدادات `.env` الحالية: `MAIL_MAILER=smtp`, `MAIL_HOST=mailpit`, `MAIL_PORT=1025` — أي إيميل يرسله السيرفر أثناء التطوير يظهر في Mailpit فقط، ولا يُرسل فعليًا لأي بريد خارجي.
+
+### 4.2 طلب رابط إعادة التعيين
+
+**Request:**
+```
+POST {{base_url}}/auth/password/forgot
+Body (JSON):
+{
+  "email": "qa-reset-review@example.test"
+}
+```
+
+**Response:** `202 Accepted`, بدون body (envelope فارغ). هذا الرد **ثابت دائمًا** — سواء الإيميل موجود، غير موجود، أو حتى لحساب معطّل (`deactivated_at`) — وذلك عن قصد لمنع تسريب معلومة "هل هذا الإيميل مسجل؟" (user enumeration).
+
+⚠️ **تنبيه مهم عن الـ Throttle:** `config/auth.php` يحدد `'throttle' => 60` ثانية لكل (email). لو كررت الطلب لنفس الإيميل خلال أقل من 60 ثانية، الـ Response يبقى **202 دائمًا** لكن **لن يُرسل إيميل جديد فعليًا** (تم التأكد من هذا عمليًا: طلبان متتاليان لنفس الإيميل → رسالة واحدة فقط في Mailpit). لو ما لقيتش إيميل جديد في Mailpit، انتظر 60 ثانية أو استخدم إيميل آخر.
+
+### 4.3 قراءة الرابط من Mailpit
+
+افتح `http://localhost:8025` في المتصفح، أو استعلم الـ API:
+```
+GET http://localhost:8025/api/v1/messages?limit=5
+```
+خذ `ID` أول رسالة بعنوان "Reset Password Notification"، ثم:
+```
+GET http://localhost:8025/api/v1/message/{ID}
+```
+في حقل `Text` هتلاقي رابط بالشكل:
+```
+http://localhost:3000/reset-password?token=<TOKEN>&email=qa-reset-review%40example.test
+```
+
+> الدومين (`http://localhost:3000`) بييجي من `config('app.spa_url')` (متغير البيئة `SPA_URL`، غير موجود في `.env` الحالي فبيرجع للـ default). الرابط ده مخصص لصفحة الـ SPA وليس route حقيقي في الباك-إند — المهم هنا هو استخراج قيمتي `token` و`email` من الـ query string واستخدامهم في الخطوة التالية. الرابط صالح لمدة 60 دقيقة فقط (`'expire' => 60` في `config/auth.php`).
+
+### 4.4 تنفيذ إعادة التعيين
+
+**Request:**
+```
+POST {{base_url}}/auth/password/reset
+Body (JSON):
+{
+  "token": "<TOKEN من الرابط>",
+  "email": "qa-reset-review@example.test",
+  "password": "NewPassword123!",
+  "password_confirmation": "NewPassword123!"
+}
+```
+
+**Response:** `200 OK`, بدون body.
+
+> ⚠️ لاحظ إن الـ endpoint ده **يتطلب `email` صراحة** في الـ body (مش بس `token`) — لأن الـ backend بيستخدم password broker الافتراضي بتاع Laravel (جدول `password_reset_tokens` المفهرس بالإيميل)، مش نموذج UUID مخصص. ده **يخالف** وصف الشاشة في `docs/ui/01-auth-identity.md` (اللي بيقول إن صفحة `/password-reset/{token}` فيها حقلي كلمة السر بس، من غير إيميل) — فريق الفرونت لازم يبعت الإيميل من الـ query string لو هيلتزم بالسلوك الحالي للباك-إند، أو الباك-إند يتعدّل ليطابق الـ spec.
+
+**تحقق من نجاح العملية:** جرّب تسجيل دخول بكلمة السر الجديدة:
+```
+POST {{base_url}}/auth/login
+Body (JSON):
+{
+  "email": "qa-reset-review@example.test",
+  "password": "NewPassword123!"
+}
+```
+لازم يرجع `200` مع token جديد.
+
+### 4.5 حالات الفشل (تم اختبارها فعليًا)
+
+| السيناريو | الـ Response |
+|---|---|
+| Token غلط أو منتهي الصلاحية | `422` — `{"error":{"code":"password_reset_token_invalid", "message": "..."}}` |
+| نفس الـ Token يُستخدم مرة ثانية | `422` — نفس الكود أعلاه (الـ token يُحذف من الجدول بعد أول استخدام ناجح) |
+| Email غير موجود في الجدول | `422` — نفس الكود أعلاه (نفس رسالة الخطأ العامة، بدون تفريق، لمنع enumeration) |
+| `email` مفقود من الـ body | `422` — `validation_failed` (`field_errors.email`) |
+
+> **ملاحظة تطوير:** قبل هذا التحديث كانت الحالات الثلاث الأولى بترجع `500` (صفحة HTML خام بدل JSON envelope) لأن `CompletePasswordReset` كان بيرمي `\InvalidArgumentException` عادي مش معروف عند `ApiExceptionRenderer`. تم إصلاحها بإضافة `InvalidPasswordResetTokenException` (يطبّق `HasApiErrorCode`) + كود خطأ جديد `password_reset_token_invalid` (422) في `ErrorCode`.
 
 ---
 
@@ -813,6 +903,7 @@ Body (JSON):
 | `not_found` | 404 | المورد غير موجود | تحقق من UUID صحيح |
 | `idempotency_key_conflict` | 409 | نفس الطلب تم تنفيذه من قبل | غيّر idempotency key |
 | `rate_limited` | 429 | عدد الطلبات مرتفع جدًا | انتظر قبل إعادة المحاولة |
+| `password_reset_token_invalid` | 422 | رمز إعادة تعيين كلمة المرور غلط/منتهي/مُستخدم من قبل | اطلب رابط جديد من `/auth/password/forgot` |
 | `internal_error` | 500 | خطأ في السيرفر | راجع سجلات السيرفر |
 
 ---
@@ -828,6 +919,8 @@ Body (JSON):
 4. **Timestamps:** جميع التواريخ بصيغة ISO 8601 UTC. مثال: `2026-08-27T14:30:00Z`.
 
 5. **UUIDs:** جميع المعرفات في النظام من نوع UUID (v4). تأكد من نسخهم بدقة.
+
+6. **البريد الإلكتروني أثناء التطوير:** أي إيميل (دعوة، إعادة تعيين كلمة مرور، إلخ) بيروح لـ Mailpit (`http://localhost:8025`) مش لصندوق بريد حقيقي. راجع [قسم 4](#نسيت-كلمة-المرور-وإعادة-التعيين-forgot--reset-password) لتفاصيل استخدام الـ API بتاعه.
 
 ---
 

@@ -11,7 +11,8 @@ final class CustomerErpContextController
     public function show(Customer $customer, ErpClient $erpClient)
     {
         $context = $erpClient->fetchCustomerContext((string) $customer->external_ref ?? '');
-        return ApiResponse::success([
+
+        return ApiResponse::item([
             'customer_id' => $customer->uuid,
             'erp_context' => $context ? [
                 'legal_name' => $context->legalName,

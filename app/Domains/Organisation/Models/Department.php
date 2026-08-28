@@ -2,6 +2,8 @@
 
 namespace App\Domains\Organisation\Models;
 
+use App\Domains\Automation\Models\NoAgentFallback;
+use App\Domains\Automation\Models\RoutingStrategy;
 use App\Models\User;
 use App\Support\I18n\BilingualString;
 use App\Support\I18n\Casts\BilingualStringCast;

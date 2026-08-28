@@ -24,8 +24,10 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      // Disable @typescript-eslint/no-unused-vars since it conflicts with type definitions
-      // where parameters are part of the contract but not used in the definition itself
+      // Disable no-unused-vars (both base and @typescript-eslint) since it conflicts with type
+      // definitions (interfaces, function-type literals, ambient declarations) where parameter
+      // names are part of the contract but not used in the definition itself
+      'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       // Axios restriction is enforced by tests, not by ESLint (flat config limitations)
     },
