@@ -8,6 +8,7 @@ import { LoadingState } from '@/shell/states/LoadingState';
 import { ActionGuard } from '@/shell/ActionGuard';
 import { PERMISSIONS } from '@/auth/permissions';
 import { usePermissions } from '@/auth/usePermissions';
+import { CustomerStatusBadge } from '@/features/customers/detail/CustomerStatusBadge';
 
 interface CustomerSummary {
   uuid: string;
@@ -66,7 +67,10 @@ function CustomerContextPanelContent({ customerId }: { customerId: string }) {
         {(customer) => (
           <div>
             <p className="font-medium text-gray-900">{customer.name}</p>
-            <p className="text-xs text-gray-500">{t(`tickets.customer_context.status.${customer.status}`)}</p>
+            <CustomerStatusBadge
+              status={customer.status}
+              label={t(`tickets.customer_context.status.${customer.status}`)}
+            />
             <Link
               to={`/customers/${customer.uuid}`}
               target="_blank"

@@ -29,6 +29,10 @@ interface AttachmentUploaderProps {
 // while scanning is pending, it doesn't return status. So a "pending" result
 // here has no way to become "clean" without a fresh upload; this component
 // reflects that rather than polling something that doesn't exist.
+//
+// Shared between the ticket composer and the customer attachments panel:
+// both link a generically-uploaded attachment (this component's job) to
+// their own owner afterward via their own domain-specific endpoint.
 export function AttachmentUploader({ attachments, onChange }: AttachmentUploaderProps) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -83,7 +87,7 @@ export function AttachmentUploader({ attachments, onChange }: AttachmentUploader
           ) : (
             <>
               <span className="text-gray-500">
-                {t('tickets.attachments.uploading', { name: item.name })} ({item.progress}%)
+                {t('attachments.uploader.uploading', { name: item.name })} ({item.progress}%)
               </span>
               <div className="mt-0.5 h-1.5 w-full max-w-xs rounded bg-gray-200">
                 <div
@@ -108,12 +112,12 @@ export function AttachmentUploader({ attachments, onChange }: AttachmentUploader
               }`}
             >
               <span>
-                {attachment.name} — {t(`tickets.attachments.scan_state.${attachment.scanState}`)}
+                {attachment.name} — {t(`attachments.uploader.scan_state.${attachment.scanState}`)}
               </span>
               <button
                 type="button"
                 onClick={() => removeAttachment(attachment.uuid)}
-                aria-label={t('tickets.attachments.remove', { name: attachment.name })}
+                aria-label={t('attachments.uploader.remove', { name: attachment.name })}
                 className="text-gray-400 hover:text-red-600"
               >
                 ×

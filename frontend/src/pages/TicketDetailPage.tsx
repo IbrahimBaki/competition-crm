@@ -15,6 +15,8 @@ import { TicketAssignmentControl } from '@/features/tickets/detail/TicketAssignm
 import { TicketSlaPanel } from '@/features/tickets/detail/TicketSlaPanel';
 import { CustomerContextPanel } from '@/features/tickets/detail/CustomerContextPanel';
 import { TicketHistoryPanel } from '@/features/tickets/detail/TicketHistoryPanel';
+import { TicketTasksPanel } from '@/features/tickets/detail/TicketTasksPanel';
+import { TicketWatchersPanel } from '@/features/tickets/detail/TicketWatchersPanel';
 
 export function TicketDetailPage() {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -67,6 +69,8 @@ export function TicketDetailPage() {
               <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('tickets.detail.sla_heading')}</h2>
               <TicketSlaPanel sla={ticket.sla} />
             </section>
+            <TicketWatchersPanel ticket={ticket.id} />
+            <TicketTasksPanel ticket={{ uuid: ticket.id, reference: ticket.reference }} />
           </div>
         </div>
       )}

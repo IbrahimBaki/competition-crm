@@ -6,9 +6,9 @@ import path from 'path';
 // common way user-facing copy sneaks in outside i18n: a literal string
 // passed to an attribute that renders as visible/announced text.
 describe('no hardcoded user-facing strings in the ticket UI', () => {
-  it('does not pass literal strings to text-bearing JSX attributes under features/tickets', () => {
+  it('does not pass literal strings to text-bearing JSX attributes under features/', () => {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
-    const targetPath = path.join(__dirname, '../features/tickets');
+    const targetPath = path.join(__dirname, '../features');
 
     const textAttributePattern = /\b(placeholder|aria-label|title|alt)=(["'])[A-Za-z][^"']*\2/;
 

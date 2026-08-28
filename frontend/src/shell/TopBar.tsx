@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '@/auth/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { useLocale } from '@/i18n/LocaleProvider';
+import { NotificationBell } from '@/features/workspace/notifications/NotificationBell';
 
 export function TopBar() {
   const { user, logout } = useAuth();
@@ -28,6 +29,8 @@ export function TopBar() {
         >
           {i18n.language === 'en' ? 'العربية' : 'English'}
         </button>
+
+        <NotificationBell />
 
         {/* User menu */}
         <div className="relative">
