@@ -83,12 +83,12 @@ use App\Domains\Workspace\Http\Controllers\QuickReplyController;
 use App\Domains\Workspace\Http\Controllers\QuickReplyRenderController;
 use App\Support\Attachments\Http\AttachmentController;
 use App\Support\Http\Health\HealthController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// NOTE: Laravel's scaffolded `GET /user` route was removed. It returned the
+// raw User model — bypassing the {data, meta} envelope and exposing the
+// internal bigint id — and duplicated `GET /v1/auth/me`, which is the
+// documented endpoint for the current user.
 
 Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
@@ -96,20 +96,24 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
     Route::post('auth/password/forgot', [PasswordResetController::class, 'forgot']);
     Route::post('auth/password/reset', [PasswordResetController::class, 'reset']);
     Route::post('invitations/{token}/accept', [InvitationController::class, 'accept']);
-    Route::post('channels/email/inbound', [InboundEmailWebhookController::class, 'store'])->middleware(['public.protect', 'idempotency']);
+    Route::post('channels/email/inbound', [InboundEmailWebhookController::class, 'store'])->middleware(['public.protect']);
 
-    Route::post('channels/whatsapp/inbound', [ProviderInboundWebhookController::class, 'handleWhatsapp'])->middleware(['idempotency']);
+    Route::post('channels/whatsapp/inbound', [ProviderInboundWebhookController::class, 'handleWhatsapp']);
     Route::post('channels/whatsapp/receipts', [ProviderDeliveryReceiptController::class, 'handleWhatsapp']);
-    Route::post('channels/sms/inbound', [ProviderInboundWebhookController::class, 'handleSms'])->middleware(['idempotency']);
+    Route::post('channels/sms/inbound', [ProviderInboundWebhookController::class, 'handleSms']);
     Route::post('channels/sms/receipts', [ProviderDeliveryReceiptController::class, 'handleSms']);
 
-    Route::get('channels/web-forms/{formKey}', [PublicWebFormController::class, 'show']);
-    Route::post('channels/web-forms/{formKey}/submissions', [PublicWebFormController::class, 'store'])
-        ->middleware(['public.protect', 'throttle:web-form', 'idempotency']);
-    Route::get('channels/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
+    // Namespaced under channels/public/* per docs/api/openapi.yaml. Without the
+    // `public` segment these shadow the authenticated apiResource routes at
+    // channels/web-forms/{webForm} — the public GET is registered first, so the
+    // staff-facing show/update/delete become unreachable.
+    Route::get('channels/public/web-forms/{formKey}', [PublicWebFormController::class, 'show']);
+    Route::post('channels/public/web-forms/{formKey}/submissions', [PublicWebFormController::class, 'store'])
+        ->middleware(['public.protect', 'throttle:web-form']);
+    Route::get('channels/public/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
 
     Route::post('channels/chat/sessions', [PublicChatSessionController::class, 'store'])
-        ->middleware(['public.protect', 'throttle:chat', 'idempotency']);
+        ->middleware(['public.protect', 'throttle:chat']);
 
     Route::get('public/knowledge/categories', [PublicKnowledgeArticleController::class, 'categories']);
     Route::get('public/knowledge/articles', [PublicKnowledgeArticleController::class, 'index']);
@@ -134,19 +138,17 @@ Route::prefix('v1/portal')->middleware(['throttle:portal'])->group(function () {
     Route::get('guest/tickets/{token}', [GuestTicketTrackingController::class, 'show'])
         ->middleware(['public.protect']);
     Route::post('guest/feedback/{token}', [TicketFeedbackController::class, 'storeByInvitation'])
-        ->middleware(['public.protect', 'idempotency']);
+        ->middleware(['public.protect']);
 
     Route::middleware(['auth:portal', 'portal.auth'])->group(function () {
         Route::post('auth/logout', [PortalAuthController::class, 'logout']);
         Route::get('me', [PortalAccountController::class, 'show']);
         Route::get('tickets', [PortalTicketController::class, 'index']);
-        Route::post('tickets', [PortalTicketController::class, 'store'])->middleware('idempotency');
+        Route::post('tickets', [PortalTicketController::class, 'store']);
         Route::get('tickets/{ticket}', [PortalTicketController::class, 'show']);
         Route::get('tickets/{ticket}/messages', [PortalTicketMessageController::class, 'index']);
-        Route::post('tickets/{ticket}/messages', [PortalTicketMessageController::class, 'store'])
-            ->middleware('idempotency');
-        Route::post('tickets/{ticket}/feedback', [TicketFeedbackController::class, 'store'])
-            ->middleware('idempotency');
+        Route::post('tickets/{ticket}/messages', [PortalTicketMessageController::class, 'store']);
+        Route::post('tickets/{ticket}/feedback', [TicketFeedbackController::class, 'store']);
         Route::get('attachments/{attachment}', [PortalAttachmentController::class, 'show']);
     });
 });
@@ -194,7 +196,7 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::post('users/invite', [UserLifecycleController::class, 'invite']);
     Route::post('users/{user}/deactivate', [UserLifecycleController::class, 'deactivate']);
     Route::post('users/{user}/activate', [UserLifecycleController::class, 'activate']);
-    Route::post('users/{user}/erase-personal-data', [DataProtectionController::class, 'erase'])->middleware('idempotency');
+    Route::post('users/{user}/erase-personal-data', [DataProtectionController::class, 'erase']);
     Route::get('data-protection/retention', [DataProtectionController::class, 'retention']);
 
     Route::post('auth/two-factor', [TwoFactorController::class, 'enable']);
@@ -229,107 +231,107 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::post('customers/{customer}/merge', [CustomerMergeController::class, 'store']);
 
     Route::get('ticket-statuses', [TicketStatusController::class, 'index']);
-    Route::post('ticket-statuses', [TicketStatusController::class, 'store'])->middleware('idempotency');
-    Route::patch('ticket-statuses/{status}', [TicketStatusController::class, 'update'])->middleware('idempotency');
+    Route::post('ticket-statuses', [TicketStatusController::class, 'store']);
+    Route::patch('ticket-statuses/{status}', [TicketStatusController::class, 'update']);
 
     Route::get('tickets', [TicketController::class, 'index']);
-    Route::post('tickets', [TicketController::class, 'store'])->middleware('idempotency');
+    Route::post('tickets', [TicketController::class, 'store']);
 
     Route::get('tickets/queues/mine', [TicketQueueController::class, 'mine']);
     Route::get('tickets/queues/department/{department}', [TicketQueueController::class, 'department']);
 
     Route::get('tickets/{ticket}', [TicketController::class, 'show']);
-    Route::patch('tickets/{ticket}', [TicketController::class, 'update'])->middleware('idempotency');
+    Route::patch('tickets/{ticket}', [TicketController::class, 'update']);
     Route::get('tickets/{ticket}/history', [TicketController::class, 'history']);
 
-    Route::post('tickets/{ticket}/status', [TicketLifecycleController::class, 'status'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/reopen', [TicketLifecycleController::class, 'reopen'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/spam', [TicketLifecycleController::class, 'markSpam'])->middleware('idempotency');
-    Route::delete('tickets/{ticket}/spam', [TicketLifecycleController::class, 'restoreFromSpam'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/status', [TicketLifecycleController::class, 'status']);
+    Route::post('tickets/{ticket}/reopen', [TicketLifecycleController::class, 'reopen']);
+    Route::post('tickets/{ticket}/spam', [TicketLifecycleController::class, 'markSpam']);
+    Route::delete('tickets/{ticket}/spam', [TicketLifecycleController::class, 'restoreFromSpam']);
 
-    Route::post('tickets/{ticket}/merge', [TicketMergeController::class, 'merge'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/split', [TicketMergeController::class, 'split'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/merge', [TicketMergeController::class, 'merge']);
+    Route::post('tickets/{ticket}/split', [TicketMergeController::class, 'split']);
 
-    Route::post('tickets/{ticket}/assign', [TicketAssignmentController::class, 'assign'])->middleware('idempotency');
-    Route::delete('tickets/{ticket}/assign', [TicketAssignmentController::class, 'unassign'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/claim', [TicketAssignmentController::class, 'claim'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/transfer/agent', [TicketAssignmentController::class, 'transferToAgent'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/transfer/department', [TicketAssignmentController::class, 'transferToDepartment'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/assign', [TicketAssignmentController::class, 'assign']);
+    Route::delete('tickets/{ticket}/assign', [TicketAssignmentController::class, 'unassign']);
+    Route::post('tickets/{ticket}/claim', [TicketAssignmentController::class, 'claim']);
+    Route::post('tickets/{ticket}/transfer/agent', [TicketAssignmentController::class, 'transferToAgent']);
+    Route::post('tickets/{ticket}/transfer/department', [TicketAssignmentController::class, 'transferToDepartment']);
 
     Route::get('tickets/{ticket}/links', [TicketLinkController::class, 'index']);
-    Route::post('tickets/{ticket}/links', [TicketLinkController::class, 'store'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/links', [TicketLinkController::class, 'store']);
     Route::delete('tickets/{ticket}/links/{link}', [TicketLinkController::class, 'destroy']);
 
     Route::get('tickets/{ticket}/messages', [TicketMessageController::class, 'index']);
-    Route::post('tickets/{ticket}/messages', [TicketMessageController::class, 'store'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/messages', [TicketMessageController::class, 'store']);
     Route::get('tickets/{ticket}/messages/{message}/delivery-events', [TicketMessageController::class, 'deliveryEvents']);
-    Route::post('tickets/{ticket}/messages/{message}/retry', [TicketMessageController::class, 'retry'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/messages/{message}/retry', [TicketMessageController::class, 'retry']);
 
     Route::get('tickets/{ticket}/watchers', [TicketWatcherController::class, 'index']);
-    Route::post('tickets/{ticket}/watchers', [TicketWatcherController::class, 'store'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/watchers', [TicketWatcherController::class, 'store']);
     Route::delete('tickets/{ticket}/watchers/{user}', [TicketWatcherController::class, 'destroy']);
 
     Route::get('ticket-categories', [TicketCategoryController::class, 'index']);
-    Route::post('ticket-categories', [TicketCategoryController::class, 'store'])->middleware('idempotency');
-    Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update'])->middleware('idempotency');
+    Route::post('ticket-categories', [TicketCategoryController::class, 'store']);
+    Route::patch('ticket-categories/{category}', [TicketCategoryController::class, 'update']);
     Route::delete('ticket-categories/{category}', [TicketCategoryController::class, 'destroy']);
 
     Route::get('agent-tasks', [AgentTaskController::class, 'index']);
-    Route::post('agent-tasks', [AgentTaskController::class, 'store'])->middleware('idempotency');
+    Route::post('agent-tasks', [AgentTaskController::class, 'store']);
     Route::get('agent-tasks/{task}', [AgentTaskController::class, 'show']);
-    Route::patch('agent-tasks/{task}', [AgentTaskController::class, 'update'])->middleware('idempotency');
+    Route::patch('agent-tasks/{task}', [AgentTaskController::class, 'update']);
     Route::delete('agent-tasks/{task}', [AgentTaskController::class, 'destroy']);
-    Route::post('agent-tasks/{task}/state', [AgentTaskStateController::class, 'store'])->middleware('idempotency');
+    Route::post('agent-tasks/{task}/state', [AgentTaskStateController::class, 'store']);
 
     Route::get('channels/email/inbound', [InboundEmailReplayController::class, 'index']);
-    Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay'])->middleware('idempotency');
+    Route::post('channels/email/inbound/{record}/replay', [InboundEmailReplayController::class, 'replay']);
 
-    Route::apiResource('channels/web-forms', WebFormController::class);
+    Route::apiResource('channels/web-forms', WebFormController::class)->parameters(['web-forms' => 'webForm']);
 
     Route::get('messaging/templates', [ProviderMessageTemplateController::class, 'index']);
 
     Route::get('quick-replies', [QuickReplyController::class, 'index']);
-    Route::post('quick-replies', [QuickReplyController::class, 'store'])->middleware('idempotency');
+    Route::post('quick-replies', [QuickReplyController::class, 'store']);
     Route::get('quick-replies/{reply}', [QuickReplyController::class, 'show']);
-    Route::patch('quick-replies/{reply}', [QuickReplyController::class, 'update'])->middleware('idempotency');
+    Route::patch('quick-replies/{reply}', [QuickReplyController::class, 'update']);
     Route::delete('quick-replies/{reply}', [QuickReplyController::class, 'destroy']);
     Route::post('quick-replies/render', [QuickReplyRenderController::class, 'store']);
 
     Route::get('knowledge/categories', [KnowledgeCategoryController::class, 'index']);
-    Route::post('knowledge/categories', [KnowledgeCategoryController::class, 'store'])->middleware('idempotency');
-    Route::patch('knowledge/categories/{category}', [KnowledgeCategoryController::class, 'update'])->middleware('idempotency');
+    Route::post('knowledge/categories', [KnowledgeCategoryController::class, 'store']);
+    Route::patch('knowledge/categories/{category}', [KnowledgeCategoryController::class, 'update']);
 
     Route::get('knowledge/articles', [KnowledgeArticleController::class, 'index']);
-    Route::post('knowledge/articles', [KnowledgeArticleController::class, 'store'])->middleware('idempotency');
+    Route::post('knowledge/articles', [KnowledgeArticleController::class, 'store']);
     Route::get('knowledge/articles/search', [KnowledgeArticleSearchController::class, 'index']);
     Route::get('knowledge/articles/{article}', [KnowledgeArticleController::class, 'show']);
-    Route::patch('knowledge/articles/{article}', [KnowledgeArticleController::class, 'update'])->middleware('idempotency');
-    Route::post('knowledge/articles/{article}/state', [KnowledgeArticleStateController::class, 'store'])->middleware('idempotency');
+    Route::patch('knowledge/articles/{article}', [KnowledgeArticleController::class, 'update']);
+    Route::post('knowledge/articles/{article}/state', [KnowledgeArticleStateController::class, 'store']);
     Route::get('knowledge/articles/{article}/versions', [KnowledgeArticleVersionController::class, 'index']);
-    Route::post('knowledge/articles/{article}/versions/{version}/restore', [KnowledgeArticleVersionController::class, 'store'])->middleware('idempotency');
+    Route::post('knowledge/articles/{article}/versions/{version}/restore', [KnowledgeArticleVersionController::class, 'store']);
     Route::post('knowledge/articles/render', [KnowledgeArticleRenderController::class, 'store']);
 
     // SLA management
     Route::apiResource('sla/policies', SlaPolicyController::class);
     Route::get('tickets/{ticket}/sla/{clock}', [TicketSlaController::class, 'show']);
-    Route::post('tickets/{ticket}/sla/{clock}/reset', [TicketSlaController::class, 'reset'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/sla/{clock}/reset', [TicketSlaController::class, 'reset']);
 
     // Automation rules management
-    Route::post('automation/rules', [AutomationRuleController::class, 'store'])->middleware('idempotency');
+    Route::post('automation/rules', [AutomationRuleController::class, 'store']);
     Route::get('automation/rules', [AutomationRuleController::class, 'index']);
     Route::get('automation/rules/{rule}', [AutomationRuleController::class, 'show']);
-    Route::patch('automation/rules/{rule}', [AutomationRuleController::class, 'update'])->middleware('idempotency');
+    Route::patch('automation/rules/{rule}', [AutomationRuleController::class, 'update']);
     Route::delete('automation/rules/{rule}', [AutomationRuleController::class, 'destroy']);
     Route::get('automation/executions', [AutomationRuleExecutionController::class, 'index']);
-    Route::post('tickets/{ticket}/escalate', [TicketEscalationController::class, 'store'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/escalate', [TicketEscalationController::class, 'store']);
 
     // AI assistance
-    Route::post('tickets/{ticket}/ai/summary', [TicketAiAssistController::class, 'summary'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/ai/suggested-reply', [TicketAiAssistController::class, 'suggestedReply'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/ai/classify', [TicketAiAssistController::class, 'classify'])->middleware('idempotency');
-    Route::post('tickets/{ticket}/ai/suggested-articles', [TicketAiAssistController::class, 'suggestedArticles'])->middleware('idempotency');
+    Route::post('tickets/{ticket}/ai/summary', [TicketAiAssistController::class, 'summary']);
+    Route::post('tickets/{ticket}/ai/suggested-reply', [TicketAiAssistController::class, 'suggestedReply']);
+    Route::post('tickets/{ticket}/ai/classify', [TicketAiAssistController::class, 'classify']);
+    Route::post('tickets/{ticket}/ai/suggested-articles', [TicketAiAssistController::class, 'suggestedArticles']);
     Route::get('ai/suggestions', [AiSuggestionController::class, 'index']);
-    Route::post('ai/suggestions/{suggestion}/resolve/{decision}', [AiSuggestionController::class, 'resolve'])->middleware('idempotency');
+    Route::post('ai/suggestions/{suggestion}/resolve/{decision}', [AiSuggestionController::class, 'resolve']);
     Route::get('ai/usage', [AiUsageController::class, 'index']);
 
     Route::get('notifications', [NotificationController::class, 'index']);
@@ -341,16 +343,16 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
 
     Route::get('reports', [ReportController::class, 'index']);
     Route::get('reports/{report}', [ReportController::class, 'show']);
-    Route::post('reports/{report}/export', [ReportExportController::class, 'store'])->middleware('idempotency');
+    Route::post('reports/{report}/export', [ReportExportController::class, 'store']);
 
     // Report scheduling
-    Route::apiResource('report-schedules', ReportScheduleController::class);
+    Route::apiResource('report-schedules', ReportScheduleController::class)->parameters(['report-schedules' => 'schedule']);
 
     // Webhooks (machine-to-machine)
     Route::apiResource('webhooks/subscriptions', WebhookSubscriptionController::class);
     Route::get('webhooks/deliveries', [WebhookDeliveryController::class, 'index']);
     Route::get('customers/{customer}/erp-context', [CustomerErpContextController::class, 'show']);
-    Route::apiResource('import-runs', ImportRunController::class)->only(['index', 'show', 'store']);
+    Route::apiResource('import-runs', ImportRunController::class)->only(['index', 'show', 'store'])->parameters(['import-runs' => 'run']);
 
     // API tokens (staff management)
     Route::apiResource('integration/tokens', ApiTokenController::class)->only(['index', 'store', 'destroy']);

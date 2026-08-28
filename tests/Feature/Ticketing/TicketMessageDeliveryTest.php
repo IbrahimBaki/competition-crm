@@ -9,12 +9,12 @@ use App\Domains\Ticketing\Models\MessageChannel;
 use App\Domains\Ticketing\Models\MessageDeliveryState;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketMessageDeliveryTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -102,8 +102,8 @@ class TicketMessageDeliveryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         $postMessage = $this->app->make(PostTicketMessage::class);
         $message = $postMessage->handle(

@@ -26,6 +26,13 @@ import type {
   GetBranchesParams,
   GetDepartmentsParams,
   GetTeamsParams,
+  NotFoundResponse,
+  PatchBranch200,
+  PatchBranchBody,
+  PatchDepartment200,
+  PatchDepartmentBody,
+  PatchTeam200,
+  PatchTeamBody,
   PostBranchHolidaysBody,
   PostBranches201,
   PostBranchesBody,
@@ -335,6 +342,65 @@ export const useDeleteBranch = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteBranchMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * All fields optional; UpdateBranchRequest applies no `required` rules.
+ * @summary Partially update branch
+ */
+export const patchBranch = (
+    branch: string,
+    patchBranchBody: PatchBranchBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchBranch200>(
+      {url: `/branches/${branch}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchBranchBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchBranchMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchBranch>>, TError,{branch: string;data: PatchBranchBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchBranch>>, TError,{branch: string;data: PatchBranchBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchBranch>>, {branch: string;data: PatchBranchBody}> = (props) => {
+          const {branch,data} = props ?? {};
+
+          return  patchBranch(branch,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchBranchMutationResult = NonNullable<Awaited<ReturnType<typeof patchBranch>>>
+    export type PatchBranchMutationBody = PatchBranchBody
+    export type PatchBranchMutationError = NotFoundResponse
+
+    /**
+ * @summary Partially update branch
+ */
+export const usePatchBranch = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchBranch>>, TError,{branch: string;data: PatchBranchBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchBranch>>,
+        TError,
+        {branch: string;data: PatchBranchBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchBranchMutationOptions(options);
 
       return useMutation(mutationOptions);
     }
@@ -1100,6 +1166,65 @@ export const useDeleteDepartment = <TError = unknown,
       return useMutation(mutationOptions);
     }
     /**
+ * All fields optional; UpdateDepartmentRequest applies no `required` rules.
+ * @summary Partially update department
+ */
+export const patchDepartment = (
+    department: string,
+    patchDepartmentBody: PatchDepartmentBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchDepartment200>(
+      {url: `/departments/${department}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchDepartmentBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchDepartmentMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchDepartment>>, TError,{department: string;data: PatchDepartmentBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchDepartment>>, TError,{department: string;data: PatchDepartmentBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchDepartment>>, {department: string;data: PatchDepartmentBody}> = (props) => {
+          const {department,data} = props ?? {};
+
+          return  patchDepartment(department,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchDepartmentMutationResult = NonNullable<Awaited<ReturnType<typeof patchDepartment>>>
+    export type PatchDepartmentMutationBody = PatchDepartmentBody
+    export type PatchDepartmentMutationError = NotFoundResponse
+
+    /**
+ * @summary Partially update department
+ */
+export const usePatchDepartment = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchDepartment>>, TError,{department: string;data: PatchDepartmentBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchDepartment>>,
+        TError,
+        {department: string;data: PatchDepartmentBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchDepartmentMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary Activate department
  */
 export const postDepartmentActivate = (
@@ -1499,6 +1624,65 @@ export const useDeleteTeam = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteTeamMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * All fields optional; UpdateTeamRequest applies no `required` rules.
+ * @summary Partially update team
+ */
+export const patchTeam = (
+    team: string,
+    patchTeamBody: PatchTeamBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchTeam200>(
+      {url: `/teams/${team}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchTeamBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchTeamMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTeam>>, TError,{team: string;data: PatchTeamBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchTeam>>, TError,{team: string;data: PatchTeamBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchTeam>>, {team: string;data: PatchTeamBody}> = (props) => {
+          const {team,data} = props ?? {};
+
+          return  patchTeam(team,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchTeamMutationResult = NonNullable<Awaited<ReturnType<typeof patchTeam>>>
+    export type PatchTeamMutationBody = PatchTeamBody
+    export type PatchTeamMutationError = NotFoundResponse
+
+    /**
+ * @summary Partially update team
+ */
+export const usePatchTeam = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchTeam>>, TError,{team: string;data: PatchTeamBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchTeam>>,
+        TError,
+        {team: string;data: PatchTeamBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchTeamMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

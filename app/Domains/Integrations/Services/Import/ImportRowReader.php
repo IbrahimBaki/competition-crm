@@ -34,6 +34,7 @@ final class ImportRowReader
         while (($row = fgetcsv($file)) !== false && $rowNum <= $maxRows) {
             if (empty(array_filter($row))) {
                 $rowNum++;
+
                 continue;
             }
 

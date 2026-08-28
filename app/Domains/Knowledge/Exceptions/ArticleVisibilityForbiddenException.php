@@ -2,13 +2,24 @@
 
 namespace App\Domains\Knowledge\Exceptions;
 
+use App\Support\Http\Errors\ErrorCode;
 use App\Support\Http\Errors\HasApiErrorCode;
 use Exception;
 
 class ArticleVisibilityForbiddenException extends Exception implements HasApiErrorCode
 {
-    public function apiErrorCode(): string
+    public function __construct(string $message = '')
     {
-        return 'article_visibility_forbidden';
+        parent::__construct($message ?: __('errors.knowledge.article_visibility_forbidden'));
+    }
+
+    public function errorCode(): ErrorCode
+    {
+        return ErrorCode::ArticleVisibilityForbidden;
+    }
+
+    public function errorMeta(): array
+    {
+        return [];
     }
 }

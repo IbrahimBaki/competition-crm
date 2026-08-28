@@ -7,13 +7,13 @@ use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use App\Support\Attachments\ScanState;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Http\UploadedFile;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketMessageAttachmentTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -25,9 +25,9 @@ class TicketMessageAttachmentTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('attachments.upload');
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'attachments.upload');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         // Upload file
         $file = UploadedFile::fake()->create('test.pdf', 100);
@@ -57,8 +57,8 @@ class TicketMessageAttachmentTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         // Create a pending-scan attachment
         $attachment = Attachment::factory()->create([
@@ -86,8 +86,8 @@ class TicketMessageAttachmentTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         // Create an infected attachment
         $attachment = Attachment::factory()->create([
@@ -116,8 +116,8 @@ class TicketMessageAttachmentTest extends TestCase
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
         $otherUser = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         // Create attachment uploaded by different user
         $attachment = Attachment::factory()->create([

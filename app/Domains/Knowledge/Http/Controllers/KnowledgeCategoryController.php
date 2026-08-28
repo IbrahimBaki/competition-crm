@@ -8,11 +8,14 @@ use App\Domains\Knowledge\Http\Resources\KnowledgeCategoryResource;
 use App\Domains\Knowledge\Models\Audience;
 use App\Domains\Knowledge\Models\KnowledgeCategory;
 use App\Domains\Knowledge\Services\KnowledgeCategoryTree;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 
 class KnowledgeCategoryController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private KnowledgeCategoryTree $categoryTree,
     ) {}

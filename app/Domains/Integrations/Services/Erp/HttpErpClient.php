@@ -15,7 +15,7 @@ final class HttpErpClient implements ErpClient
         $timeout = config('integrations.erp.timeout_seconds', 5);
         $cacheTtl = config('integrations.erp.cache_ttl_seconds', 300);
 
-        if (!$baseUrl || !$apiKey) {
+        if (! $baseUrl || ! $apiKey) {
             return null;
         }
 
@@ -31,7 +31,7 @@ final class HttpErpClient implements ErpClient
                     return null;
                 }
 
-                if (!$response->successful()) {
+                if (! $response->successful()) {
                     throw new IntegrationDependencyUnavailableException('ERP service unavailable');
                 }
 
@@ -55,7 +55,7 @@ final class HttpErpClient implements ErpClient
             if ($e instanceof IntegrationDependencyUnavailableException) {
                 throw $e;
             }
-            throw new IntegrationDependencyUnavailableException('ERP integration failed: ' . $e->getMessage());
+            throw new IntegrationDependencyUnavailableException('ERP integration failed: '.$e->getMessage());
         }
     }
 }

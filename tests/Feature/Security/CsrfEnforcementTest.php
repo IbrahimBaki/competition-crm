@@ -5,6 +5,7 @@ namespace Tests\Feature\Security;
 use App\Models\User;
 use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 class CsrfEnforcementTest extends TestCase
@@ -29,7 +30,7 @@ class CsrfEnforcementTest extends TestCase
             ]);
 
         // Laravel returns 419 for missing/invalid CSRF
-        $this->assertIn($response->status(), [419, 204]); // May vary depending on middleware config
+        $this->assertContains($response->status(), [419, 204]); // May vary depending on middleware config
     }
 
     public function test_logout_with_valid_csrf_token_succeeds(): void

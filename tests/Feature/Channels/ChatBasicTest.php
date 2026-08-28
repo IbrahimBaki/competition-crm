@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Channels;
 
+use App\Domains\Channels\Chat\Actions\AbandonChatSession;
+use App\Domains\Channels\Chat\Actions\EndChatSession;
+use App\Domains\Channels\Chat\Actions\PostChatMessage;
 use App\Domains\Channels\Chat\Models\ChatSession;
 use App\Domains\Channels\Chat\Models\ChatSessionState;
 use App\Domains\Channels\Chat\Models\ChatVisitorIdentity;

@@ -6,18 +6,33 @@
  * OpenAPI spec version: 1.0.0
  */
 import {
+  useMutation,
   useQuery
 } from '@tanstack/react-query'
 import type {
+  MutationFunction,
   QueryFunction,
   QueryKey,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query'
 import type {
   CollectionResponse,
+  ErrorResponse,
+  ForbiddenResponse,
   GetReportParams,
-  GetReportsParams
+  GetReportSchedule200,
+  GetReportSchedulesParams,
+  GetReportsParams,
+  NotFoundResponse,
+  PatchReportSchedule200,
+  PostReportExport202,
+  PostReportExportBody,
+  PostReportSchedules201,
+  PutReportSchedule200,
+  ReportScheduleWrite
 } from '.././model'
 import { apiRequest } from '../../http/mutator';
 
@@ -153,3 +168,414 @@ export const useGetReport = <TData = Awaited<ReturnType<typeof getReport>>, TErr
 
 
 
+/**
+ * @summary List report schedules
+ */
+export const getReportSchedules = (
+    params?: GetReportSchedulesParams,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<CollectionResponse>(
+      {url: `/report-schedules`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetReportSchedulesQueryKey = (params?: GetReportSchedulesParams,) => {
+    return [`/report-schedules`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetReportSchedulesQueryOptions = <TData = Awaited<ReturnType<typeof getReportSchedules>>, TError = ForbiddenResponse>(params?: GetReportSchedulesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReportSchedules>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReportSchedulesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReportSchedules>>> = ({ signal }) => getReportSchedules(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReportSchedules>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReportSchedulesQueryResult = NonNullable<Awaited<ReturnType<typeof getReportSchedules>>>
+export type GetReportSchedulesQueryError = ForbiddenResponse
+
+/**
+ * @summary List report schedules
+ */
+export const useGetReportSchedules = <TData = Awaited<ReturnType<typeof getReportSchedules>>, TError = ForbiddenResponse>(
+ params?: GetReportSchedulesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReportSchedules>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetReportSchedulesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * @summary Create report schedule
+ */
+export const postReportSchedules = (
+    reportScheduleWrite: ReportScheduleWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PostReportSchedules201>(
+      {url: `/report-schedules`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: reportScheduleWrite
+    },
+      options);
+    }
+  
+
+
+export const getPostReportSchedulesMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postReportSchedules>>, TError,{data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postReportSchedules>>, TError,{data: ReportScheduleWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postReportSchedules>>, {data: ReportScheduleWrite}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postReportSchedules(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostReportSchedulesMutationResult = NonNullable<Awaited<ReturnType<typeof postReportSchedules>>>
+    export type PostReportSchedulesMutationBody = ReportScheduleWrite
+    export type PostReportSchedulesMutationError = ErrorResponse
+
+    /**
+ * @summary Create report schedule
+ */
+export const usePostReportSchedules = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postReportSchedules>>, TError,{data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postReportSchedules>>,
+        TError,
+        {data: ReportScheduleWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPostReportSchedulesMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Get report schedule
+ */
+export const getReportSchedule = (
+    schedule: string,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<GetReportSchedule200>(
+      {url: `/report-schedules/${schedule}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetReportScheduleQueryKey = (schedule: string,) => {
+    return [`/report-schedules/${schedule}`] as const;
+    }
+
+    
+export const getGetReportScheduleQueryOptions = <TData = Awaited<ReturnType<typeof getReportSchedule>>, TError = NotFoundResponse>(schedule: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReportSchedule>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetReportScheduleQueryKey(schedule);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getReportSchedule>>> = ({ signal }) => getReportSchedule(schedule, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(schedule), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getReportSchedule>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetReportScheduleQueryResult = NonNullable<Awaited<ReturnType<typeof getReportSchedule>>>
+export type GetReportScheduleQueryError = NotFoundResponse
+
+/**
+ * @summary Get report schedule
+ */
+export const useGetReportSchedule = <TData = Awaited<ReturnType<typeof getReportSchedule>>, TError = NotFoundResponse>(
+ schedule: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getReportSchedule>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetReportScheduleQueryOptions(schedule,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * @summary Replace report schedule
+ */
+export const putReportSchedule = (
+    schedule: string,
+    reportScheduleWrite: ReportScheduleWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PutReportSchedule200>(
+      {url: `/report-schedules/${schedule}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: reportScheduleWrite
+    },
+      options);
+    }
+  
+
+
+export const getPutReportScheduleMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof putReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putReportSchedule>>, {schedule: string;data: ReportScheduleWrite}> = (props) => {
+          const {schedule,data} = props ?? {};
+
+          return  putReportSchedule(schedule,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutReportScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof putReportSchedule>>>
+    export type PutReportScheduleMutationBody = ReportScheduleWrite
+    export type PutReportScheduleMutationError = NotFoundResponse
+
+    /**
+ * @summary Replace report schedule
+ */
+export const usePutReportSchedule = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof putReportSchedule>>,
+        TError,
+        {schedule: string;data: ReportScheduleWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPutReportScheduleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Update report schedule
+ */
+export const patchReportSchedule = (
+    schedule: string,
+    reportScheduleWrite: ReportScheduleWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchReportSchedule200>(
+      {url: `/report-schedules/${schedule}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: reportScheduleWrite
+    },
+      options);
+    }
+  
+
+
+export const getPatchReportScheduleMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchReportSchedule>>, {schedule: string;data: ReportScheduleWrite}> = (props) => {
+          const {schedule,data} = props ?? {};
+
+          return  patchReportSchedule(schedule,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchReportScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof patchReportSchedule>>>
+    export type PatchReportScheduleMutationBody = ReportScheduleWrite
+    export type PatchReportScheduleMutationError = NotFoundResponse
+
+    /**
+ * @summary Update report schedule
+ */
+export const usePatchReportSchedule = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchReportSchedule>>, TError,{schedule: string;data: ReportScheduleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchReportSchedule>>,
+        TError,
+        {schedule: string;data: ReportScheduleWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchReportScheduleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Delete report schedule
+ */
+export const deleteReportSchedule = (
+    schedule: string,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/report-schedules/${schedule}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteReportScheduleMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReportSchedule>>, TError,{schedule: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteReportSchedule>>, TError,{schedule: string}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteReportSchedule>>, {schedule: string}> = (props) => {
+          const {schedule} = props ?? {};
+
+          return  deleteReportSchedule(schedule,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteReportScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof deleteReportSchedule>>>
+    
+    export type DeleteReportScheduleMutationError = NotFoundResponse
+
+    /**
+ * @summary Delete report schedule
+ */
+export const useDeleteReportSchedule = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteReportSchedule>>, TError,{schedule: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteReportSchedule>>,
+        TError,
+        {schedule: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteReportScheduleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * Queues an export and returns 202 with the export id while it is generated. Refused with `reports.export_too_large` when the row count exceeds the cap.
+ * @summary Request a report export
+ */
+export const postReportExport = (
+    report: string,
+    postReportExportBody: PostReportExportBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PostReportExport202>(
+      {url: `/reports/${report}/export`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postReportExportBody
+    },
+      options);
+    }
+  
+
+
+export const getPostReportExportMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postReportExport>>, TError,{report: string;data: PostReportExportBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postReportExport>>, TError,{report: string;data: PostReportExportBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postReportExport>>, {report: string;data: PostReportExportBody}> = (props) => {
+          const {report,data} = props ?? {};
+
+          return  postReportExport(report,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostReportExportMutationResult = NonNullable<Awaited<ReturnType<typeof postReportExport>>>
+    export type PostReportExportMutationBody = PostReportExportBody
+    export type PostReportExportMutationError = ErrorResponse
+
+    /**
+ * @summary Request a report export
+ */
+export const usePostReportExport = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postReportExport>>, TError,{report: string;data: PostReportExportBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postReportExport>>,
+        TError,
+        {report: string;data: PostReportExportBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostReportExportMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    

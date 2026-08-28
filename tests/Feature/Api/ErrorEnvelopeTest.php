@@ -77,8 +77,8 @@ class ErrorEnvelopeTest extends TestCase
     {
         $response = $this->getJson('/api/v1/branches?per_page=999');
 
-        $this->assertNotNull($response->header('X-Request-Id'));
-        $this->assertEquals($response->header('X-Request-Id'), $response->json('error.request_id'));
+        $this->assertNotNull($response->headers->get('X-Request-Id'));
+        $this->assertEquals($response->headers->get('X-Request-Id'), $response->json('error.request_id'));
     }
 
     public function test_error_code_is_enum_value(): void

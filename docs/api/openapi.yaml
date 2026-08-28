@@ -185,6 +185,331 @@ components:
             pagination:
               $ref: '#/components/schemas/Pagination'
 
+    SlaTarget:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        target_type:
+          type: string
+          enum: [first_response, resolution]
+        priority:
+          type: string
+        category_id:
+          type: [string, 'null']
+          format: uuid
+        service_tier:
+          type: [string, 'null']
+        minutes:
+          type: integer
+          description: Target in WORKING minutes, not wall-clock minutes
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SlaPolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        branch_id:
+          type: string
+          format: uuid
+        name:
+          $ref: '#/components/schemas/BilingualString'
+        is_default:
+          type: boolean
+        is_active:
+          type: boolean
+        warning_threshold_percent:
+          type: integer
+        targets:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlaTarget'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SlaPolicyWrite:
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/BilingualString'
+        targets:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [first_response, resolution]
+              minutes:
+                type: integer
+                minimum: 1
+            required: [type, minutes]
+      required: [name, targets]
+
+    TicketSlaPosition:
+      type: object
+      description: Server-computed business-time position of one SLA clock.
+      properties:
+        target_type:
+          type: string
+          enum: [first_response, resolution]
+        state:
+          type: string
+        due_at:
+          type: [string, 'null']
+          format: date-time
+        target_minutes:
+          type: integer
+        elapsed_minutes:
+          type: integer
+        remaining_minutes:
+          type: integer
+        warning_fired:
+          type: boolean
+        paused_at:
+          type: [string, 'null']
+          format: date-time
+
+    AiSuggestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticket_id:
+          type: [string, 'null']
+          format: uuid
+        feature:
+          type: string
+        state:
+          type: string
+          enum: [pending, accepted, discarded, sent]
+        content:
+          type: string
+        confidence:
+          type: [number, 'null']
+          format: float
+        model:
+          type: string
+        requested_by_user_id:
+          type: [string, 'null']
+          format: uuid
+        resolved_by_user_id:
+          type: [string, 'null']
+          format: uuid
+        resolved_at:
+          type: [string, 'null']
+          format: date-time
+        metadata:
+          type: [object, 'null']
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ReportSchedule:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        report_key:
+          type: string
+        format:
+          type: string
+          enum: [csv, xlsx, pdf]
+        filters:
+          type: object
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly]
+        day_of_week:
+          type: [integer, 'null']
+        day_of_month:
+          type: [integer, 'null']
+        run_at_time:
+          type: string
+        timezone:
+          type: string
+        recipients:
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+        created_by_user_id:
+          type: [string, 'null']
+          format: uuid
+        last_run_at:
+          type: [string, 'null']
+          format: date-time
+        next_run_at:
+          type: [string, 'null']
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ReportScheduleWrite:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        report_key:
+          type: string
+        format:
+          type: string
+          enum: [csv, xlsx, pdf]
+        filters:
+          type: object
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly]
+        day_of_week:
+          type: [integer, 'null']
+          minimum: 0
+          maximum: 6
+          description: Required when frequency is weekly
+        day_of_month:
+          type: [integer, 'null']
+          minimum: 1
+          maximum: 31
+          description: Required when frequency is monthly
+        run_at_time:
+          type: string
+          pattern: '^\d{2}:\d{2}$'
+        timezone:
+          type: string
+        recipients:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        is_active:
+          type: boolean
+
+    WebhookSubscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        target_url:
+          type: string
+          format: uri
+        event_types:
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    WebhookSubscriptionWrite:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        target_url:
+          type: string
+          format: uri
+          description: Must be an https:// URL
+        event_types:
+          type: array
+          minItems: 1
+          items:
+            type: string
+        is_active:
+          type: boolean
+
+    AutomationRuleWrite:
+      type: object
+      description: >-
+        Condition/action payloads follow docs/contracts/automation-rules.md.
+        `key` is immutable-by-convention and unique across rules.
+      properties:
+        key:
+          type: string
+          pattern: '^[a-z0-9-]+$'
+        name:
+          $ref: '#/components/schemas/BilingualString'
+        trigger:
+          type: string
+        priority:
+          type: integer
+          minimum: 0
+          maximum: 1000
+        department_id:
+          type: [string, 'null']
+          format: uuid
+        conditions:
+          type: array
+          items:
+            type: object
+        actions:
+          type: array
+          items:
+            type: object
+        escalation_level:
+          type: [integer, 'null']
+          minimum: 1
+        cooldown_minutes:
+          type: [integer, 'null']
+          minimum: 1
+        stop_on_match:
+          type: boolean
+        is_active:
+          type: boolean
+
+    ImportRun:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        kind:
+          type: string
+        mode:
+          type: string
+          enum: [dry_run, commit]
+        state:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
   responses:
     BadRequest:
       description: Bad Request
@@ -592,6 +917,56 @@ paths:
       responses:
         '204':
           description: Role deleted
+
+    patch:
+      tags: [Security]
+      operationId: patchRole
+      summary: Update role
+      description: >-
+        PATCH and PUT share one handler and one validator, so this is NOT a
+        partial update: `display_name` and `permission_keys` are both required
+        and `permission_keys` replaces the role's permissions wholesale.
+      security:
+        - bearer: []
+      parameters:
+        - name: role
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  $ref: '#/components/schemas/BilingualString'
+                permission_keys:
+                  type: array
+                  items:
+                    type: string
+              required: [display_name, permission_keys]
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: System roles are immutable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /roles/{role}/users/{user}:
     post:
@@ -1047,6 +1422,49 @@ paths:
         '204':
           description: Branch deleted
 
+    patch:
+      tags: [Organization]
+      operationId: patchBranch
+      summary: Partially update branch
+      description: All fields optional; UpdateBranchRequest applies no `required` rules.
+      security:
+        - bearer: []
+      parameters:
+        - name: branch
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/BilingualString'
+                code:
+                  type: string
+                  pattern: '^[a-z0-9-]{2,32}$'
+                timezone:
+                  type: string
+                is_24_7:
+                  type: boolean
+      responses:
+        '200':
+          description: Branch updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /branches/{branch}/activate:
     post:
       tags: [Organization]
@@ -1347,6 +1765,45 @@ paths:
         '204':
           description: Department deleted
 
+    patch:
+      tags: [Organization]
+      operationId: patchDepartment
+      summary: Partially update department
+      description: All fields optional; UpdateDepartmentRequest applies no `required` rules.
+      security:
+        - bearer: []
+      parameters:
+        - name: department
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/BilingualString'
+                code:
+                  type: string
+                  pattern: '^[a-z0-9-]{2,32}$'
+      responses:
+        '200':
+          description: Department updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /departments/{department}/activate:
     post:
       tags: [Organization]
@@ -1490,6 +1947,45 @@ paths:
         '204':
           description: Team deleted
 
+    patch:
+      tags: [Organization]
+      operationId: patchTeam
+      summary: Partially update team
+      description: All fields optional; UpdateTeamRequest applies no `required` rules.
+      security:
+        - bearer: []
+      parameters:
+        - name: team
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/BilingualString'
+                code:
+                  type: string
+                  pattern: '^[a-z0-9-]{2,32}$'
+      responses:
+        '200':
+          description: Team updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /teams/{team}/activate:
     post:
       tags: [Organization]
@@ -1620,6 +2116,38 @@ paths:
       responses:
         '200':
           description: Customer updated
+
+    patch:
+      tags: [Customers]
+      operationId: patchCustomer
+      summary: Partially update customer
+      security:
+        - bearer: []
+      parameters:
+        - name: customer
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /customers/duplicates:
     get:
@@ -3259,6 +3787,52 @@ paths:
         '204':
           description: Web form deleted
 
+    patch:
+      tags: [Channels]
+      operationId: patchWebForm
+      summary: Partially update web form
+      security:
+        - bearer: []
+      parameters:
+        - name: webForm
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  $ref: '#/components/schemas/BilingualString'
+                description:
+                  $ref: '#/components/schemas/BilingualString'
+                department_id:
+                  type: [string, 'null']
+                  format: uuid
+                ticket_category_id:
+                  type: [string, 'null']
+                default_priority:
+                  type: string
+                is_active:
+                  type: boolean
+      responses:
+        '200':
+          description: Web form updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+
   /channels/public/web-forms/{formKey}:
     get:
       tags: [Channels]
@@ -3354,6 +3928,30 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CollectionResponse'
+
+    post:
+      tags: [Channels]
+      operationId: postInboundEmailWebhook
+      summary: Inbound email webhook
+      description: Provider-to-platform webhook for inbound mail. Public but bot-protected and idempotent.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Message accepted for processing
+        '422':
+          description: Message could not be parsed, or was already processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 
   /channels/email/inbound/{record}/replay:
     post:
@@ -3799,6 +4397,37 @@ paths:
               schema:
                 $ref: '#/components/schemas/CollectionResponse'
 
+    post:
+      tags: [Automation]
+      operationId: postAutomationRules
+      summary: Create automation rule
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationRuleWrite'
+      responses:
+        '201':
+          description: Automation rule created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '422':
+          description: Validation failed or rule key already taken
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /automation/rules/{rule}:
     get:
       tags: [Automation]
@@ -3816,6 +4445,58 @@ paths:
       responses:
         '200':
           description: Rule details
+
+    patch:
+      tags: [Automation]
+      operationId: patchAutomationRule
+      summary: Update automation rule
+      security:
+        - bearer: []
+      parameters:
+        - name: rule
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutomationRuleWrite'
+      responses:
+        '200':
+          description: Automation rule updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Automation]
+      operationId: deleteAutomationRule
+      summary: Delete automation rule
+      security:
+        - bearer: []
+      parameters:
+        - name: rule
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Automation rule deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
 
   /automation/executions:
     get:
@@ -4485,3 +5166,1077 @@ paths:
       responses:
         '204':
           description: Token revoked successfully
+
+  /health/live:
+    get:
+      tags: [Observability]
+      operationId: getHealthLive
+      summary: Liveness probe
+      description: Returns 200 as long as the process is running. No auth, no dependencies checked.
+      responses:
+        '200':
+          description: Process is live
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+
+  /health/ready:
+    get:
+      tags: [Observability]
+      operationId: getHealthReady
+      summary: Readiness probe
+      description: Verifies downstream dependencies (database, cache, queue) before reporting ready.
+      responses:
+        '200':
+          description: All dependencies reachable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  checks:
+                    type: object
+        '503':
+          description: One or more dependencies unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sla/policies:
+    get:
+      tags: [Sla]
+      operationId: getSlaPolicies
+      summary: List SLA policies
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: SLA policies list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Sla]
+      operationId: postSlaPolicies
+      summary: Create SLA policy
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaPolicyWrite'
+      responses:
+        '201':
+          description: SLA policy created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SlaPolicy'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /sla/policies/{policy}:
+    parameters:
+      - name: policy
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Sla]
+      operationId: getSlaPolicy
+      summary: Get SLA policy
+      security:
+        - bearer: []
+      responses:
+        '200':
+          description: SLA policy details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SlaPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Sla]
+      operationId: putSlaPolicy
+      summary: Replace SLA policy
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaPolicyWrite'
+      responses:
+        '200':
+          description: SLA policy updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SlaPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Sla]
+      operationId: patchSlaPolicy
+      summary: Update SLA policy
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SlaPolicyWrite'
+      responses:
+        '200':
+          description: SLA policy updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/SlaPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Sla]
+      operationId: deleteSlaPolicy
+      summary: Delete SLA policy
+      description: Refused with `sla.policy_in_use` when the policy is the branch default or still drives ticket clocks.
+      security:
+        - bearer: []
+      responses:
+        '204':
+          description: SLA policy deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: Policy is in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tickets/{ticket}/sla/{clock}:
+    get:
+      tags: [Sla]
+      operationId: getTicketSlaClock
+      summary: Get SLA clock position for a ticket
+      description: >-
+        All figures are computed server-side against business hours. Clients must
+        render `remaining_minutes` as given and never recompute it locally.
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clock
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: SLA clock position
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TicketSlaPosition'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /tickets/{ticket}/sla/{clock}/reset:
+    post:
+      tags: [Sla]
+      operationId: postTicketSlaClockReset
+      summary: Reset an SLA clock
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: clock
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  maxLength: 500
+              required: [reason]
+      responses:
+        '200':
+          description: SLA clock reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TicketSlaPosition'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /ai/suggestions:
+    get:
+      tags: [Ai]
+      operationId: getAiSuggestions
+      summary: List AI suggestions
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: AI suggestions list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /ai/suggestions/{suggestion}/resolve/{decision}:
+    post:
+      tags: [Ai]
+      operationId: postAiSuggestionResolve
+      summary: Accept or discard an AI suggestion
+      description: >-
+        Approval gate. A suggestion must be accepted by a human before its content
+        may be sent as a ticket message; the server rejects unapproved sends.
+      security:
+        - bearer: []
+      parameters:
+        - name: suggestion
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: decision
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [accepted, discarded]
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200':
+          description: Suggestion resolved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AiSuggestion'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /ai/usage:
+    get:
+      tags: [Ai]
+      operationId: getAiUsage
+      summary: List AI usage records
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: AI usage records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /tickets/{ticket}/ai/summary:
+    post:
+      tags: [Ai]
+      operationId: postTicketAiSummary
+      summary: Generate a ticket summary suggestion
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Suggestion generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AiSuggestion'
+        '429':
+          description: AI budget exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: AI provider unavailable or feature disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tickets/{ticket}/ai/suggested-reply:
+    post:
+      tags: [Ai]
+      operationId: postTicketAiSuggestedReply
+      summary: Generate a suggested reply
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Suggestion generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AiSuggestion'
+        '429':
+          description: AI budget exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: AI provider unavailable or feature disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tickets/{ticket}/ai/classify:
+    post:
+      tags: [Ai]
+      operationId: postTicketAiClassify
+      summary: Generate a classification suggestion
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Suggestion generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AiSuggestion'
+        '429':
+          description: AI budget exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: AI provider unavailable or feature disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /tickets/{ticket}/ai/suggested-articles:
+    post:
+      tags: [Ai]
+      operationId: postTicketAiSuggestedArticles
+      summary: Generate knowledge-article suggestions
+      security:
+        - bearer: []
+      parameters:
+        - name: ticket
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Suggestion generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AiSuggestion'
+        '429':
+          description: AI budget exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: AI provider unavailable or feature disabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /report-schedules:
+    get:
+      tags: [Reporting]
+      operationId: getReportSchedules
+      summary: List report schedules
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Report schedules list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Reporting]
+      operationId: postReportSchedules
+      summary: Create report schedule
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleWrite'
+      responses:
+        '201':
+          description: Report schedule created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ReportSchedule'
+        '422':
+          description: Validation failed or recipient limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /report-schedules/{schedule}:
+    parameters:
+      - name: schedule
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Reporting]
+      operationId: getReportSchedule
+      summary: Get report schedule
+      security:
+        - bearer: []
+      responses:
+        '200':
+          description: Report schedule details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ReportSchedule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Reporting]
+      operationId: putReportSchedule
+      summary: Replace report schedule
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleWrite'
+      responses:
+        '200':
+          description: Report schedule updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ReportSchedule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Reporting]
+      operationId: patchReportSchedule
+      summary: Update report schedule
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportScheduleWrite'
+      responses:
+        '200':
+          description: Report schedule updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ReportSchedule'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Reporting]
+      operationId: deleteReportSchedule
+      summary: Delete report schedule
+      security:
+        - bearer: []
+      responses:
+        '204':
+          description: Report schedule deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /reports/{report}/export:
+    post:
+      tags: [Reporting]
+      operationId: postReportExport
+      summary: Request a report export
+      description: >-
+        Queues an export and returns 202 with the export id while it is generated.
+        Refused with `reports.export_too_large` when the row count exceeds the cap.
+      security:
+        - bearer: []
+      parameters:
+        - name: report
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  enum: [csv, xlsx, pdf]
+                date_from:
+                  type: string
+                  format: date
+                date_to:
+                  type: string
+                  format: date
+                timezone:
+                  type: string
+                branch:
+                  type: string
+                  format: uuid
+                department:
+                  type: string
+                  format: uuid
+                team:
+                  type: string
+                  format: uuid
+                agent:
+                  type: string
+                  format: uuid
+                category:
+                  type: string
+                  format: uuid
+                priority:
+                  type: string
+                  enum: [low, normal, high, urgent]
+                channel:
+                  type: string
+                  enum: [email, chat, phone, portal]
+                tag:
+                  type: string
+                  format: uuid
+              required: [date_from, date_to]
+      responses:
+        '202':
+          description: Export queued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      state:
+                        type: string
+        '422':
+          description: Export too large, unsupported format, or range too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /webhooks/subscriptions:
+    get:
+      tags: [Integrations]
+      operationId: getWebhookSubscriptions
+      summary: List webhook subscriptions
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Webhook subscriptions list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Integrations]
+      operationId: postWebhookSubscriptions
+      summary: Create webhook subscription
+      description: The signing secret is generated server-side and is not accepted from the client.
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  maxLength: 255
+                target_url:
+                  type: string
+                  format: uri
+                  description: Must be an https:// URL
+                event_types:
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+              required: [name, target_url, event_types]
+      responses:
+        '201':
+          description: Subscription created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WebhookSubscription'
+
+  /webhooks/subscriptions/{subscription}:
+    parameters:
+      - name: subscription
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Integrations]
+      operationId: getWebhookSubscription
+      summary: Get webhook subscription
+      security:
+        - bearer: []
+      responses:
+        '200':
+          description: Subscription details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WebhookSubscription'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      tags: [Integrations]
+      operationId: putWebhookSubscription
+      summary: Replace webhook subscription
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionWrite'
+      responses:
+        '200':
+          description: Subscription updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WebhookSubscription'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Integrations]
+      operationId: patchWebhookSubscription
+      summary: Update webhook subscription
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookSubscriptionWrite'
+      responses:
+        '200':
+          description: Subscription updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/WebhookSubscription'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags: [Integrations]
+      operationId: deleteWebhookSubscription
+      summary: Delete webhook subscription
+      security:
+        - bearer: []
+      responses:
+        '204':
+          description: Subscription deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /webhooks/deliveries:
+    get:
+      tags: [Integrations]
+      operationId: getWebhookDeliveries
+      summary: List webhook delivery attempts
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Filter'
+      responses:
+        '200':
+          description: Delivery attempts list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /import-runs:
+    get:
+      tags: [Integrations]
+      operationId: getImportRuns
+      summary: List bulk import runs
+      security:
+        - bearer: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Import runs list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      tags: [Integrations]
+      operationId: postImportRuns
+      summary: Create a bulk import run
+      description: Defaults to `dry_run` mode so the file can be validated before committing.
+      security:
+        - bearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kind:
+                  type: string
+                mode:
+                  type: string
+                  enum: [dry_run, commit]
+                  default: dry_run
+              required: [kind]
+      responses:
+        '201':
+          description: Import run created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ImportRun'
+
+  /import-runs/{run}:
+    get:
+      tags: [Integrations]
+      operationId: getImportRun
+      summary: Get bulk import run
+      security:
+        - bearer: []
+      parameters:
+        - name: run
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Import run details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ImportRun'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /customers/{customer}/erp-context:
+    get:
+      tags: [Integrations]
+      operationId: getCustomerErpContext
+      summary: Get ERP context for a customer
+      description: Read-only projection from the configured ERP; returns an empty payload when the ERP integration is disabled.
+      security:
+        - bearer: []
+      parameters:
+        - name: customer
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: ERP context
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /channels/whatsapp/inbound:
+    post:
+      tags: [Channels]
+      operationId: postWhatsappInbound
+      summary: WhatsApp inbound message webhook
+      description: Provider-to-platform webhook. Idempotent on the provider message id.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Message accepted for processing
+        '422':
+          description: Payload could not be parsed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /channels/whatsapp/receipts:
+    post:
+      tags: [Channels]
+      operationId: postWhatsappReceipts
+      summary: WhatsApp delivery receipt webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Receipt accepted
+
+  /channels/sms/inbound:
+    post:
+      tags: [Channels]
+      operationId: postSmsInbound
+      summary: SMS inbound message webhook
+      description: Provider-to-platform webhook. Idempotent on the provider message id.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Message accepted for processing
+        '422':
+          description: Payload could not be parsed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /channels/sms/receipts:
+    post:
+      tags: [Channels]
+      operationId: postSmsReceipts
+      summary: SMS delivery receipt webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '202':
+          description: Receipt accepted

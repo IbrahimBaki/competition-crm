@@ -13,7 +13,12 @@ final class WebhookDeliveryController
     public function index(Request $request)
     {
         $deliveries = WebhookDelivery::paginate();
-        return ApiResponse::success(WebhookDeliveryResource::collection($deliveries));
+
+        // paginated(), not success() — a list response must carry pagination meta.
+        return ApiResponse::paginated(
+            WebhookDeliveryResource::collection($deliveries),
+            $deliveries,
+        );
     }
 
     public function show(WebhookDelivery $delivery)
@@ -27,6 +32,7 @@ final class WebhookDeliveryController
             $delivery->update(['state' => 'pending', 'attempt_count' => 0, 'next_attempt_at' => now()]);
             DeliverWebhookJob::dispatch($delivery);
         }
+
         return ApiResponse::success(new WebhookDeliveryResource($delivery));
     }
 }

@@ -13,7 +13,12 @@ final class WebhookSubscriptionController
     public function index(Request $request)
     {
         $subscriptions = WebhookSubscription::paginate();
-        return ApiResponse::success(WebhookSubscriptionResource::collection($subscriptions));
+
+        // paginated(), not success() — a list response must carry pagination meta.
+        return ApiResponse::paginated(
+            WebhookSubscriptionResource::collection($subscriptions),
+            $subscriptions,
+        );
     }
 
     public function store(Request $request)
@@ -37,6 +42,12 @@ final class WebhookSubscriptionController
         return ApiResponse::success(new WebhookSubscriptionResource($subscription), status: 201);
     }
 
+    // apiResource registers GET /{subscription}; without this the route 500s.
+    public function show(WebhookSubscription $subscription)
+    {
+        return ApiResponse::success(new WebhookSubscriptionResource($subscription));
+    }
+
     public function update(Request $request, WebhookSubscription $subscription)
     {
         $validated = $request->validate([
@@ -47,12 +58,14 @@ final class WebhookSubscriptionController
         ]);
 
         $subscription->update($validated);
+
         return ApiResponse::success(new WebhookSubscriptionResource($subscription));
     }
 
     public function destroy(WebhookSubscription $subscription)
     {
         $subscription->delete();
+
         return ApiResponse::success(null, status: 204);
     }
 }

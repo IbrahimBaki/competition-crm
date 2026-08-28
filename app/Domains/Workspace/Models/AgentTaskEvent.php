@@ -3,11 +3,14 @@
 namespace App\Domains\Workspace\Models;
 
 use App\Models\User;
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AgentTaskEvent extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['agent_task_id', 'actor_id', 'type', 'payload'];

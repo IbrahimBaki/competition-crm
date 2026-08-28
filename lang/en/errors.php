@@ -143,6 +143,7 @@ return [
     'knowledge' => [
         'illegal_article_transition' => 'This article state transition is not allowed',
         'article_not_published' => 'Article must be published before it can be rendered',
+        'article_visibility_forbidden' => 'You are not allowed to view this article',
         'article_version_not_found' => 'Article version not found',
         'duplicate_article_feedback' => 'You have already submitted identical feedback for this article',
         'category_depth_exceeded' => 'Cannot create a category at depth greater than 3',

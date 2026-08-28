@@ -52,7 +52,7 @@ class BotProtectionTest extends TestCase
         ]);
 
         // Should fail auth, not bot protection
-        $this->assertNotEqual('bot_protection_failed', $response->json('error.code'));
+        $this->assertNotEquals('bot_protection_failed', $response->json('error.code'));
     }
 
     public function test_authenticated_routes_bypass_bot_protection(): void
@@ -75,7 +75,7 @@ class BotProtectionTest extends TestCase
             ->get('/api/v1/auth/me');
 
         // Should succeed (200 or similar), not be blocked by bot protection
-        $this->assertNotEqual(422, $response->status());
+        $this->assertNotEquals(422, $response->status());
     }
 
     public function test_health_probes_bypass_bot_protection(): void
@@ -93,6 +93,6 @@ class BotProtectionTest extends TestCase
         $response = $this->get('/api/v1/health/live');
 
         // Health probes should work even if bot protection fails
-        $this->assertNotEqual(422, $response->status());
+        $this->assertNotEquals(422, $response->status());
     }
 }

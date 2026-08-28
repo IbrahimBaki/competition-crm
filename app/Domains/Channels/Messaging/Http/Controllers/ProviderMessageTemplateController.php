@@ -4,12 +4,15 @@ namespace App\Domains\Channels\Messaging\Http\Controllers;
 
 use App\Domains\Channels\Messaging\Http\Resources\ProviderMessageTemplateResource;
 use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Routing\Controller;
 
 class ProviderMessageTemplateController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request): JsonResource
     {
         $this->authorize('viewAny', ProviderMessageTemplate::class);

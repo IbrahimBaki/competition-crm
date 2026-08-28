@@ -64,6 +64,10 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
             PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
             PermissionKey::CUSTOMERS_MERGE,
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $managerPermissions);
@@ -99,6 +103,10 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
             PermissionKey::CUSTOMERS_DUPLICATE_VIEW,
             PermissionKey::CUSTOMERS_DUPLICATE_REVIEW,
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $supervisorPermissions);
@@ -123,6 +131,10 @@ class PermissionsAndRolesSeederTest extends TestCase
             PermissionKey::CUSTOMERS_NOTE_VIEW,
             PermissionKey::CUSTOMERS_NOTE_CREATE,
             PermissionKey::CUSTOMERS_TIMELINE_VIEW,
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $agentPermissions);
@@ -138,6 +150,11 @@ class PermissionsAndRolesSeederTest extends TestCase
         $expectedPermissions = [
             PermissionKey::TICKETS_VIEW_OWN,
             PermissionKey::TICKET_MESSAGE_VIEW,
+            // Read-only role: may download attachments but never upload.
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            // Every role that can sign in must be able to see its own notifications.
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
         ];
 
         $this->assertEqualsCanonicalizing($expectedPermissions, $viewerPermissions);

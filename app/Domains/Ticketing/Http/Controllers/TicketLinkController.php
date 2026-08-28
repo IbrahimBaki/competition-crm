@@ -10,10 +10,13 @@ use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketLink;
 use App\Domains\Ticketing\Models\TicketLinkRelation;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 
 class TicketLinkController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Ticket $ticket)
     {
         $this->authorize('view', $ticket);

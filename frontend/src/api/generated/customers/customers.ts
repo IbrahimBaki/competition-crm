@@ -26,6 +26,9 @@ import type {
   GetCustomerNotesParams,
   GetCustomerTimelineParams,
   GetCustomersParams,
+  NotFoundResponse,
+  PatchCustomer200,
+  PatchCustomerBody,
   PostCustomerAttachmentsBody,
   PostCustomerBlockBody,
   PostCustomerContactsBody,
@@ -277,6 +280,64 @@ export const usePutCustomer = <TError = unknown,
       > => {
 
       const mutationOptions = getPutCustomerMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Partially update customer
+ */
+export const patchCustomer = (
+    customer: string,
+    patchCustomerBody: PatchCustomerBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchCustomer200>(
+      {url: `/customers/${customer}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchCustomerBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchCustomerMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchCustomer>>, TError,{customer: string;data: PatchCustomerBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchCustomer>>, TError,{customer: string;data: PatchCustomerBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchCustomer>>, {customer: string;data: PatchCustomerBody}> = (props) => {
+          const {customer,data} = props ?? {};
+
+          return  patchCustomer(customer,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchCustomerMutationResult = NonNullable<Awaited<ReturnType<typeof patchCustomer>>>
+    export type PatchCustomerMutationBody = PatchCustomerBody
+    export type PatchCustomerMutationError = NotFoundResponse
+
+    /**
+ * @summary Partially update customer
+ */
+export const usePatchCustomer = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchCustomer>>, TError,{customer: string;data: PatchCustomerBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchCustomer>>,
+        TError,
+        {customer: string;data: PatchCustomerBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchCustomerMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

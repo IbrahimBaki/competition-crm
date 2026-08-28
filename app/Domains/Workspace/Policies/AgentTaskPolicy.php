@@ -15,8 +15,8 @@ readonly class AgentTaskPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_VIEW_OWN)
-            || $user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS);
+        return $user->can(PermissionKey::WORKSPACE_TASKS_VIEW_OWN)
+            || $user->can(PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS);
     }
 
     public function view(User $user, AgentTask $task): bool
@@ -25,7 +25,7 @@ readonly class AgentTaskPolicy
             return true;
         }
 
-        if ($user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS)) {
+        if ($user->can(PermissionKey::WORKSPACE_TASKS_VIEW_OTHERS)) {
             return $this->scopeFilter->allows($user, $task->owner->department);
         }
 
@@ -34,13 +34,13 @@ readonly class AgentTaskPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_CREATE);
+        return $user->can(PermissionKey::WORKSPACE_TASKS_CREATE);
     }
 
     public function update(User $user, AgentTask $task): bool
     {
         return $user->id === $task->owner_id || $user->id === $task->created_by_id
-            || $user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_REASSIGN);
+            || $user->can(PermissionKey::WORKSPACE_TASKS_REASSIGN);
     }
 
     public function changeState(User $user, AgentTask $task): bool
@@ -50,6 +50,6 @@ readonly class AgentTaskPolicy
 
     public function reassign(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::WORKSPACE_TASKS_REASSIGN);
+        return $user->can(PermissionKey::WORKSPACE_TASKS_REASSIGN);
     }
 }

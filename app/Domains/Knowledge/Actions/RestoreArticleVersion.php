@@ -6,7 +6,7 @@ use App\Domains\Knowledge\Exceptions\ArticleVersionNotFoundException;
 use App\Domains\Knowledge\Models\ArticleState;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Domains\Knowledge\Services\Search\ArticleSearchIndexer;
-use App\Security\Services\AuditLogger;
+use App\Domains\Security\Services\AuditLogger;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class RestoreArticleVersion

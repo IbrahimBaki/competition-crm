@@ -105,37 +105,31 @@ export async function requestExport(
   const body = { format, ...cleanedFilters };
   const idempotencyKey = await generateIdempotencyKey(body);
 
-  try {
-    const response = await apiRequest<any>(
-      {
-        method: 'POST',
-        url: `/v1/reports/${reportId}/export`,
-        data: body,
-        headers: {
-          'Idempotency-Key': idempotencyKey,
-        },
-      }
-    );
+  const response = await apiRequest<any>({
+    method: 'POST',
+    url: `/v1/reports/${reportId}/export`,
+    data: body,
+    headers: {
+      'Idempotency-Key': idempotencyKey,
+    },
+  });
 
-    // The response might be wrapped in an envelope; check if it has the expected shape
-    const data = (response as any)?.data || response;
+  // The response might be wrapped in an envelope; check if it has the expected shape
+  const data = (response as any)?.data || response;
 
-    // 202 Accepted: async export
-    if (data?.state) {
-      return {
-        status: 'pending',
-        id: data.id,
-      };
-    }
-
-    // 200 OK: synchronous export (file is returned as attachment)
-    // The response is the raw file bytes; we don't unwrap here
+  // 202 Accepted: async export
+  if (data?.state) {
     return {
-      status: 'ready',
-      contentType: 'application/octet-stream',
-      filename: `report.${format}`,
+      status: 'pending',
+      id: data.id,
     };
-  } catch (error) {
-    throw error;
   }
+
+  // 200 OK: synchronous export (file is returned as attachment)
+  // The response is the raw file bytes; we don't unwrap here
+  return {
+    status: 'ready',
+    contentType: 'application/octet-stream',
+    filename: `report.${format}`,
+  };
 }

@@ -2,6 +2,7 @@
 
 namespace App\Domains\Integrations\Http\Controllers;
 
+use App\Domains\Integrations\Http\Resources\ImportRunResource;
 use App\Domains\Integrations\Models\ImportRun;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\Request;
@@ -12,12 +13,15 @@ final class ImportRunController
     public function index(Request $request)
     {
         $runs = ImportRun::paginate();
-        return ApiResponse::success($runs);
+
+        // paginated() (not success()) so the response carries pagination meta,
+        // and through the Resource so `id` is the uuid rather than the raw model.
+        return ApiResponse::paginated(ImportRunResource::collection($runs), $runs);
     }
 
     public function show(ImportRun $run)
     {
-        return ApiResponse::success($run);
+        return ApiResponse::success(new ImportRunResource($run));
     }
 
     public function store(Request $request)
@@ -29,6 +33,7 @@ final class ImportRunController
             'state' => 'pending',
             'created_by_user_id' => auth()->id(),
         ]);
-        return ApiResponse::success($run, status: 201);
+
+        return ApiResponse::success(new ImportRunResource($run), status: 201);
     }
 }

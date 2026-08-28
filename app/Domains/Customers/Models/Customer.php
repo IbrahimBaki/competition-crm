@@ -2,6 +2,7 @@
 
 namespace App\Domains\Customers\Models;
 
+use App\Domains\Customers\Services\TextNormaliser;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

@@ -15,16 +15,17 @@ final class RunImportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $timeout = 3600;
+
     public $tries = 1;
 
     public function __construct(private ImportRun $run) {}
 
     public function handle(RunImport $service): void
     {
-        $validator = match($this->run->kind) {
-            'customers' => fn($row, $num) => $this->validateCustomerRow($row, $num),
-            'historical_tickets' => fn($row, $num) => $this->validateTicketRow($row, $num),
-            default => fn($row, $num) => ['Unknown import kind'],
+        $validator = match ($this->run->kind) {
+            'customers' => fn ($row, $num) => $this->validateCustomerRow($row, $num),
+            'historical_tickets' => fn ($row, $num) => $this->validateTicketRow($row, $num),
+            default => fn ($row, $num) => ['Unknown import kind'],
         };
 
         $service->execute($this->run, $validator);
@@ -36,6 +37,7 @@ final class RunImportJob implements ShouldQueue
         if (empty($row['name'] ?? null)) {
             $errors[] = 'name is required';
         }
+
         return $errors;
     }
 
@@ -48,6 +50,7 @@ final class RunImportJob implements ShouldQueue
         if (empty($row['created_at'] ?? null)) {
             $errors[] = 'created_at is required for historical tickets';
         }
+
         return $errors;
     }
 

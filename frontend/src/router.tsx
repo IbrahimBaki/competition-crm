@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { LoginPage } from './pages/LoginPage';
 import { TwoFactorPage } from './pages/TwoFactorPage';
 import { WorkspacePage } from './pages/WorkspacePage';
@@ -40,7 +40,7 @@ import { NotFoundState } from './shell/states/NotFoundState';
 import { AppLayout } from './shell/AppLayout';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { RouteErrorBoundary } from './shell/RouteErrorBoundary';
-import { PERMISSIONS } from './auth/permissions';
+import { PERMISSIONS, TICKETS_VIEW_SCOPES, REPORTS_VIEW_SCOPES } from './auth/permissions';
 
 export const router = createBrowserRouter([
   {
@@ -65,17 +65,13 @@ export const router = createBrowserRouter([
         element: <WorkspacePage />,
       },
       {
-        path: 'dashboard',
-        element: <Navigate to="/" replace />,
-      },
-      {
         path: 'workspace',
         element: <WorkspacePage />,
       },
       {
         path: 'tickets',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.TICKETS_VIEW_ANY}>
+          <ProtectedRoute anyPermission={TICKETS_VIEW_SCOPES}>
             <TicketsPage />
           </ProtectedRoute>
         ),
@@ -83,7 +79,7 @@ export const router = createBrowserRouter([
       {
         path: 'tickets/:ticketId',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.TICKETS_VIEW_ANY}>
+          <ProtectedRoute anyPermission={TICKETS_VIEW_SCOPES}>
             <TicketDetailPage />
           </ProtectedRoute>
         ),
@@ -107,7 +103,7 @@ export const router = createBrowserRouter([
       {
         path: 'reports',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+          <ProtectedRoute anyPermission={REPORTS_VIEW_SCOPES}>
             <ReportsIndexPage />
           </ProtectedRoute>
         ),
@@ -115,7 +111,7 @@ export const router = createBrowserRouter([
       {
         path: 'reports/:reportId',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+          <ProtectedRoute anyPermission={REPORTS_VIEW_SCOPES}>
             <ReportDetailPage />
           </ProtectedRoute>
         ),
@@ -123,7 +119,7 @@ export const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+          <ProtectedRoute anyPermission={REPORTS_VIEW_SCOPES}>
             <ManagementDashboardPage />
           </ProtectedRoute>
         ),

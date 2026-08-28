@@ -10,11 +10,14 @@ use App\Domains\Reporting\Policies\ReportPolicy;
 use App\Domains\Reporting\Services\Definitions\ReportRegistry;
 use App\Domains\Reporting\Services\Scoping\ReportScopeResolver;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 
 class ReportController extends Controller
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private ReportRegistry $registry,
         private ReportScopeResolver $scopeResolver,

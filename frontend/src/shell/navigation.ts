@@ -1,4 +1,4 @@
-import { PermissionKey } from '@/auth/permissions';
+import { PermissionKey, TICKETS_VIEW_SCOPES, REPORTS_VIEW_SCOPES } from '@/auth/permissions';
 
 export interface NavItem {
   id: string;
@@ -22,7 +22,7 @@ export const NAVIGATION: readonly NavItem[] = [
     labelKey: 'nav.ticketing',
     path: '/tickets',
     icon: '🎫',
-    permission: 'tickets.view.any',
+    anyPermission: TICKETS_VIEW_SCOPES,
   },
   {
     id: 'customers',
@@ -36,14 +36,14 @@ export const NAVIGATION: readonly NavItem[] = [
     labelKey: 'reports.navigation.reports',
     path: '/reports',
     icon: '📊',
-    permission: 'reports.view.any',
+    anyPermission: REPORTS_VIEW_SCOPES,
   },
   {
     id: 'dashboard',
     labelKey: 'reports.navigation.dashboard',
     path: '/dashboard',
     icon: '📈',
-    permission: 'reports.view.any',
+    anyPermission: REPORTS_VIEW_SCOPES,
   },
   {
     // No `permission`/`anyPermission` on the group itself: filterNavTree

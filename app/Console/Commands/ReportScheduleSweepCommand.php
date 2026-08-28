@@ -61,17 +61,7 @@ class ReportScheduleSweepCommand extends Command
 
     private function computeNextRun(ReportSchedule $schedule): CarbonImmutable
     {
-        $tz = new \DateTimeZone($schedule->timezone);
-        $time = CarbonImmutable::createFromFormat('H:i:s', $schedule->run_at_time, $tz);
-
-        $next = CarbonImmutable::now($tz);
-
-        return match ($schedule->frequency) {
-            'daily' => $next->addDay()->setTime($time->hour, $time->minute),
-            'weekly' => $next->addWeek()->setTime($time->hour, $time->minute),
-            'monthly' => $next->addMonth()->setTime($time->hour, $time->minute),
-            default => $next,
-        };
+        return $schedule->computeNextRun();
     }
 
     private function getScope(array $filters): string

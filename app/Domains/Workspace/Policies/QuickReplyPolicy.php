@@ -34,7 +34,7 @@ readonly class QuickReplyPolicy
             return $user->id === $reply->owner_id;
         }
 
-        return $user->hasPermissionTo(PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED);
+        return $user->can(PermissionKey::WORKSPACE_QUICK_REPLIES_MANAGE_SHARED);
     }
 
     public function delete(User $user, QuickReply $reply): bool

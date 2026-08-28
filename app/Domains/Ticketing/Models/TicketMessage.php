@@ -6,14 +6,33 @@ use App\Domains\Customers\Models\CustomerContact;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 class TicketMessage extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['*'];
+
+    /**
+     * `ticket_messages.uuid` is NOT NULL with no default, and production code
+     * (PostTicketMessage) creates rows without supplying one — so generate it
+     * here, matching the pattern used by AiSuggestion and friends.
+     */
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid ??= Str::uuid();
+        });
+    }
 
     protected $fillable = [
         'ticket_id',

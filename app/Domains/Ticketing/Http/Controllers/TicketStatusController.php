@@ -7,11 +7,14 @@ use App\Domains\Ticketing\Http\Requests\UpdateTicketStatusRequest;
 use App\Domains\Ticketing\Http\Resources\TicketStatusResource;
 use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 
 class TicketStatusController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index()
     {
         $this->authorize('viewAny', TicketStatusDefinition::class);

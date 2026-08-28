@@ -7,11 +7,14 @@ use App\Domains\Notifications\Enums\NotificationEventType;
 use App\Domains\Notifications\Http\Requests\UpdateNotificationPreferencesRequest;
 use App\Domains\Notifications\Models\NotificationPreference;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationPreferenceController
 {
+    use AuthorizesRequests;
+
     public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', NotificationPreference::class);

@@ -10,10 +10,12 @@ use App\Domains\Security\Permissions\PermissionKey;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class ReportScopeTest extends TestCase
 {
+    use InteractsWithPermissions;
     use RefreshDatabase;
 
     public function test_agent_with_own_scope_sees_only_their_performance(): void
@@ -22,7 +24,7 @@ class ReportScopeTest extends TestCase
         $otherAgent = User::factory()->create();
 
         // Grant agent reports.view.own
-        $agent->givePermissionTo(PermissionKey::REPORTS_VIEW_OWN);
+        $this->grantPermission($agent, PermissionKey::REPORTS_VIEW_OWN);
 
         $this->actingAs($agent);
 
@@ -44,7 +46,7 @@ class ReportScopeTest extends TestCase
     public function test_manager_with_department_scope_sees_their_departments(): void
     {
         $manager = User::factory()->create();
-        $manager->givePermissionTo(PermissionKey::REPORTS_VIEW_DEPARTMENT);
+        $this->grantPermission($manager, PermissionKey::REPORTS_VIEW_DEPARTMENT);
 
         $this->actingAs($manager);
 
@@ -65,7 +67,7 @@ class ReportScopeTest extends TestCase
     public function test_requesting_foreign_department_returns_empty_not_error(): void
     {
         $agent = User::factory()->create();
-        $agent->givePermissionTo(PermissionKey::REPORTS_VIEW_OWN);
+        $this->grantPermission($agent, PermissionKey::REPORTS_VIEW_OWN);
 
         $this->actingAs($agent);
 

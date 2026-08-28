@@ -3,12 +3,15 @@
 namespace App\Domains\Ticketing\Models;
 
 use App\Support\I18n\Casts\BilingualStringCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TicketCategory extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['parent_id', 'code', 'name', 'depth', 'position', 'is_active'];

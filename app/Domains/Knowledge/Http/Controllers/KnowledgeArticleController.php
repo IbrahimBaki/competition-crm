@@ -10,10 +10,13 @@ use App\Domains\Knowledge\Http\Resources\KnowledgeArticleResource;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class KnowledgeArticleController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private CreateArticle $createArticle,
         private UpdateArticle $updateArticle,

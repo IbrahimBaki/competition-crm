@@ -5,11 +5,14 @@ namespace App\Domains\Workspace\Models;
 use App\Domains\Organisation\Models\Department;
 use App\Models\User;
 use App\Support\I18n\Casts\BilingualStringCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QuickReply extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['*'];
 
     protected $fillable = [

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 
 export function PortalLoginPage() {
   const { t } = useTranslation();
@@ -8,7 +8,7 @@ export function PortalLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // TODO: Implement actual login
     navigate('/portal/tickets');

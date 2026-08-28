@@ -2,14 +2,30 @@
 
 namespace Tests\Feature\Api;
 
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
+use App\Domains\Organisation\Models\Branch;
+use App\Domains\Ticketing\Models\Ticket;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class UuidExposureTest extends TestCase
 {
+    use InteractsWithPermissions;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // These exercise API conventions, not authorisation: the endpoints
+        // under test sit behind auth:sanctum, so without an actor every
+        // request returns 401 before the convention can be asserted.
+        $this->actingAsAdministrator();
+    }
 
     public function test_list_response_ids_are_uuid(): void
     {
@@ -26,7 +42,7 @@ class UuidExposureTest extends TestCase
 
     public function test_single_item_id_is_uuid(): void
     {
-        $branch = $this->seed()->factory('branch')->create();
+        $branch = Branch::factory()->create();
 
         $response = $this->getJson('/api/v1/branches/'.$branch->id);
 
@@ -53,7 +69,7 @@ class UuidExposureTest extends TestCase
 
     public function test_single_item_timestamps_are_iso8601(): void
     {
-        $branch = $this->seed()->factory('branch')->create();
+        $branch = Branch::factory()->create();
 
         $response = $this->getJson('/api/v1/branches/'.$branch->id);
 
@@ -80,8 +96,8 @@ class UuidExposureTest extends TestCase
 
     public function test_duplicate_candidate_list_uses_uuids(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         CustomerDuplicateCandidate::create([
             'uuid' => Str::uuid(),
@@ -116,8 +132,8 @@ class UuidExposureTest extends TestCase
 
     public function test_merge_response_uses_uuids(): void
     {
-        $survivor = $this->seed()->factory('customer')->create();
-        $loser = $this->seed()->factory('customer')->create();
+        $survivor = Customer::factory()->create();
+        $loser = Customer::factory()->create();
 
         $response = $this->postJson(
             "/api/v1/customers/{$survivor->uuid}/merge",
@@ -137,10 +153,10 @@ class UuidExposureTest extends TestCase
 
     public function test_ticket_messages_use_uuids(): void
     {
-        $ticket = $this->seed()->factory('ticket')->create();
-        $user = $this->seed()->factory('user')->create();
-        $user->grantPermission('ticket.message.view');
-        $user->grantPermission('ticket.message.send');
+        $ticket = Ticket::factory()->create();
+        $user = User::factory()->create();
+        $this->grantPermission($user, 'ticket.message.view');
+        $this->grantPermission($user, 'ticket.message.send');
 
         $this->actingAs($user)->postJson(
             "/api/v1/tickets/{$ticket->uuid}/messages",
@@ -167,10 +183,10 @@ class UuidExposureTest extends TestCase
 
     public function test_ticket_message_delivery_events_use_uuids(): void
     {
-        $ticket = $this->seed()->factory('ticket')->create();
-        $user = $this->seed()->factory('user')->create();
-        $user->grantPermission('ticket.message.view');
-        $user->grantPermission('ticket.message.send');
+        $ticket = Ticket::factory()->create();
+        $user = User::factory()->create();
+        $this->grantPermission($user, 'ticket.message.view');
+        $this->grantPermission($user, 'ticket.message.send');
 
         $postResponse = $this->actingAs($user)->postJson(
             "/api/v1/tickets/{$ticket->uuid}/messages",

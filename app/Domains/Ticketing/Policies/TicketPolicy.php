@@ -15,15 +15,15 @@ class TicketPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_VIEW_OWN)
-            || $user->hasPermissionTo(PermissionKey::TICKETS_VIEW_TEAM)
-            || $user->hasPermissionTo(PermissionKey::TICKETS_VIEW_DEPARTMENT)
-            || $user->hasPermissionTo(PermissionKey::TICKETS_VIEW_ANY);
+        return $user->can(PermissionKey::TICKETS_VIEW_OWN)
+            || $user->can(PermissionKey::TICKETS_VIEW_TEAM)
+            || $user->can(PermissionKey::TICKETS_VIEW_DEPARTMENT)
+            || $user->can(PermissionKey::TICKETS_VIEW_ANY);
     }
 
     public function view(User $user, Ticket $ticket): bool
     {
-        if ($user->hasPermissionTo(PermissionKey::TICKETS_VIEW_ANY)) {
+        if ($user->can(PermissionKey::TICKETS_VIEW_ANY)) {
             return true;
         }
 
@@ -31,15 +31,15 @@ class TicketPolicy
             return false;
         }
 
-        if ($user->hasPermissionTo(PermissionKey::TICKETS_VIEW_DEPARTMENT)) {
+        if ($user->can(PermissionKey::TICKETS_VIEW_DEPARTMENT)) {
             return true;
         }
 
-        if ($user->hasPermissionTo(PermissionKey::TICKETS_VIEW_TEAM) && $ticket->assignee?->id === $user->id) {
+        if ($user->can(PermissionKey::TICKETS_VIEW_TEAM) && $ticket->assignee?->id === $user->id) {
             return true;
         }
 
-        if ($user->hasPermissionTo(PermissionKey::TICKETS_VIEW_OWN) && $ticket->created_by_user_id === $user->id) {
+        if ($user->can(PermissionKey::TICKETS_VIEW_OWN) && $ticket->created_by_user_id === $user->id) {
             return true;
         }
 
@@ -48,12 +48,12 @@ class TicketPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_CREATE);
+        return $user->can(PermissionKey::TICKETS_CREATE);
     }
 
     public function update(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_UPDATE)) {
+        if (! $user->can(PermissionKey::TICKETS_UPDATE)) {
             return false;
         }
 
@@ -62,7 +62,7 @@ class TicketPolicy
 
     public function assign(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_ASSIGN)) {
+        if (! $user->can(PermissionKey::TICKETS_ASSIGN)) {
             return false;
         }
 
@@ -71,7 +71,7 @@ class TicketPolicy
 
     public function claim(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_CLAIM)) {
+        if (! $user->can(PermissionKey::TICKETS_CLAIM)) {
             return false;
         }
 
@@ -80,7 +80,7 @@ class TicketPolicy
 
     public function transferToAgent(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_TRANSFER_AGENT)) {
+        if (! $user->can(PermissionKey::TICKETS_TRANSFER_AGENT)) {
             return false;
         }
 
@@ -89,7 +89,7 @@ class TicketPolicy
 
     public function transferToDepartment(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_TRANSFER_DEPARTMENT)) {
+        if (! $user->can(PermissionKey::TICKETS_TRANSFER_DEPARTMENT)) {
             return false;
         }
 
@@ -98,12 +98,12 @@ class TicketPolicy
 
     public function viewQueue(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_QUEUE_VIEW);
+        return $user->can(PermissionKey::TICKETS_QUEUE_VIEW);
     }
 
     public function reclassify(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_RECLASSIFY)) {
+        if (! $user->can(PermissionKey::TICKETS_RECLASSIFY)) {
             return false;
         }
 
@@ -112,7 +112,7 @@ class TicketPolicy
 
     public function tag(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_TAG)) {
+        if (! $user->can(PermissionKey::TICKETS_TAG)) {
             return false;
         }
 
@@ -121,7 +121,7 @@ class TicketPolicy
 
     public function viewHistory(User $user, Ticket $ticket): bool
     {
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_HISTORY_VIEW)) {
+        if (! $user->can(PermissionKey::TICKETS_HISTORY_VIEW)) {
             return false;
         }
 
@@ -134,7 +134,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_STATUS_CHANGE)) {
+        if (! $user->can(PermissionKey::TICKETS_STATUS_CHANGE)) {
             return false;
         }
 
@@ -147,7 +147,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_REOPEN)) {
+        if (! $user->can(PermissionKey::TICKETS_REOPEN)) {
             return false;
         }
 
@@ -160,7 +160,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_SPAM_MARK)) {
+        if (! $user->can(PermissionKey::TICKETS_SPAM_MARK)) {
             return false;
         }
 
@@ -173,7 +173,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_SPAM_RESTORE)) {
+        if (! $user->can(PermissionKey::TICKETS_SPAM_RESTORE)) {
             return false;
         }
 
@@ -186,7 +186,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_MERGE)) {
+        if (! $user->can(PermissionKey::TICKETS_MERGE)) {
             return false;
         }
 
@@ -199,7 +199,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_SPLIT)) {
+        if (! $user->can(PermissionKey::TICKETS_SPLIT)) {
             return false;
         }
 
@@ -212,7 +212,7 @@ class TicketPolicy
             return false;
         }
 
-        if (! $user->hasPermissionTo(PermissionKey::TICKETS_LINK)) {
+        if (! $user->can(PermissionKey::TICKETS_LINK)) {
             return false;
         }
 

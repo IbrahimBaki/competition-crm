@@ -4,12 +4,12 @@ namespace Tests\Feature\Ticketing;
 
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketConcurrencyTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     private Ticket $ticket;
 
@@ -29,11 +29,11 @@ class TicketConcurrencyTest extends TestCase
         $this->agent1 = User::factory()->create();
         $this->agent2 = User::factory()->create();
 
-        $this->manager->grantPermission('tickets.assign');
-        $this->manager->grantPermission('tickets.transfer.agent');
-        $this->manager->grantPermission('tickets.claim');
-        $this->agent1->grantPermission('tickets.claim');
-        $this->agent2->grantPermission('tickets.claim');
+        $this->grantPermission($this->manager, 'tickets.assign');
+        $this->grantPermission($this->manager, 'tickets.transfer.agent');
+        $this->grantPermission($this->manager, 'tickets.claim');
+        $this->grantPermission($this->agent1, 'tickets.claim');
+        $this->grantPermission($this->agent2, 'tickets.claim');
     }
 
     public function test_stale_version_on_assign_returns_conflict(): void

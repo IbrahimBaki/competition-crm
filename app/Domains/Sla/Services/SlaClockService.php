@@ -5,6 +5,7 @@ namespace App\Domains\Sla\Services;
 use App\Domains\Organisation\Services\WorkingTimeService;
 use App\Domains\Sla\Models\SlaClockState;
 use App\Domains\Sla\Models\SlaPauseInterval;
+use App\Domains\Sla\Models\SlaPolicy;
 use App\Domains\Sla\Models\SlaPosition;
 use App\Domains\Sla\Models\SlaTarget;
 use App\Domains\Sla\Models\SlaTargetType;

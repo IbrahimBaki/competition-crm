@@ -118,6 +118,24 @@ export const PERMISSIONS = {
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
 
+// Scope-based view permissions (`own | team | department | branch | any`).
+// A queue-style screen must be reachable by ANY scope the user holds — the
+// backend narrows the rows. Gating such a screen on `.any` alone locks out
+// every role below Administrator. See docs/ui/00-overview.md §2.3.
+export const TICKETS_VIEW_SCOPES = [
+  PERMISSIONS.TICKETS_VIEW_OWN,
+  PERMISSIONS.TICKETS_VIEW_TEAM,
+  PERMISSIONS.TICKETS_VIEW_DEPARTMENT,
+  PERMISSIONS.TICKETS_VIEW_ANY,
+] as const;
+
+export const REPORTS_VIEW_SCOPES = [
+  PERMISSIONS.REPORTS_VIEW_OWN,
+  PERMISSIONS.REPORTS_VIEW_DEPARTMENT,
+  PERMISSIONS.REPORTS_VIEW_BRANCH,
+  PERMISSIONS.REPORTS_VIEW_ANY,
+] as const;
+
 export function hasPermission(
   granted: readonly string[],
   required: PermissionKey

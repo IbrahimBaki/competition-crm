@@ -6,12 +6,12 @@ use App\Domains\Ticketing\Models\MessageDeliveryState;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketMessageRetryTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -23,7 +23,7 @@ class TicketMessageRetryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.view');
 
         $failedMessage = TicketMessage::factory()
             ->failed()
@@ -46,8 +46,8 @@ class TicketMessageRetryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.retry');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.retry');
 
         $failedMessage = TicketMessage::factory()
             ->failed()
@@ -72,8 +72,8 @@ class TicketMessageRetryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.retry');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.retry');
 
         $failedMessage = TicketMessage::factory()
             ->failed()
@@ -91,8 +91,8 @@ class TicketMessageRetryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.retry');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.retry');
 
         $sentMessage = TicketMessage::factory()
             ->queued()
@@ -110,8 +110,8 @@ class TicketMessageRetryTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.retry');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.retry');
 
         $failedMessage = TicketMessage::factory()
             ->failed()

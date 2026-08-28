@@ -20,12 +20,21 @@ import type {
 } from '@tanstack/react-query'
 import type {
   CollectionResponse,
+  ErrorResponse,
   GetInboundEmailsParams,
   GetMessagingTemplatesParams,
   GetWebFormsParams,
+  NotFoundResponse,
+  PatchWebForm200,
+  PatchWebFormBody,
   PostChatSessionBody,
+  PostInboundEmailWebhookBody,
   PostPublicWebFormSubmissionBody,
+  PostSmsInboundBody,
+  PostSmsReceiptsBody,
   PostWebFormsBody,
+  PostWhatsappInboundBody,
+  PostWhatsappReceiptsBody,
   PutWebFormBody
 } from '.././model'
 import { apiRequest } from '../../http/mutator';
@@ -324,6 +333,64 @@ export const useDeleteWebForm = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteWebFormMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Partially update web form
+ */
+export const patchWebForm = (
+    webForm: string,
+    patchWebFormBody: PatchWebFormBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchWebForm200>(
+      {url: `/channels/web-forms/${webForm}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchWebFormBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchWebFormMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchWebForm>>, TError,{webForm: string;data: PatchWebFormBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchWebForm>>, TError,{webForm: string;data: PatchWebFormBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchWebForm>>, {webForm: string;data: PatchWebFormBody}> = (props) => {
+          const {webForm,data} = props ?? {};
+
+          return  patchWebForm(webForm,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchWebFormMutationResult = NonNullable<Awaited<ReturnType<typeof patchWebForm>>>
+    export type PatchWebFormMutationBody = PatchWebFormBody
+    export type PatchWebFormMutationError = NotFoundResponse
+
+    /**
+ * @summary Partially update web form
+ */
+export const usePatchWebForm = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchWebForm>>, TError,{webForm: string;data: PatchWebFormBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchWebForm>>,
+        TError,
+        {webForm: string;data: PatchWebFormBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchWebFormMutationOptions(options);
 
       return useMutation(mutationOptions);
     }
@@ -627,6 +694,64 @@ export const useGetInboundEmails = <TData = Awaited<ReturnType<typeof getInbound
 
 
 /**
+ * Provider-to-platform webhook for inbound mail. Public but bot-protected and idempotent.
+ * @summary Inbound email webhook
+ */
+export const postInboundEmailWebhook = (
+    postInboundEmailWebhookBody: PostInboundEmailWebhookBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/channels/email/inbound`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postInboundEmailWebhookBody
+    },
+      options);
+    }
+  
+
+
+export const getPostInboundEmailWebhookMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postInboundEmailWebhook>>, TError,{data: PostInboundEmailWebhookBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postInboundEmailWebhook>>, TError,{data: PostInboundEmailWebhookBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postInboundEmailWebhook>>, {data: PostInboundEmailWebhookBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postInboundEmailWebhook(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostInboundEmailWebhookMutationResult = NonNullable<Awaited<ReturnType<typeof postInboundEmailWebhook>>>
+    export type PostInboundEmailWebhookMutationBody = PostInboundEmailWebhookBody
+    export type PostInboundEmailWebhookMutationError = ErrorResponse
+
+    /**
+ * @summary Inbound email webhook
+ */
+export const usePostInboundEmailWebhook = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postInboundEmailWebhook>>, TError,{data: PostInboundEmailWebhookBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postInboundEmailWebhook>>,
+        TError,
+        {data: PostInboundEmailWebhookBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostInboundEmailWebhookMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary Replay inbound email
  */
 export const postInboundEmailReplay = (
@@ -743,3 +868,234 @@ export const useGetMessagingTemplates = <TData = Awaited<ReturnType<typeof getMe
 
 
 
+/**
+ * Provider-to-platform webhook. Idempotent on the provider message id.
+ * @summary WhatsApp inbound message webhook
+ */
+export const postWhatsappInbound = (
+    postWhatsappInboundBody: PostWhatsappInboundBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/channels/whatsapp/inbound`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postWhatsappInboundBody
+    },
+      options);
+    }
+  
+
+
+export const getPostWhatsappInboundMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWhatsappInbound>>, TError,{data: PostWhatsappInboundBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postWhatsappInbound>>, TError,{data: PostWhatsappInboundBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWhatsappInbound>>, {data: PostWhatsappInboundBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postWhatsappInbound(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostWhatsappInboundMutationResult = NonNullable<Awaited<ReturnType<typeof postWhatsappInbound>>>
+    export type PostWhatsappInboundMutationBody = PostWhatsappInboundBody
+    export type PostWhatsappInboundMutationError = ErrorResponse
+
+    /**
+ * @summary WhatsApp inbound message webhook
+ */
+export const usePostWhatsappInbound = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWhatsappInbound>>, TError,{data: PostWhatsappInboundBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postWhatsappInbound>>,
+        TError,
+        {data: PostWhatsappInboundBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostWhatsappInboundMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary WhatsApp delivery receipt webhook
+ */
+export const postWhatsappReceipts = (
+    postWhatsappReceiptsBody: PostWhatsappReceiptsBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/channels/whatsapp/receipts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postWhatsappReceiptsBody
+    },
+      options);
+    }
+  
+
+
+export const getPostWhatsappReceiptsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWhatsappReceipts>>, TError,{data: PostWhatsappReceiptsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postWhatsappReceipts>>, TError,{data: PostWhatsappReceiptsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWhatsappReceipts>>, {data: PostWhatsappReceiptsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postWhatsappReceipts(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostWhatsappReceiptsMutationResult = NonNullable<Awaited<ReturnType<typeof postWhatsappReceipts>>>
+    export type PostWhatsappReceiptsMutationBody = PostWhatsappReceiptsBody
+    export type PostWhatsappReceiptsMutationError = unknown
+
+    /**
+ * @summary WhatsApp delivery receipt webhook
+ */
+export const usePostWhatsappReceipts = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWhatsappReceipts>>, TError,{data: PostWhatsappReceiptsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postWhatsappReceipts>>,
+        TError,
+        {data: PostWhatsappReceiptsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostWhatsappReceiptsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * Provider-to-platform webhook. Idempotent on the provider message id.
+ * @summary SMS inbound message webhook
+ */
+export const postSmsInbound = (
+    postSmsInboundBody: PostSmsInboundBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/channels/sms/inbound`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postSmsInboundBody
+    },
+      options);
+    }
+  
+
+
+export const getPostSmsInboundMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postSmsInbound>>, TError,{data: PostSmsInboundBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postSmsInbound>>, TError,{data: PostSmsInboundBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postSmsInbound>>, {data: PostSmsInboundBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postSmsInbound(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostSmsInboundMutationResult = NonNullable<Awaited<ReturnType<typeof postSmsInbound>>>
+    export type PostSmsInboundMutationBody = PostSmsInboundBody
+    export type PostSmsInboundMutationError = ErrorResponse
+
+    /**
+ * @summary SMS inbound message webhook
+ */
+export const usePostSmsInbound = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postSmsInbound>>, TError,{data: PostSmsInboundBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postSmsInbound>>,
+        TError,
+        {data: PostSmsInboundBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostSmsInboundMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary SMS delivery receipt webhook
+ */
+export const postSmsReceipts = (
+    postSmsReceiptsBody: PostSmsReceiptsBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/channels/sms/receipts`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postSmsReceiptsBody
+    },
+      options);
+    }
+  
+
+
+export const getPostSmsReceiptsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postSmsReceipts>>, TError,{data: PostSmsReceiptsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postSmsReceipts>>, TError,{data: PostSmsReceiptsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postSmsReceipts>>, {data: PostSmsReceiptsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postSmsReceipts(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostSmsReceiptsMutationResult = NonNullable<Awaited<ReturnType<typeof postSmsReceipts>>>
+    export type PostSmsReceiptsMutationBody = PostSmsReceiptsBody
+    export type PostSmsReceiptsMutationError = unknown
+
+    /**
+ * @summary SMS delivery receipt webhook
+ */
+export const usePostSmsReceipts = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postSmsReceipts>>, TError,{data: PostSmsReceiptsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postSmsReceipts>>,
+        TError,
+        {data: PostSmsReceiptsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostSmsReceiptsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    

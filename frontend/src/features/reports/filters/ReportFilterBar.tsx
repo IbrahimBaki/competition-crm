@@ -1,3 +1,4 @@
+import { type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReportFilters } from './useReportFilters';
 
@@ -10,11 +11,11 @@ export function ReportFilterBar() {
   const { t } = useTranslation();
   const { values, setFilter, reset, isComplete } = useReportFilters();
 
-  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateFromChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter('date_from', e.target.value || undefined);
   };
 
-  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateToChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilter('date_to', e.target.value || undefined);
   };
 

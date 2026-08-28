@@ -7,7 +7,7 @@ use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Domains\Knowledge\Models\KnowledgeCategory;
 use App\Domains\Knowledge\Services\KnowledgeCategoryTree;
 use App\Domains\Knowledge\Services\Search\ArticleSearchIndexer;
-use App\Security\Services\AuditLogger;
+use App\Domains\Security\Services\AuditLogger;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Str;
 

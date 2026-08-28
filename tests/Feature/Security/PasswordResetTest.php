@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Security;
 
-use App\Domains\Security\Models\PasswordReset;
 use App\Models\User;
 use Database\Seeders\PermissionsAndRolesSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 class PasswordResetTest extends TestCase
@@ -50,15 +49,12 @@ class PasswordResetTest extends TestCase
             'password' => Hash::make('OldPassword123!'),
         ]);
 
-        $token = Str::random(64);
-        PasswordReset::create([
-            'id' => Str::uuid(),
-            'email' => $user->email,
-            'token_hash' => hash('sha256', $token),
-            'expires_at' => now()->addHour(),
-        ]);
+        // CompletePasswordReset delegates to Laravel's password broker, so the
+        // token has to come from the broker rather than a hand-rolled row.
+        $token = Password::createToken($user);
 
         $response = $this->postJson('/api/v1/auth/password/reset', [
+            'email' => $user->email,
             'token' => $token,
             'password' => 'NewPassword123!',
             'password_confirmation' => 'NewPassword123!',
@@ -75,6 +71,7 @@ class PasswordResetTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->postJson('/api/v1/auth/password/reset', [
+            'email' => $user->email,
             'token' => 'wrong-token',
             'password' => 'NewPassword123!',
             'password_confirmation' => 'NewPassword123!',

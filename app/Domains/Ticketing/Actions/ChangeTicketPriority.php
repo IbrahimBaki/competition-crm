@@ -5,6 +5,7 @@ namespace App\Domains\Ticketing\Actions;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Models\TicketPriority;
+use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;

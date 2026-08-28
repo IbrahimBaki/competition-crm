@@ -16,8 +16,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_moves_notes_to_survivor(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $loser->notes()->create([
             'content' => ['en' => 'Loser note', 'ar' => 'ملاحظة الخاسر'],
@@ -39,8 +39,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_moves_events_to_survivor(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $loser->events()->create([
             'type' => 'note_added',
@@ -64,8 +64,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_moves_contacts_to_survivor(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $loser->contacts()->create([
             'type' => ContactType::Email->value,
@@ -85,8 +85,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_deletes_duplicate_contacts(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $survivor->contacts()->create([
             'type' => ContactType::Email->value,
@@ -113,8 +113,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_old_customer_uuid_resolves_to_survivor(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $this->postJson(
             "/api/v1/customers/{$survivor->uuid}/merge",
@@ -129,8 +129,8 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_records_audit_entry(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser = $this->seed()->factory('customer')->create(['name' => 'Loser']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser = Customer::factory()->create(['name' => 'Loser']);
 
         $this->postJson(
             "/api/v1/customers/{$survivor->uuid}/merge",
@@ -145,7 +145,7 @@ class CustomerMergeTest extends TestCase
 
     public function test_self_merge_fails(): void
     {
-        $customer = $this->seed()->factory('customer')->create(['name' => 'Customer']);
+        $customer = Customer::factory()->create(['name' => 'Customer']);
 
         $response = $this->postJson(
             "/api/v1/customers/{$customer->uuid}/merge",
@@ -157,9 +157,9 @@ class CustomerMergeTest extends TestCase
 
     public function test_merge_already_merged_customer_fails(): void
     {
-        $survivor = $this->seed()->factory('customer')->create(['name' => 'Survivor']);
-        $loser1 = $this->seed()->factory('customer')->create(['name' => 'Loser1']);
-        $loser2 = $this->seed()->factory('customer')->create(['name' => 'Loser2']);
+        $survivor = Customer::factory()->create(['name' => 'Survivor']);
+        $loser1 = Customer::factory()->create(['name' => 'Loser1']);
+        $loser2 = Customer::factory()->create(['name' => 'Loser2']);
 
         // First merge
         $this->postJson(

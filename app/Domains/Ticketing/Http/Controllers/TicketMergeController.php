@@ -9,10 +9,13 @@ use App\Domains\Ticketing\Http\Requests\SplitTicketRequest;
 use App\Domains\Ticketing\Http\Resources\TicketResource;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 
 class TicketMergeController extends Controller
 {
+    use AuthorizesRequests;
+
     public function merge(
         MergeTicketsRequest $request,
         Ticket $ticket,

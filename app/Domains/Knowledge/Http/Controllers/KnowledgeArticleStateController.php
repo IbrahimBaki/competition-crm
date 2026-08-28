@@ -9,10 +9,13 @@ use App\Domains\Knowledge\Http\Requests\ChangeArticleStateRequest;
 use App\Domains\Knowledge\Http\Resources\KnowledgeArticleResource;
 use App\Domains\Knowledge\Models\ArticleState;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class KnowledgeArticleStateController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private SubmitArticleForReview $submitForReview,
         private PublishArticle $publishArticle,

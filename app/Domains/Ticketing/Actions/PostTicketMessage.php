@@ -7,6 +7,9 @@ use App\Domains\Ai\Models\AiSuggestion;
 use App\Domains\Ai\Models\AiSuggestionState;
 use App\Domains\Channels\Messaging\Exceptions\WhatsappFreeFormWindowClosedException;
 use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
+use App\Domains\Channels\Messaging\Services\Consent\MessagingConsentGuard;
+use App\Domains\Channels\Messaging\Services\Templates\ProviderTemplateRenderer;
+use App\Domains\Channels\Messaging\Services\Window\WhatsappWindowPolicy;
 use App\Domains\Notifications\Events\TicketMentionedNotification;
 use App\Domains\Notifications\Events\TicketWatchedUpdateNotification;
 use App\Domains\Ticketing\Exceptions\TicketConversationReadOnlyException;
@@ -17,6 +20,7 @@ use App\Domains\Ticketing\Models\MessageDirection;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Models\TicketMessage;
+use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
 use App\Models\User;
@@ -24,9 +28,11 @@ use App\Support\Attachments\Attachment;
 use App\Support\Attachments\Exceptions\AttachmentInfectedException;
 use App\Support\Attachments\Exceptions\AttachmentPendingScanException;
 use App\Support\Attachments\ScanState;
+use App\Support\I18n\LocaleResolver;
 use Carbon\CarbonImmutable;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 
 class PostTicketMessage
 {

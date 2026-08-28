@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Domains\Organisation\Models\Branch;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -39,7 +40,7 @@ class ResponseEnvelopeTest extends TestCase
     public function test_get_single_item_returns_success_envelope(): void
     {
         $user = User::factory()->create();
-        $branch = $this->seed()->factory('branch')->create();
+        $branch = Branch::factory()->create();
 
         $response = $this->actingAs($user)->getJson('/api/v1/branches/'.$branch->id);
 
@@ -60,7 +61,7 @@ class ResponseEnvelopeTest extends TestCase
             'X-Request-Id' => $requestId,
         ]);
 
-        $this->assertEquals($requestId, $response->header('X-Request-Id'));
+        $this->assertEquals($requestId, $response->headers->get('X-Request-Id'));
         $this->assertEquals($requestId, $response->json('meta.request_id'));
     }
 
@@ -70,7 +71,7 @@ class ResponseEnvelopeTest extends TestCase
 
         $response = $this->actingAs($user)->getJson('/api/v1/branches');
 
-        $responseId = $response->header('X-Request-Id');
+        $responseId = $response->headers->get('X-Request-Id');
         $this->assertNotNull($responseId);
         $this->assertMatchesRegularExpression('/^[0-9a-f-]{36}$/', $responseId);
         $this->assertEquals($responseId, $response->json('meta.request_id'));
@@ -87,7 +88,7 @@ class ResponseEnvelopeTest extends TestCase
         ];
 
         foreach ($responses as $response) {
-            $this->assertNotNull($response->header('X-Request-Id'));
+            $this->assertNotNull($response->headers->get('X-Request-Id'));
             $this->assertNotNull($response->json('meta.request_id'));
         }
     }

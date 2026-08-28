@@ -23,12 +23,12 @@ class ReportExportTooLargeException extends \DomainException implements HasApiEr
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::ReportExportTooLarge;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::ReportExportTooLarge;
     }
 }

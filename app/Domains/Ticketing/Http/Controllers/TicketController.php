@@ -15,10 +15,13 @@ use App\Domains\Ticketing\Services\TicketSearch;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class TicketController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(TicketSearch $search): JsonResponse
     {
         $spec = (new CollectionQuerySpec)

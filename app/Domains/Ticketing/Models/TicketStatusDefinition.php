@@ -3,10 +3,17 @@
 namespace App\Domains\Ticketing\Models;
 
 use App\Support\I18n\Casts\BilingualStringCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TicketStatusDefinition extends Model
 {
+    use HasFactory;
+
+    // The table is `ticket_statuses`; without this Laravel infers
+    // `ticket_status_definitions`, which does not exist.
+    protected $table = 'ticket_statuses';
+
     protected $guarded = ['*'];
 
     protected $fillable = ['name', 'lifecycle_type', 'is_default', 'position', 'is_active'];

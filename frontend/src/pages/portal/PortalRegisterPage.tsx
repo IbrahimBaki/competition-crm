@@ -1,3 +1,4 @@
+import { type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,7 +6,7 @@ export function PortalRegisterPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     navigate('/portal/verify');
   };

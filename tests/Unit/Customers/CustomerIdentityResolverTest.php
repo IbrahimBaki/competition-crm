@@ -3,6 +3,7 @@
 namespace Tests\Unit\Customers;
 
 use App\Domains\Customers\Models\ContactType;
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Services\Identity\CustomerIdentityResolver;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -39,7 +40,7 @@ class CustomerIdentityResolverTest extends TestCase
 
     public function test_resolve_with_known_email_returns_owning_customer(): void
     {
-        $customer = $this->seed()->factory('customer')->create();
+        $customer = Customer::factory()->create();
         $customer->contacts()->create([
             'type' => ContactType::Email->value,
             'value' => 'test@example.com',
@@ -70,8 +71,8 @@ class CustomerIdentityResolverTest extends TestCase
 
     public function test_resolve_with_ambiguous_identities_returns_no_customer(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         $customer1->contacts()->create([
             'type' => ContactType::Email->value,
@@ -97,7 +98,7 @@ class CustomerIdentityResolverTest extends TestCase
 
     public function test_resolve_returns_evidence_with_rule_names(): void
     {
-        $customer = $this->seed()->factory('customer')->create();
+        $customer = Customer::factory()->create();
         $customer->contacts()->create([
             'type' => ContactType::Phone->value,
             'value' => '0501234567',
@@ -115,7 +116,7 @@ class CustomerIdentityResolverTest extends TestCase
 
     public function test_resolve_normalises_phone_numbers(): void
     {
-        $customer = $this->seed()->factory('customer')->create();
+        $customer = Customer::factory()->create();
         $customer->contacts()->create([
             'type' => ContactType::Phone->value,
             'value' => '+966501234567',

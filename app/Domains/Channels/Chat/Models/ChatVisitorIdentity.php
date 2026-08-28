@@ -4,6 +4,7 @@ namespace App\Domains\Channels\Chat\Models;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,8 @@ use Illuminate\Support\Str;
 
 class ChatVisitorIdentity extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'visitor_token',
         'customer_id',

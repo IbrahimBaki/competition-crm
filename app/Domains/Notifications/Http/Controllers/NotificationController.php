@@ -6,11 +6,14 @@ use App\Domains\Notifications\Http\Resources\NotificationResource;
 use App\Domains\Notifications\Models\Notification;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationController
 {
+    use AuthorizesRequests;
+
     public function index(Request $request, CollectionQuery $collectionQuery): JsonResponse
     {
         $this->authorize('viewAny', Notification::class);

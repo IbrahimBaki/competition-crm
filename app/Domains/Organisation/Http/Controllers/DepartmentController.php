@@ -5,6 +5,7 @@ namespace App\Domains\Organisation\Http\Controllers;
 use App\Domains\Organisation\Actions\ActivateDepartment;
 use App\Domains\Organisation\Actions\CreateDepartment;
 use App\Domains\Organisation\Actions\DeactivateDepartment;
+use App\Domains\Organisation\Actions\DeleteDepartment;
 use App\Domains\Organisation\Actions\UpdateDepartment;
 use App\Domains\Organisation\Http\Requests\StoreDepartmentRequest;
 use App\Domains\Organisation\Http\Requests\UpdateDepartmentRequest;
@@ -78,5 +79,14 @@ class DepartmentController extends Controller
         $department = $action->execute($department, $request->all(), auth()->user());
 
         return ApiResponse::item(new DepartmentResource($department));
+    }
+
+    public function destroy(Department $department, DeleteDepartment $action)
+    {
+        $this->authorize('delete', $department);
+
+        $action->execute($department, auth()->user());
+
+        return ApiResponse::noContent();
     }
 }

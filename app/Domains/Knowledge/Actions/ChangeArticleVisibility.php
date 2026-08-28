@@ -4,7 +4,7 @@ namespace App\Domains\Knowledge\Actions;
 
 use App\Domains\Knowledge\Models\ArticleVisibility;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
-use App\Security\Services\AuditLogger;
+use App\Domains\Security\Services\AuditLogger;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 class ChangeArticleVisibility

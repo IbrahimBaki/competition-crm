@@ -5,13 +5,10 @@ namespace Tests\Unit\Ticketing;
 use App\Domains\Ticketing\Exceptions\TicketVersionConflictException;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Services\Concurrency\TicketVersionGuard;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class TicketVersionGuardTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private TicketVersionGuard $guard;
 
     protected function setUp(): void

@@ -19,9 +19,14 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  AutomationRuleWrite,
   CollectionResponse,
+  ErrorResponse,
   GetAutomationExecutionsParams,
   GetAutomationRulesParams,
+  NotFoundResponse,
+  PatchAutomationRule200,
+  PostAutomationRules201,
   PostTicketEscalateBody
 } from '.././model'
 import { apiRequest } from '../../http/mutator';
@@ -93,6 +98,63 @@ export const useGetAutomationRules = <TData = Awaited<ReturnType<typeof getAutom
 
 
 /**
+ * @summary Create automation rule
+ */
+export const postAutomationRules = (
+    automationRuleWrite: AutomationRuleWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PostAutomationRules201>(
+      {url: `/automation/rules`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: automationRuleWrite
+    },
+      options);
+    }
+  
+
+
+export const getPostAutomationRulesMutationOptions = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAutomationRules>>, TError,{data: AutomationRuleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postAutomationRules>>, TError,{data: AutomationRuleWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postAutomationRules>>, {data: AutomationRuleWrite}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postAutomationRules(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostAutomationRulesMutationResult = NonNullable<Awaited<ReturnType<typeof postAutomationRules>>>
+    export type PostAutomationRulesMutationBody = AutomationRuleWrite
+    export type PostAutomationRulesMutationError = ErrorResponse
+
+    /**
+ * @summary Create automation rule
+ */
+export const usePostAutomationRules = <TError = ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postAutomationRules>>, TError,{data: AutomationRuleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postAutomationRules>>,
+        TError,
+        {data: AutomationRuleWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPostAutomationRulesMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary Get automation rule
  */
 export const getAutomationRule = (
@@ -154,6 +216,119 @@ export const useGetAutomationRule = <TData = Awaited<ReturnType<typeof getAutoma
 
 
 /**
+ * @summary Update automation rule
+ */
+export const patchAutomationRule = (
+    rule: string,
+    automationRuleWrite: AutomationRuleWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchAutomationRule200>(
+      {url: `/automation/rules/${rule}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: automationRuleWrite
+    },
+      options);
+    }
+  
+
+
+export const getPatchAutomationRuleMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchAutomationRule>>, TError,{rule: string;data: AutomationRuleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchAutomationRule>>, TError,{rule: string;data: AutomationRuleWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchAutomationRule>>, {rule: string;data: AutomationRuleWrite}> = (props) => {
+          const {rule,data} = props ?? {};
+
+          return  patchAutomationRule(rule,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchAutomationRuleMutationResult = NonNullable<Awaited<ReturnType<typeof patchAutomationRule>>>
+    export type PatchAutomationRuleMutationBody = AutomationRuleWrite
+    export type PatchAutomationRuleMutationError = NotFoundResponse
+
+    /**
+ * @summary Update automation rule
+ */
+export const usePatchAutomationRule = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchAutomationRule>>, TError,{rule: string;data: AutomationRuleWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchAutomationRule>>,
+        TError,
+        {rule: string;data: AutomationRuleWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchAutomationRuleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Delete automation rule
+ */
+export const deleteAutomationRule = (
+    rule: string,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/automation/rules/${rule}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteAutomationRuleMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAutomationRule>>, TError,{rule: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteAutomationRule>>, TError,{rule: string}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAutomationRule>>, {rule: string}> = (props) => {
+          const {rule} = props ?? {};
+
+          return  deleteAutomationRule(rule,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteAutomationRuleMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAutomationRule>>>
+    
+    export type DeleteAutomationRuleMutationError = NotFoundResponse
+
+    /**
+ * @summary Delete automation rule
+ */
+export const useDeleteAutomationRule = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAutomationRule>>, TError,{rule: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteAutomationRule>>,
+        TError,
+        {rule: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteAutomationRuleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
  * @summary List automation executions
  */
 export const getAutomationExecutions = (

@@ -127,6 +127,12 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
             PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
             PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
+            // attachments.*
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            // notifications.*
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
             // reports.*
             PermissionKey::REPORTS_VIEW_BRANCH,
             PermissionKey::REPORTS_EXPORT_ANY,
@@ -213,6 +219,12 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE,
             PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE,
             PermissionKey::KNOWLEDGE_CATEGORIES_MANAGE,
+            // attachments.*
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            // notifications.*
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
             // reports.*
             PermissionKey::REPORTS_VIEW_DEPARTMENT,
         ];
@@ -278,6 +290,12 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::AI_ASSISTANCE_USE,
             PermissionKey::AI_SUGGESTIONS_RESOLVE,
             PermissionKey::AI_USAGE_VIEW,
+            // attachments.*
+            PermissionKey::ATTACHMENTS_UPLOAD,
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            // notifications.*
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
             // reports.*
             PermissionKey::REPORTS_VIEW_OWN,
         ];
@@ -303,6 +321,11 @@ class PermissionsAndRolesSeeder extends Seeder
             PermissionKey::TICKETS_VIEW_OWN,
             // ticket messages.*
             PermissionKey::TICKET_MESSAGE_VIEW,
+            // attachments.* — read-only role: download only, no upload
+            PermissionKey::ATTACHMENTS_DOWNLOAD,
+            // notifications.*
+            PermissionKey::NOTIFICATIONS_VIEW_OWN,
+            PermissionKey::NOTIFICATIONS_MANAGE_PREFERENCES,
         ];
 
         $role = Role::firstOrCreate(

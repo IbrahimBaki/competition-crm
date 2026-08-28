@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query'
 import type {
   CollectionResponse,
+  ErrorResponse,
   GetAuditLogsParams,
   GetAuthMe200,
   GetAuthPolicy200,
@@ -28,6 +29,9 @@ import type {
   GetRole200,
   GetRolesParams,
   GetUsersParams,
+  NotFoundResponse,
+  PatchRole200,
+  PatchRoleBody,
   PostAuthLogin200,
   PostAuthLoginBody,
   PostAuthPasswordForgotBody,
@@ -1087,6 +1091,65 @@ export const useDeleteRole = <TError = unknown,
       > => {
 
       const mutationOptions = getDeleteRoleMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * PATCH and PUT share one handler and one validator, so this is NOT a partial update: `display_name` and `permission_keys` are both required and `permission_keys` replaces the role's permissions wholesale.
+ * @summary Update role
+ */
+export const patchRole = (
+    role: string,
+    patchRoleBody: PatchRoleBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchRole200>(
+      {url: `/roles/${role}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: patchRoleBody
+    },
+      options);
+    }
+  
+
+
+export const getPatchRoleMutationOptions = <TError = NotFoundResponse | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchRole>>, TError,{role: string;data: PatchRoleBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchRole>>, TError,{role: string;data: PatchRoleBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchRole>>, {role: string;data: PatchRoleBody}> = (props) => {
+          const {role,data} = props ?? {};
+
+          return  patchRole(role,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchRoleMutationResult = NonNullable<Awaited<ReturnType<typeof patchRole>>>
+    export type PatchRoleMutationBody = PatchRoleBody
+    export type PatchRoleMutationError = NotFoundResponse | ErrorResponse
+
+    /**
+ * @summary Update role
+ */
+export const usePatchRole = <TError = NotFoundResponse | ErrorResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchRole>>, TError,{role: string;data: PatchRoleBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchRole>>,
+        TError,
+        {role: string;data: PatchRoleBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchRoleMutationOptions(options);
 
       return useMutation(mutationOptions);
     }

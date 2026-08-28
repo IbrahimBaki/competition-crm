@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Domains\Customers\Models\Customer;
+use App\Domains\Customers\Services\ArabicTextNormaliser;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 

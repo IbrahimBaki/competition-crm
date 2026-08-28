@@ -20,16 +20,16 @@ class TicketCategoryPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_CATEGORIES_MANAGE);
+        return $user->can(PermissionKey::TICKETS_CATEGORIES_MANAGE);
     }
 
     public function update(User $user, TicketCategory $category): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_CATEGORIES_MANAGE);
+        return $user->can(PermissionKey::TICKETS_CATEGORIES_MANAGE);
     }
 
     public function delete(User $user, TicketCategory $category): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKETS_CATEGORIES_MANAGE);
+        return $user->can(PermissionKey::TICKETS_CATEGORIES_MANAGE);
     }
 }

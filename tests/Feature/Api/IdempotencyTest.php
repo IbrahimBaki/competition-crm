@@ -4,11 +4,23 @@ namespace Tests\Feature\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class IdempotencyTest extends TestCase
 {
+    use InteractsWithPermissions;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // These exercise API conventions, not authorisation: the endpoints
+        // under test sit behind auth:sanctum, so without an actor every
+        // request returns 401 before the convention can be asserted.
+        $this->actingAsAdministrator();
+    }
 
     public function test_idempotent_key_replays_response(): void
     {

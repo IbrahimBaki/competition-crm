@@ -11,7 +11,9 @@ final class ImportRunRow extends Model
         'import_run_id', 'row_number', 'state', 'errors',
         'external_ref', 'created_entity_uuid',
     ];
+
     protected $hidden = ['id'];
+
     protected $casts = ['errors' => 'array'];
 
     public function importRun(): BelongsTo

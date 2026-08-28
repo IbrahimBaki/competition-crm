@@ -5,7 +5,7 @@ namespace App\Domains\Ai\Actions;
 use App\Domains\Ai\Models\AiSuggestion;
 use App\Domains\Ai\Models\AiSuggestionFeature;
 use App\Domains\Ai\Models\AiSuggestionState;
-use App\Domains\Ai\Services\Provider\AiClient;
+use App\Domains\Ai\Services\AiClient;
 use App\Domains\Ticketing\Models\Ticket;
 
 class GenerateTicketSummary

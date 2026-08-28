@@ -5,10 +5,13 @@ namespace App\Domains\Knowledge\Http\Controllers;
 use App\Domains\Knowledge\Actions\RestoreArticleVersion;
 use App\Domains\Knowledge\Http\Resources\KnowledgeArticleVersionResource;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class KnowledgeArticleVersionController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private RestoreArticleVersion $restoreVersion,
     ) {}

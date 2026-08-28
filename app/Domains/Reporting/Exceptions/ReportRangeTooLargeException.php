@@ -22,12 +22,12 @@ class ReportRangeTooLargeException extends \DomainException implements HasApiErr
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::ReportRangeTooLarge;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::ReportRangeTooLarge;
     }
 }

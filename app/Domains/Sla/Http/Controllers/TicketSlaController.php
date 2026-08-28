@@ -7,10 +7,13 @@ use App\Domains\Sla\Http\Requests\ResetTicketSlaRequest;
 use App\Domains\Sla\Http\Resources\TicketSlaResource;
 use App\Domains\Sla\Models\TicketSlaClock;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 
 class TicketSlaController extends Controller
 {
+    use AuthorizesRequests;
+
     public function show(TicketSlaClock $clock)
     {
         $this->authorize('view', $clock->ticket);

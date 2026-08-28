@@ -8,13 +8,13 @@ use App\Domains\Ticketing\Models\MessageDirection;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class Story462IntegrationTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -27,11 +27,11 @@ class Story462IntegrationTest extends TestCase
         // Setup
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
-        $agent->grantPermission('ticket.message.internal.view');
-        $agent->grantPermission('ticket.message.internal.write');
-        $agent->grantPermission('ticket.message.retry');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.internal.view');
+        $this->grantPermission($agent, 'ticket.message.internal.write');
+        $this->grantPermission($agent, 'ticket.message.retry');
 
         // 1. Post a message with all required fields
         $postResponse = $this->actingAs($agent)->postJson(
@@ -54,8 +54,8 @@ class Story462IntegrationTest extends TestCase
 
         // 2. Internal note should be excluded from non-privileged users
         $restrictedAgent = User::factory()->create();
-        $restrictedAgent->grantPermission('ticket.message.view');
-        $restrictedAgent->grantPermission('ticket.message.send');
+        $this->grantPermission($restrictedAgent, 'ticket.message.view');
+        $this->grantPermission($restrictedAgent, 'ticket.message.send');
 
         $internalResponse = $this->actingAs($restrictedAgent)->postJson(
             "/api/v1/tickets/{$ticket->uuid}/messages",

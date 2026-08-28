@@ -15,7 +15,9 @@ final class ImportRun extends Model
         'total_rows', 'valid_rows', 'imported_rows', 'failed_rows',
         'error_report', 'created_by_user_id',
     ];
+
     protected $hidden = ['id'];
+
     protected $casts = ['error_report' => 'array'];
 
     public function createdBy(): BelongsTo

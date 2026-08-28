@@ -13,7 +13,7 @@ class CustomerIdentityResolutionTest extends TestCase
 
     public function test_inbound_contact_with_known_email_resolves_to_existing_customer(): void
     {
-        $existingCustomer = $this->seed()->factory('customer')->create(['name' => 'Existing']);
+        $existingCustomer = Customer::factory()->create(['name' => 'Existing']);
         $existingCustomer->contacts()->create([
             'type' => ContactType::Email->value,
             'value' => 'test@example.com',
@@ -39,8 +39,8 @@ class CustomerIdentityResolutionTest extends TestCase
 
     public function test_ambiguous_identities_create_pending_duplicate_candidate(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create(['name' => 'Customer 1']);
-        $customer2 = $this->seed()->factory('customer')->create(['name' => 'Customer 2']);
+        $customer1 = Customer::factory()->create(['name' => 'Customer 1']);
+        $customer2 = Customer::factory()->create(['name' => 'Customer 2']);
 
         $customer1->contacts()->create([
             'type' => ContactType::Email->value,

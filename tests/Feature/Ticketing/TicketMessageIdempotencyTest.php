@@ -5,13 +5,13 @@ namespace Tests\Feature\Ticketing;
 use App\Domains\Ticketing\Models\MessageChannel;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Str;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketMessageIdempotencyTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -23,8 +23,8 @@ class TicketMessageIdempotencyTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         $idempotencyKey = Str::uuid()->toString();
         $payload = [
@@ -52,8 +52,8 @@ class TicketMessageIdempotencyTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         $idempotencyKey = Str::uuid()->toString();
         $payload = [
@@ -82,8 +82,8 @@ class TicketMessageIdempotencyTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         $idempotencyKey = Str::uuid()->toString();
 
@@ -109,8 +109,8 @@ class TicketMessageIdempotencyTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.send');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.send');
 
         $payload = [
             'body' => 'Test message',

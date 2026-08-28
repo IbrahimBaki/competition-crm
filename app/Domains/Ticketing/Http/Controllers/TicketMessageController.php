@@ -13,12 +13,15 @@ use App\Domains\Ticketing\Models\TicketMessage;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
 class TicketMessageController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(Request $request, Ticket $ticket): JsonResponse
     {
         $this->authorize('viewAny', [TicketMessage::class, $ticket]);

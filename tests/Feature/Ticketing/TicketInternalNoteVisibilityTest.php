@@ -6,12 +6,12 @@ use App\Domains\Ticketing\Models\MessageChannel;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketInternalNoteVisibilityTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     protected function setUp(): void
     {
@@ -23,8 +23,8 @@ class TicketInternalNoteVisibilityTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.internal.view');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.internal.view');
 
         $internalNote = TicketMessage::factory()
             ->internal()
@@ -42,7 +42,7 @@ class TicketInternalNoteVisibilityTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.view');
 
         $internalNote = TicketMessage::factory()
             ->internal()
@@ -64,9 +64,9 @@ class TicketInternalNoteVisibilityTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
-        $agent->grantPermission('ticket.message.internal.view');
-        $agent->grantPermission('ticket.message.internal.write');
+        $this->grantPermission($agent, 'ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.internal.view');
+        $this->grantPermission($agent, 'ticket.message.internal.write');
 
         $response = $this->actingAs($agent)->postJson(
             "/api/v1/tickets/{$ticket->uuid}/messages",
@@ -85,7 +85,7 @@ class TicketInternalNoteVisibilityTest extends TestCase
     {
         $ticket = Ticket::factory()->create();
         $agent = User::factory()->create();
-        $agent->grantPermission('ticket.message.view');
+        $this->grantPermission($agent, 'ticket.message.view');
 
         $internalNote = TicketMessage::factory()
             ->internal()

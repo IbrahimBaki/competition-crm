@@ -5,13 +5,10 @@ namespace Tests\Feature\Ticketing;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketMessage;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
 class TicketMergeTest extends TestCase
 {
-    use DatabaseMigrations;
-
     private User $user;
 
     protected function setUp(): void

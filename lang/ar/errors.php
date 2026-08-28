@@ -143,6 +143,7 @@ return [
     'knowledge' => [
         'illegal_article_transition' => 'انتقال حالة المقالة هذا غير مسموح',
         'article_not_published' => 'يجب نشر المقالة قبل إمكانية عرضها',
+        'article_visibility_forbidden' => 'غير مسموح لك بعرض هذه المقالة',
         'article_version_not_found' => 'إصدار المقالة غير موجود',
         'duplicate_article_feedback' => 'لقد قدمت بالفعل تقييمًا متطابقًا لهذه المقالة',
         'category_depth_exceeded' => 'لا يمكن إنشاء فئة بعمق أكبر من 3 مستويات',

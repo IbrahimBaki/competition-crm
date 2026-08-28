@@ -5,12 +5,12 @@ namespace Tests\Feature\Ticketing;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketAssignmentTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     private Ticket $ticket;
 
@@ -28,12 +28,12 @@ class TicketAssignmentTest extends TestCase
         $this->manager = User::factory()->create();
 
         // Grant permissions
-        $this->agent->grantPermission('tickets.assign');
-        $this->agent->grantPermission('tickets.claim');
-        $this->agent->grantPermission('tickets.queue.view');
-        $this->manager->grantPermission('tickets.assign');
-        $this->manager->grantPermission('tickets.transfer.agent');
-        $this->manager->grantPermission('tickets.transfer.department');
+        $this->grantPermission($this->agent, 'tickets.assign');
+        $this->grantPermission($this->agent, 'tickets.claim');
+        $this->grantPermission($this->agent, 'tickets.queue.view');
+        $this->grantPermission($this->manager, 'tickets.assign');
+        $this->grantPermission($this->manager, 'tickets.transfer.agent');
+        $this->grantPermission($this->manager, 'tickets.transfer.department');
     }
 
     public function test_assign_endpoint_returns_ticket_with_assignee(): void

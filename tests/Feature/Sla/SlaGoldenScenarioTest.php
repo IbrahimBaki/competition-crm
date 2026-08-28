@@ -26,9 +26,15 @@ class SlaGoldenScenarioTest extends TestCase
     }
 
     /**
+     * The provider returns string-keyed rows, which PHPUnit binds as NAMED
+     * arguments — so the signature must name them individually. Taking a
+     * single `array $scenario` here raises "Unknown named parameter
+     * $condition", and rendering that error crashes the reporter before it
+     * can print the run summary.
+     *
      * @dataProvider scenarioProvider
      */
-    public function test_sla_scenarios(array $scenario): void
+    public function test_sla_scenarios(string $condition): void
     {
         // Freeze clock
         $now = Carbon::parse('2026-08-27 09:00:00'); // Monday, working hours

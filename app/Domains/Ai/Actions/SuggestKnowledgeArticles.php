@@ -5,8 +5,8 @@ namespace App\Domains\Ai\Actions;
 use App\Domains\Ai\Models\AiSuggestion;
 use App\Domains\Ai\Models\AiSuggestionFeature;
 use App\Domains\Ai\Models\AiSuggestionState;
-use App\Domains\Knowledge\Models\ArticleQueryScope;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Domains\Knowledge\Services\Visibility\ArticleQueryScope;
 use App\Domains\Ticketing\Models\Ticket;
 
 class SuggestKnowledgeArticles

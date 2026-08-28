@@ -18,7 +18,7 @@ class RequestIdPropagationTest extends TestCase
                 'password' => 'wrong',
             ]);
 
-        $this->assertEquals('test-id-123', $response->header('X-Request-Id'));
+        $this->assertEquals('test-id-123', $response->headers->get('X-Request-Id'));
     }
 
     public function test_request_id_is_present_in_error_envelope(): void

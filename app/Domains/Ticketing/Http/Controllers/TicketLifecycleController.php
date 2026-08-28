@@ -14,10 +14,13 @@ use App\Domains\Ticketing\Http\Resources\TicketResource;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 
 class TicketLifecycleController extends Controller
 {
+    use AuthorizesRequests;
+
     public function status(
         ChangeTicketStatusRequest $request,
         Ticket $ticket,

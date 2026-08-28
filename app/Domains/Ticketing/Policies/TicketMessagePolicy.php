@@ -15,28 +15,28 @@ class TicketMessagePolicy
 
     public function viewAny(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKET_MESSAGE_VIEW)
+        return $user->can(PermissionKey::TICKET_MESSAGE_VIEW)
             && $this->ticketPolicy->view($user, $ticket);
     }
 
     public function viewInternal(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKET_MESSAGE_INTERNAL_VIEW);
+        return $user->can(PermissionKey::TICKET_MESSAGE_INTERNAL_VIEW);
     }
 
     public function send(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKET_MESSAGE_SEND);
+        return $user->can(PermissionKey::TICKET_MESSAGE_SEND);
     }
 
     public function writeInternal(User $user, Ticket $ticket): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKET_MESSAGE_INTERNAL_WRITE);
+        return $user->can(PermissionKey::TICKET_MESSAGE_INTERNAL_WRITE);
     }
 
     public function retry(User $user, TicketMessage $message): bool
     {
-        return $user->hasPermissionTo(PermissionKey::TICKET_MESSAGE_RETRY)
+        return $user->can(PermissionKey::TICKET_MESSAGE_RETRY)
             && $message->isRetryable();
     }
 }

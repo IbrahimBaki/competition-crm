@@ -5,6 +5,7 @@ namespace App\Domains\Organisation\Http\Controllers;
 use App\Domains\Organisation\Actions\ActivateTeam;
 use App\Domains\Organisation\Actions\CreateTeam;
 use App\Domains\Organisation\Actions\DeactivateTeam;
+use App\Domains\Organisation\Actions\DeleteTeam;
 use App\Domains\Organisation\Actions\UpdateTeam;
 use App\Domains\Organisation\Http\Requests\StoreTeamRequest;
 use App\Domains\Organisation\Http\Requests\UpdateTeamRequest;
@@ -78,5 +79,14 @@ class TeamController extends Controller
         $team = $action->execute($team, auth()->user());
 
         return ApiResponse::item(new TeamResource($team));
+    }
+
+    public function destroy(Team $team, DeleteTeam $action)
+    {
+        $this->authorize('delete', $team);
+
+        $action->execute($team, auth()->user());
+
+        return ApiResponse::noContent();
     }
 }

@@ -4,11 +4,14 @@ namespace App\Domains\Knowledge\Http\Controllers;
 
 use App\Domains\Knowledge\Models\KnowledgeArticle;
 use App\Domains\Knowledge\Services\ArticleReplyRenderer;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class KnowledgeArticleRenderController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private ArticleReplyRenderer $renderer,
     ) {}

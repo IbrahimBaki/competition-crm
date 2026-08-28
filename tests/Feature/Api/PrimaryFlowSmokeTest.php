@@ -4,10 +4,23 @@ namespace Tests\Feature\Api;
 
 use App\Domains\Customers\Models\Customer;
 use App\Domains\Ticketing\Models\Ticket;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class PrimaryFlowSmokeTest extends TestCase
 {
+    use InteractsWithPermissions;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // These exercise API conventions, not authorisation: the endpoints
+        // under test sit behind auth:sanctum, so without an actor every
+        // request returns 401 before the convention can be asserted.
+        $this->actingAsAdministrator();
+    }
+
     public function test_primary_flow_staff_login_to_ticket_creation()
     {
         // 1. Staff Login

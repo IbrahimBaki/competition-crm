@@ -3,11 +3,23 @@
 namespace Tests\Feature\Api;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class RateLimitTest extends TestCase
 {
+    use InteractsWithPermissions;
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // These exercise API conventions, not authorisation: the endpoints
+        // under test sit behind auth:sanctum, so without an actor every
+        // request returns 401 before the convention can be asserted.
+        $this->actingAsAdministrator();
+    }
 
     public function test_rate_limit_returns_429_when_exceeded(): void
     {
@@ -17,7 +29,7 @@ class RateLimitTest extends TestCase
 
         $response->assertStatus(200);
         // Verify rate limit headers are present
-        $this->assertNotNull($response->header('X-RateLimit-Limit') ?? null);
+        $this->assertNotNull($response->headers->get('X-RateLimit-Limit') ?? null);
     }
 
     public function test_rate_limited_response_includes_retry_after(): void

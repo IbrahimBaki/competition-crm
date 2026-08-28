@@ -9,10 +9,13 @@ use App\Domains\Ticketing\Services\TicketSearch;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class TicketQueueController extends Controller
 {
+    use AuthorizesRequests;
+
     public function department(
         Department $department,
         TicketSearch $search,

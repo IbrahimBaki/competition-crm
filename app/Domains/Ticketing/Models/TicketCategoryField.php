@@ -2,11 +2,14 @@
 
 namespace App\Domains\Ticketing\Models;
 
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketCategoryField extends Model
 {
+    use GeneratesUuid;
+
     protected $guarded = ['*'];
 
     protected $fillable = ['ticket_category_id', 'key', 'label', 'type', 'options', 'is_required', 'position'];

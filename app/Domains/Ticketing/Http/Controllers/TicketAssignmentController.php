@@ -16,10 +16,13 @@ use App\Domains\Ticketing\Http\Resources\TicketResource;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
 
 class TicketAssignmentController extends Controller
 {
+    use AuthorizesRequests;
+
     public function assign(
         AssignTicketRequest $request,
         Ticket $ticket,

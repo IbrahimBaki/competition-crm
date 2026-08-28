@@ -4,9 +4,9 @@ namespace App\Domains\Integrations\Services\Import;
 
 use App\Domains\Customers\Actions\CreateCustomer;
 use App\Domains\Integrations\Models\ImportRun;
-use App\Domains\Integrations\Models\ImportRunRow;
 use App\Domains\Ticketing\Actions\CreateTicket;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final class RunImport
 {
@@ -46,6 +46,7 @@ final class RunImport
 
         if ($run->mode === 'dry_run' || $invalidRows > 0) {
             $run->update(['state' => 'completed']);
+
             return;
         }
 
@@ -58,7 +59,7 @@ final class RunImport
                 try {
                     // Simplified: just mark as imported. Full implementation would
                     // call CreateCustomer or CreateTicket based on kind
-                    $runRow->update(['state' => 'imported', 'created_entity_uuid' => \Illuminate\Support\Str::uuid()]);
+                    $runRow->update(['state' => 'imported', 'created_entity_uuid' => Str::uuid()]);
                     $importedRows++;
                 } catch (\Throwable $e) {
                     $runRow->update(['state' => 'invalid', 'errors' => [$e->getMessage()]]);

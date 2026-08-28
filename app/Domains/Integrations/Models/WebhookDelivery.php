@@ -12,7 +12,9 @@ final class WebhookDelivery extends Model
         'payload', 'state', 'attempt_count', 'last_status_code',
         'last_error', 'next_attempt_at', 'delivered_at',
     ];
+
     protected $hidden = ['id'];
+
     protected $casts = [
         'payload' => 'array',
         'next_attempt_at' => 'datetime',

@@ -5,6 +5,7 @@ namespace App\Domains\Organisation\Http\Controllers;
 use App\Domains\Organisation\Actions\ActivateBranch;
 use App\Domains\Organisation\Actions\CreateBranch;
 use App\Domains\Organisation\Actions\DeactivateBranch;
+use App\Domains\Organisation\Actions\DeleteBranch;
 use App\Domains\Organisation\Actions\UpdateBranch;
 use App\Domains\Organisation\Http\Requests\StoreBranchRequest;
 use App\Domains\Organisation\Http\Requests\UpdateBranchRequest;
@@ -82,5 +83,14 @@ class BranchController extends Controller
         $branch = $action->execute($branch, auth()->user());
 
         return ApiResponse::item(new BranchResource($branch));
+    }
+
+    public function destroy(Branch $branch, DeleteBranch $action)
+    {
+        $this->authorize('delete', $branch);
+
+        $action->execute($branch, auth()->user());
+
+        return ApiResponse::noContent();
     }
 }

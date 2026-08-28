@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Customers;
 
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
 use App\Domains\Customers\Models\DuplicateCandidateStatus;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -14,8 +16,8 @@ class CustomerDuplicateReviewTest extends TestCase
 
     public function test_list_duplicates_with_pagination(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         CustomerDuplicateCandidate::create([
             'uuid' => Str::uuid(),
@@ -35,7 +37,7 @@ class CustomerDuplicateReviewTest extends TestCase
 
     public function test_duplicate_list_requires_permission(): void
     {
-        $userWithoutPermission = $this->seed()->factory('user')->create();
+        $userWithoutPermission = User::factory()->create();
         $this->actingAs($userWithoutPermission);
 
         $response = $this->getJson('/api/v1/customers/duplicates');
@@ -45,8 +47,8 @@ class CustomerDuplicateReviewTest extends TestCase
 
     public function test_dismiss_duplicate_candidate(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         $candidate = CustomerDuplicateCandidate::create([
             'uuid' => Str::uuid(),
@@ -69,8 +71,8 @@ class CustomerDuplicateReviewTest extends TestCase
 
     public function test_dismiss_requires_review_permission(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         $candidate = CustomerDuplicateCandidate::create([
             'uuid' => Str::uuid(),
@@ -81,7 +83,7 @@ class CustomerDuplicateReviewTest extends TestCase
             'evidence' => [],
         ]);
 
-        $userWithViewOnly = $this->seed()->factory('user')->create();
+        $userWithViewOnly = User::factory()->create();
         // Grant only VIEW permission, not REVIEW
         $this->actingAs($userWithViewOnly);
 
@@ -92,8 +94,8 @@ class CustomerDuplicateReviewTest extends TestCase
 
     public function test_filter_duplicates_by_status(): void
     {
-        $customer1 = $this->seed()->factory('customer')->create();
-        $customer2 = $this->seed()->factory('customer')->create();
+        $customer1 = Customer::factory()->create();
+        $customer2 = Customer::factory()->create();
 
         CustomerDuplicateCandidate::create([
             'uuid' => Str::uuid(),

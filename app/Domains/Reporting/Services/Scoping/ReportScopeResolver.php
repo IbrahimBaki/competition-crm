@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Domains\Reporting\Services\Scoping;
 
 use App\Domains\Reporting\Services\Filters\ReportFilter;
+use App\Domains\Security\Permissions\Scope;
 use App\Domains\Security\Scoping\OrganisationStructureScopeFilter;
 use App\Domains\Security\Scoping\ResolveEffectiveScope;
-use App\Domains\Security\Scoping\Scope;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 

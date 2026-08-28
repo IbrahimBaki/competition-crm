@@ -22,12 +22,12 @@ class UnsupportedExportFormatException extends \DomainException implements HasAp
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::UnsupportedExportFormat;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::UnsupportedExportFormat;
     }
 }

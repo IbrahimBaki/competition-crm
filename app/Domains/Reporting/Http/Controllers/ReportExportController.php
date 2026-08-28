@@ -15,12 +15,15 @@ use App\Domains\Reporting\Services\Export\ReportExporterRegistry;
 use App\Domains\Reporting\Services\Scoping\ReportScopeResolver;
 use App\Support\Http\ApiResponse;
 use Carbon\CarbonImmutable;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 
 class ReportExportController extends Controller
 {
+    use AuthorizesRequests;
+
     public function store(
         ReportQueryRequest $request,
         string $report,

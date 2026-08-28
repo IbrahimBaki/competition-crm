@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Integrations;
 
-use App\Domains\Integrations\Models\ApiToken;
 use Tests\TestCase;
 
 class ApiTokenLifecycleTest extends TestCase

@@ -14,8 +14,10 @@ class ArabicTextNormaliser implements TextNormaliser
         // Lowercase
         $normalized = mb_strtolower($normalized, 'UTF-8');
 
-        // Strip Arabic diacritics (harakat U+064B–U+0652, U+0670, tatweel U+0640)
-        $normalized = preg_replace('/[\u{064B}-\u{0652}\u{0670}\u{0640}]/u', '', $normalized);
+        // Strip Arabic diacritics (harakat U+064B–U+0652, U+0670, tatweel U+0640).
+        // PCRE spells code points \x{...}; \u{...} is a PHP double-quoted-string
+        // escape and makes this pattern fail to compile.
+        $normalized = preg_replace('/[\x{064B}-\x{0652}\x{0670}\x{0640}]/u', '', $normalized);
 
         // Fold alef variants (آ أ إ ٱ) -> ا
         $normalized = str_replace(['آ', 'أ', 'إ', 'ٱ'], 'ا', $normalized);

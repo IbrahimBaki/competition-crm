@@ -8,11 +8,14 @@ use App\Domains\Notifications\Models\Notification;
 use App\Domains\Notifications\Models\NotificationDeliveryAttempt;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class NotificationDeliveryController
 {
+    use AuthorizesRequests;
+
     public function index(Request $request, CollectionQuery $collectionQuery): JsonResponse
     {
         $this->authorize('viewDeliveryLog', Notification::class);

@@ -3,6 +3,7 @@
 namespace App\Support\Attachments;
 
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -27,6 +28,8 @@ use Illuminate\Support\Carbon;
  */
 class Attachment extends Model
 {
+    use HasFactory;
+
     protected $guarded = ['*'];
 
     protected $hidden = ['disk', 'storage_key', 'checksum_sha256'];

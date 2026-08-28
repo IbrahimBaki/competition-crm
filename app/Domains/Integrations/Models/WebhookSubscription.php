@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 final class WebhookSubscription extends Model
 {
     protected $fillable = ['name', 'target_url', 'secret', 'event_types', 'created_by_user_id'];
+
     protected $hidden = ['secret', 'id'];
+
     protected $casts = ['event_types' => 'array'];
 
     public function createdBy(): BelongsTo

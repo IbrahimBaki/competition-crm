@@ -11,6 +11,7 @@ use App\Domains\Channels\WebForm\Models\WebFormSubmission;
 use App\Domains\Channels\WebForm\Services\Intake\SubmitWebForm;
 use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class PublicWebFormController
 {
@@ -23,7 +24,7 @@ class PublicWebFormController
         $form = WebForm::where('key', $formKey)->first();
 
         if (! $form || ! $form->is_active) {
-            return ApiResponse::error(404)->toResponse(request());
+            throw new NotFoundHttpException;
         }
 
         return ApiResponse::item(new PublicWebFormResource($form))
@@ -35,7 +36,7 @@ class PublicWebFormController
         $form = WebForm::where('key', $formKey)->first();
 
         if (! $form || ! $form->is_active) {
-            return ApiResponse::error(404)->toResponse(request());
+            throw new NotFoundHttpException;
         }
 
         $ipHash = hash('sha256', $request->ip() ?? '');
@@ -48,8 +49,10 @@ class PublicWebFormController
             userAgent: $userAgent,
         );
 
-        return ApiResponse::item(new WebFormSubmissionAcknowledgementResource($result))
-            ->toResponse(request(), 201);
+        // created() sets 201; toResponse() takes no status argument, so the
+        // previous `toResponse(request(), 201)` silently returned 200.
+        return ApiResponse::created(new WebFormSubmissionAcknowledgementResource($result))
+            ->toResponse(request());
     }
 
     public function status(string $trackingToken): JsonResponse
@@ -57,7 +60,7 @@ class PublicWebFormController
         $submission = WebFormSubmission::where('tracking_token', $trackingToken)->first();
 
         if (! $submission) {
-            return ApiResponse::error(404)->toResponse(request());
+            throw new NotFoundHttpException;
         }
 
         return ApiResponse::item(new WebFormStatusResource($submission))

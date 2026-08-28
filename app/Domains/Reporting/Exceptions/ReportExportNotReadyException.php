@@ -15,12 +15,12 @@ class ReportExportNotReadyException extends \DomainException implements HasApiEr
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::ReportExportNotReady;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::ReportExportNotReady;
     }
 }

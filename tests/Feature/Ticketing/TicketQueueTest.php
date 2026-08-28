@@ -4,12 +4,12 @@ namespace Tests\Feature\Ticketing;
 
 use App\Domains\Ticketing\Models\Ticket;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\Support\InteractsWithPermissions;
 use Tests\TestCase;
 
 class TicketQueueTest extends TestCase
 {
-    use DatabaseMigrations;
+    use InteractsWithPermissions;
 
     private User $agent;
 
@@ -19,8 +19,8 @@ class TicketQueueTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->agent = User::factory()->create();
-        $this->agent->grantPermission('tickets.queue.view');
-        $this->agent->grantPermission('tickets.view.team');
+        $this->grantPermission($this->agent, 'tickets.queue.view');
+        $this->grantPermission($this->agent, 'tickets.view.team');
     }
 
     public function test_personal_queue_returns_assigned_tickets(): void

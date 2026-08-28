@@ -22,12 +22,12 @@ class UnknownReportException extends \DomainException implements HasApiErrorCode
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::UnknownReport;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::UnknownReport;
     }
 }

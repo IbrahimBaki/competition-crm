@@ -26,7 +26,7 @@ class WebFormSubmissionAcknowledgedEvent implements NotifiableEvent
         return [];
     }
 
-    public function toPayload(): array
+    public function payload(): array
     {
         return [
             'ticket_reference' => $this->submission->ticket->reference,

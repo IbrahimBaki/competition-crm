@@ -2,11 +2,18 @@
 
 namespace App\Domains\Ticketing\Models;
 
+use App\Support\Models\GeneratesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class TicketMessageDeliveryEvent extends Model
 {
+    use GeneratesUuid;
+
+    // Append-only log: the table records `occurred_at` and has no
+    // created_at/updated_at columns.
+    public $timestamps = false;
+
     protected $guarded = ['*'];
 
     protected $fillable = [

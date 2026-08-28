@@ -19,10 +19,26 @@ import type {
   UseQueryResult
 } from '@tanstack/react-query'
 import type {
+  CollectionResponse,
+  ForbiddenResponse,
+  GetCustomerErpContext200,
+  GetImportRun200,
+  GetImportRunsParams,
   GetIntegrationTokens200,
   GetIntegrationTokensParams,
+  GetWebhookDeliveriesParams,
+  GetWebhookSubscription200,
+  GetWebhookSubscriptionsParams,
+  NotFoundResponse,
+  PatchWebhookSubscription200,
+  PostImportRuns201,
+  PostImportRunsBody,
   PostIntegrationTokens201,
-  PostIntegrationTokensBody
+  PostIntegrationTokensBody,
+  PostWebhookSubscriptions201,
+  PostWebhookSubscriptionsBody,
+  PutWebhookSubscription200,
+  WebhookSubscriptionWrite
 } from '.././model'
 import { apiRequest } from '../../http/mutator';
 
@@ -204,4 +220,660 @@ export const useDeleteIntegrationToken = <TError = unknown,
 
       return useMutation(mutationOptions);
     }
+    /**
+ * @summary List webhook subscriptions
+ */
+export const getWebhookSubscriptions = (
+    params?: GetWebhookSubscriptionsParams,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<CollectionResponse>(
+      {url: `/webhooks/subscriptions`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetWebhookSubscriptionsQueryKey = (params?: GetWebhookSubscriptionsParams,) => {
+    return [`/webhooks/subscriptions`, ...(params ? [params]: [])] as const;
+    }
+
     
+export const getGetWebhookSubscriptionsQueryOptions = <TData = Awaited<ReturnType<typeof getWebhookSubscriptions>>, TError = ForbiddenResponse>(params?: GetWebhookSubscriptionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscriptions>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWebhookSubscriptionsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebhookSubscriptions>>> = ({ signal }) => getWebhookSubscriptions(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscriptions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWebhookSubscriptionsQueryResult = NonNullable<Awaited<ReturnType<typeof getWebhookSubscriptions>>>
+export type GetWebhookSubscriptionsQueryError = ForbiddenResponse
+
+/**
+ * @summary List webhook subscriptions
+ */
+export const useGetWebhookSubscriptions = <TData = Awaited<ReturnType<typeof getWebhookSubscriptions>>, TError = ForbiddenResponse>(
+ params?: GetWebhookSubscriptionsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscriptions>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWebhookSubscriptionsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * The signing secret is generated server-side and is not accepted from the client.
+ * @summary Create webhook subscription
+ */
+export const postWebhookSubscriptions = (
+    postWebhookSubscriptionsBody: PostWebhookSubscriptionsBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PostWebhookSubscriptions201>(
+      {url: `/webhooks/subscriptions`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postWebhookSubscriptionsBody
+    },
+      options);
+    }
+  
+
+
+export const getPostWebhookSubscriptionsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWebhookSubscriptions>>, TError,{data: PostWebhookSubscriptionsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postWebhookSubscriptions>>, TError,{data: PostWebhookSubscriptionsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWebhookSubscriptions>>, {data: PostWebhookSubscriptionsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postWebhookSubscriptions(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostWebhookSubscriptionsMutationResult = NonNullable<Awaited<ReturnType<typeof postWebhookSubscriptions>>>
+    export type PostWebhookSubscriptionsMutationBody = PostWebhookSubscriptionsBody
+    export type PostWebhookSubscriptionsMutationError = unknown
+
+    /**
+ * @summary Create webhook subscription
+ */
+export const usePostWebhookSubscriptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postWebhookSubscriptions>>, TError,{data: PostWebhookSubscriptionsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postWebhookSubscriptions>>,
+        TError,
+        {data: PostWebhookSubscriptionsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostWebhookSubscriptionsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Get webhook subscription
+ */
+export const getWebhookSubscription = (
+    subscription: string,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<GetWebhookSubscription200>(
+      {url: `/webhooks/subscriptions/${subscription}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetWebhookSubscriptionQueryKey = (subscription: string,) => {
+    return [`/webhooks/subscriptions/${subscription}`] as const;
+    }
+
+    
+export const getGetWebhookSubscriptionQueryOptions = <TData = Awaited<ReturnType<typeof getWebhookSubscription>>, TError = NotFoundResponse>(subscription: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscription>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWebhookSubscriptionQueryKey(subscription);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebhookSubscription>>> = ({ signal }) => getWebhookSubscription(subscription, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(subscription), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscription>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWebhookSubscriptionQueryResult = NonNullable<Awaited<ReturnType<typeof getWebhookSubscription>>>
+export type GetWebhookSubscriptionQueryError = NotFoundResponse
+
+/**
+ * @summary Get webhook subscription
+ */
+export const useGetWebhookSubscription = <TData = Awaited<ReturnType<typeof getWebhookSubscription>>, TError = NotFoundResponse>(
+ subscription: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookSubscription>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWebhookSubscriptionQueryOptions(subscription,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * @summary Replace webhook subscription
+ */
+export const putWebhookSubscription = (
+    subscription: string,
+    webhookSubscriptionWrite: WebhookSubscriptionWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PutWebhookSubscription200>(
+      {url: `/webhooks/subscriptions/${subscription}`, method: 'PUT',
+      headers: {'Content-Type': 'application/json', },
+      data: webhookSubscriptionWrite
+    },
+      options);
+    }
+  
+
+
+export const getPutWebhookSubscriptionMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof putWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof putWebhookSubscription>>, {subscription: string;data: WebhookSubscriptionWrite}> = (props) => {
+          const {subscription,data} = props ?? {};
+
+          return  putWebhookSubscription(subscription,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PutWebhookSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof putWebhookSubscription>>>
+    export type PutWebhookSubscriptionMutationBody = WebhookSubscriptionWrite
+    export type PutWebhookSubscriptionMutationError = NotFoundResponse
+
+    /**
+ * @summary Replace webhook subscription
+ */
+export const usePutWebhookSubscription = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof putWebhookSubscription>>,
+        TError,
+        {subscription: string;data: WebhookSubscriptionWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPutWebhookSubscriptionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Update webhook subscription
+ */
+export const patchWebhookSubscription = (
+    subscription: string,
+    webhookSubscriptionWrite: WebhookSubscriptionWrite,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PatchWebhookSubscription200>(
+      {url: `/webhooks/subscriptions/${subscription}`, method: 'PATCH',
+      headers: {'Content-Type': 'application/json', },
+      data: webhookSubscriptionWrite
+    },
+      options);
+    }
+  
+
+
+export const getPatchWebhookSubscriptionMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof patchWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchWebhookSubscription>>, {subscription: string;data: WebhookSubscriptionWrite}> = (props) => {
+          const {subscription,data} = props ?? {};
+
+          return  patchWebhookSubscription(subscription,data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PatchWebhookSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof patchWebhookSubscription>>>
+    export type PatchWebhookSubscriptionMutationBody = WebhookSubscriptionWrite
+    export type PatchWebhookSubscriptionMutationError = NotFoundResponse
+
+    /**
+ * @summary Update webhook subscription
+ */
+export const usePatchWebhookSubscription = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof patchWebhookSubscription>>, TError,{subscription: string;data: WebhookSubscriptionWrite}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof patchWebhookSubscription>>,
+        TError,
+        {subscription: string;data: WebhookSubscriptionWrite},
+        TContext
+      > => {
+
+      const mutationOptions = getPatchWebhookSubscriptionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Delete webhook subscription
+ */
+export const deleteWebhookSubscription = (
+    subscription: string,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<void>(
+      {url: `/webhooks/subscriptions/${subscription}`, method: 'DELETE'
+    },
+      options);
+    }
+  
+
+
+export const getDeleteWebhookSubscriptionMutationOptions = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteWebhookSubscription>>, TError,{subscription: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteWebhookSubscription>>, TError,{subscription: string}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteWebhookSubscription>>, {subscription: string}> = (props) => {
+          const {subscription} = props ?? {};
+
+          return  deleteWebhookSubscription(subscription,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteWebhookSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof deleteWebhookSubscription>>>
+    
+    export type DeleteWebhookSubscriptionMutationError = NotFoundResponse
+
+    /**
+ * @summary Delete webhook subscription
+ */
+export const useDeleteWebhookSubscription = <TError = NotFoundResponse,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteWebhookSubscription>>, TError,{subscription: string}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof deleteWebhookSubscription>>,
+        TError,
+        {subscription: string},
+        TContext
+      > => {
+
+      const mutationOptions = getDeleteWebhookSubscriptionMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary List webhook delivery attempts
+ */
+export const getWebhookDeliveries = (
+    params?: GetWebhookDeliveriesParams,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<CollectionResponse>(
+      {url: `/webhooks/deliveries`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetWebhookDeliveriesQueryKey = (params?: GetWebhookDeliveriesParams,) => {
+    return [`/webhooks/deliveries`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetWebhookDeliveriesQueryOptions = <TData = Awaited<ReturnType<typeof getWebhookDeliveries>>, TError = ForbiddenResponse>(params?: GetWebhookDeliveriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookDeliveries>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetWebhookDeliveriesQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebhookDeliveries>>> = ({ signal }) => getWebhookDeliveries(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebhookDeliveries>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetWebhookDeliveriesQueryResult = NonNullable<Awaited<ReturnType<typeof getWebhookDeliveries>>>
+export type GetWebhookDeliveriesQueryError = ForbiddenResponse
+
+/**
+ * @summary List webhook delivery attempts
+ */
+export const useGetWebhookDeliveries = <TData = Awaited<ReturnType<typeof getWebhookDeliveries>>, TError = ForbiddenResponse>(
+ params?: GetWebhookDeliveriesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebhookDeliveries>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetWebhookDeliveriesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * @summary List bulk import runs
+ */
+export const getImportRuns = (
+    params?: GetImportRunsParams,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<CollectionResponse>(
+      {url: `/import-runs`, method: 'GET',
+        params, signal
+    },
+      options);
+    }
+  
+
+export const getGetImportRunsQueryKey = (params?: GetImportRunsParams,) => {
+    return [`/import-runs`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getGetImportRunsQueryOptions = <TData = Awaited<ReturnType<typeof getImportRuns>>, TError = ForbiddenResponse>(params?: GetImportRunsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getImportRuns>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetImportRunsQueryKey(params);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getImportRuns>>> = ({ signal }) => getImportRuns(params, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getImportRuns>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetImportRunsQueryResult = NonNullable<Awaited<ReturnType<typeof getImportRuns>>>
+export type GetImportRunsQueryError = ForbiddenResponse
+
+/**
+ * @summary List bulk import runs
+ */
+export const useGetImportRuns = <TData = Awaited<ReturnType<typeof getImportRuns>>, TError = ForbiddenResponse>(
+ params?: GetImportRunsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getImportRuns>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetImportRunsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * Defaults to `dry_run` mode so the file can be validated before committing.
+ * @summary Create a bulk import run
+ */
+export const postImportRuns = (
+    postImportRunsBody: PostImportRunsBody,
+ options?: SecondParameter<typeof apiRequest>,) => {
+      
+      
+      return apiRequest<PostImportRuns201>(
+      {url: `/import-runs`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: postImportRunsBody
+    },
+      options);
+    }
+  
+
+
+export const getPostImportRunsMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postImportRuns>>, TError,{data: PostImportRunsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationOptions<Awaited<ReturnType<typeof postImportRuns>>, TError,{data: PostImportRunsBody}, TContext> => {
+const {mutation: mutationOptions, request: requestOptions} = options ?? {};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postImportRuns>>, {data: PostImportRunsBody}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postImportRuns(data,requestOptions)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostImportRunsMutationResult = NonNullable<Awaited<ReturnType<typeof postImportRuns>>>
+    export type PostImportRunsMutationBody = PostImportRunsBody
+    export type PostImportRunsMutationError = unknown
+
+    /**
+ * @summary Create a bulk import run
+ */
+export const usePostImportRuns = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postImportRuns>>, TError,{data: PostImportRunsBody}, TContext>, request?: SecondParameter<typeof apiRequest>}
+): UseMutationResult<
+        Awaited<ReturnType<typeof postImportRuns>>,
+        TError,
+        {data: PostImportRunsBody},
+        TContext
+      > => {
+
+      const mutationOptions = getPostImportRunsMutationOptions(options);
+
+      return useMutation(mutationOptions);
+    }
+    /**
+ * @summary Get bulk import run
+ */
+export const getImportRun = (
+    run: string,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<GetImportRun200>(
+      {url: `/import-runs/${run}`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetImportRunQueryKey = (run: string,) => {
+    return [`/import-runs/${run}`] as const;
+    }
+
+    
+export const getGetImportRunQueryOptions = <TData = Awaited<ReturnType<typeof getImportRun>>, TError = NotFoundResponse>(run: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getImportRun>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetImportRunQueryKey(run);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getImportRun>>> = ({ signal }) => getImportRun(run, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(run), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getImportRun>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetImportRunQueryResult = NonNullable<Awaited<ReturnType<typeof getImportRun>>>
+export type GetImportRunQueryError = NotFoundResponse
+
+/**
+ * @summary Get bulk import run
+ */
+export const useGetImportRun = <TData = Awaited<ReturnType<typeof getImportRun>>, TError = NotFoundResponse>(
+ run: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getImportRun>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetImportRunQueryOptions(run,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
+ * Read-only projection from the configured ERP; returns an empty payload when the ERP integration is disabled.
+ * @summary Get ERP context for a customer
+ */
+export const getCustomerErpContext = (
+    customer: string,
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+      
+      
+      return apiRequest<GetCustomerErpContext200>(
+      {url: `/customers/${customer}/erp-context`, method: 'GET', signal
+    },
+      options);
+    }
+  
+
+export const getGetCustomerErpContextQueryKey = (customer: string,) => {
+    return [`/customers/${customer}/erp-context`] as const;
+    }
+
+    
+export const getGetCustomerErpContextQueryOptions = <TData = Awaited<ReturnType<typeof getCustomerErpContext>>, TError = NotFoundResponse>(customer: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerErpContext>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetCustomerErpContextQueryKey(customer);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getCustomerErpContext>>> = ({ signal }) => getCustomerErpContext(customer, requestOptions, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(customer), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getCustomerErpContext>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetCustomerErpContextQueryResult = NonNullable<Awaited<ReturnType<typeof getCustomerErpContext>>>
+export type GetCustomerErpContextQueryError = NotFoundResponse
+
+/**
+ * @summary Get ERP context for a customer
+ */
+export const useGetCustomerErpContext = <TData = Awaited<ReturnType<typeof getCustomerErpContext>>, TError = NotFoundResponse>(
+ customer: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getCustomerErpContext>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetCustomerErpContextQueryOptions(customer,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+

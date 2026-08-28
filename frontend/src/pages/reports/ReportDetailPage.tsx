@@ -12,10 +12,8 @@ export function ReportDetailPage() {
   const navigate = useNavigate();
   const { reportId } = useParams<{ reportId: string }>();
 
-  if (!reportId) {
-    return <NotFoundState />;
-  }
-
+  // Hooks must run unconditionally and in the same order on every render, so
+  // the `reportId` / `definition` guards live below them, not above.
   const { values: filters, isComplete } = useReportFilters();
 
   const { data: definitions } = useQuery({
@@ -27,11 +25,11 @@ export function ReportDetailPage() {
 
   const { data: result, isLoading, error } = useQuery({
     queryKey: ['report', reportId, filters],
-    queryFn: () => fetchReport(reportId, filters),
-    enabled: isComplete(),
+    queryFn: () => fetchReport(reportId as string, filters),
+    enabled: Boolean(reportId) && isComplete(),
   });
 
-  if (!definition) {
+  if (!reportId || !definition) {
     return <NotFoundState />;
   }
 

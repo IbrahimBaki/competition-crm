@@ -23,12 +23,12 @@ class ReportScheduleRecipientLimitException extends \DomainException implements 
     }
 
     public function errorCode(): ErrorCode
-    
+    {
+        return ErrorCode::ReportScheduleRecipientLimitExceeded;
+    }
+
     public function errorMeta(): array
     {
         return [];
-    }
-    {
-        return ErrorCode::ReportScheduleRecipientLimitExceeded;
     }
 }

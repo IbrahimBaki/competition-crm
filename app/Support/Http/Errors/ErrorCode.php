@@ -122,6 +122,7 @@ enum ErrorCode: string
 
     case IllegalArticleTransition = 'illegal_article_transition';
     case ArticleNotPublished = 'article_not_published';
+    case ArticleVisibilityForbidden = 'article_visibility_forbidden';
     case ArticleVersionNotFound = 'article_version_not_found';
     case DuplicateArticleFeedback = 'duplicate_article_feedback';
     case KnowledgeCategoryDepthExceeded = 'knowledge_category_depth_exceeded';
@@ -222,6 +223,7 @@ enum ErrorCode: string
             self::TicketIsReadOnly,
             self::SlaBreachImmutable,
             self::PortalSessionInvalid,
+            self::ArticleVisibilityForbidden,
             self::InsufficientTokenScope => 403,
             self::Unauthenticated,
             self::AccountDeactivated,

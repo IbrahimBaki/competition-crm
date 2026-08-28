@@ -7,10 +7,13 @@ use App\Domains\Ticketing\Actions\UpdateTicketCategory;
 use App\Domains\Ticketing\Http\Resources\TicketCategoryResource;
 use App\Domains\Ticketing\Models\TicketCategory;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class TicketCategoryController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(): JsonResponse
     {
         $categories = TicketCategory::with('children', 'fields')->whereNull('parent_id')->get();

@@ -2,13 +2,12 @@
 
 namespace App\Providers;
 
-use App\Customers\Models\Customer;
 use App\Domains\Ai\Services\Provider\AiProvider;
 use App\Domains\Ai\Services\Provider\NullAiProvider;
 use App\Domains\Ai\Services\Retention\AiSuggestionPurgeHandler;
 use App\Domains\Ai\Services\Retention\AiUsagePurgeHandler;
 use App\Domains\Automation\Models\AutomationRule;
-use App\Domains\Automation\Models\AutomationRulePolicy;
+use App\Domains\Automation\Policies\AutomationRulePolicy;
 use App\Domains\Automation\Services\Actions\Handlers\AddTagAction;
 use App\Domains\Automation\Services\Actions\Handlers\AssignAction;
 use App\Domains\Automation\Services\Actions\Handlers\ChangeStatusAction;
@@ -29,13 +28,18 @@ use App\Domains\Automation\Services\RuleEngine;
 use App\Domains\Automation\Services\TicketAutomationBridge;
 use App\Domains\Channels\Chat\Services\Retention\ChatSessionPurgeHandler;
 use App\Domains\Channels\Email\Services\Retention\InboundEmailPurgeHandler;
+use App\Domains\Channels\Email\Services\Transport\InboundMailTransport;
+use App\Domains\Channels\Email\Services\Transport\WebhookInboundMailTransport;
 use App\Domains\Channels\Messaging\Jobs\SendProviderMessageJob;
+use App\Domains\Channels\Messaging\Models\ProviderMessageTemplate;
+use App\Domains\Channels\Messaging\Policies\ProviderMessageTemplatePolicy;
 use App\Domains\Channels\Messaging\Services\Retention\ProviderInboundPurgeHandler;
 use App\Domains\Channels\Messaging\Services\Transport\NullProviderMessageTransport;
 use App\Domains\Channels\Messaging\Services\Transport\ProviderMessageTransport;
 use App\Domains\Channels\WebForm\Models\WebForm;
 use App\Domains\Channels\WebForm\Policies\WebFormPolicy;
 use App\Domains\Channels\WebForm\Services\Retention\WebFormSubmissionPurgeHandler;
+use App\Domains\Customers\Models\Customer;
 use App\Domains\Customers\Models\CustomerContact;
 use App\Domains\Customers\Models\CustomerDuplicateCandidate;
 use App\Domains\Customers\Models\CustomerNote;
@@ -54,7 +58,11 @@ use App\Domains\Customers\Services\TextNormaliser;
 use App\Domains\Customers\Services\Timeline\Sources\CustomerEventSource;
 use App\Domains\Customers\Services\Timeline\Sources\NoteTimelineSource;
 use App\Domains\Customers\Services\Timeline\TimelineRegistry;
+use App\Domains\Integrations\Models\ApiToken;
+use App\Domains\Integrations\Policies\ApiTokenPolicy;
+use App\Domains\Integrations\Services\Erp\ErpClient;
 use App\Domains\Integrations\Services\Erp\HttpErpClient;
+use App\Domains\Integrations\Services\Erp\NullErpClient;
 use App\Domains\Integrations\Services\Retention\ImportRunPurgeHandler;
 use App\Domains\Integrations\Services\Retention\WebhookDeliveryPurgeHandler;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
@@ -102,6 +110,10 @@ use App\Domains\Reporting\Services\Definitions\ReportRegistry;
 use App\Domains\Reporting\Services\Definitions\SatisfactionReport;
 use App\Domains\Reporting\Services\Definitions\SlaPerformanceReport;
 use App\Domains\Reporting\Services\Definitions\TicketVolumeReport;
+use App\Domains\Reporting\Services\Export\CsvReportExporter;
+use App\Domains\Reporting\Services\Export\PdfReportExporter;
+use App\Domains\Reporting\Services\Export\ReportExporterRegistry;
+use App\Domains\Reporting\Services\Export\XlsxReportExporter;
 use App\Domains\Reporting\Services\Retention\ReportExportPurgeHandler;
 use App\Domains\Reporting\Services\Scoping\ReportScopeResolver;
 use App\Domains\Security\Models\AuditLog;
@@ -123,7 +135,10 @@ use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Policies\TicketCategoryPolicy;
 use App\Domains\Ticketing\Policies\TicketMessagePolicy;
 use App\Domains\Ticketing\Policies\TicketPolicy;
+use App\Domains\Ticketing\Policies\TicketStatusDefinitionPolicy;
 use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
+use App\Domains\Ticketing\Services\Lifecycle\ReopenWindow;
+use App\Domains\Ticketing\Services\Lifecycle\TicketTransitionMap;
 use App\Domains\Ticketing\Services\Merge\Relations\LinkMergeRelation;
 use App\Domains\Ticketing\Services\Merge\Relations\MessageMergeRelation;
 use App\Domains\Ticketing\Services\Merge\Relations\TagMergeRelation;
@@ -131,6 +146,11 @@ use App\Domains\Ticketing\Services\Merge\TicketMergeRelationRegistry;
 use App\Domains\Ticketing\Services\Retention\TicketMessagePurgeHandler;
 use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
+use App\Domains\Workspace\Models\AgentTask;
+use App\Domains\Workspace\Models\QuickReply;
+use App\Domains\Workspace\Policies\AgentTaskPolicy;
+use App\Domains\Workspace\Policies\QuickReplyPolicy;
+use App\Domains\Workspace\Services\QuickReplyRenderer;
 use App\Domains\Workspace\Services\Retention\AgentTaskPurgeHandler;
 use App\Models\User;
 use App\Support\Attachments\Attachment;
@@ -148,6 +168,7 @@ use App\Support\Retention\Handlers\NullPurgeHandler;
 use App\Support\Retention\RetentionRegistry;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Queue;
@@ -162,6 +183,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        // Models live under App\Domains\{Domain}\Models\, so Laravel's default
+        // guess resolves e.g. Department to
+        // Database\Factories\Domains\Organisation\Models\DepartmentFactory,
+        // which does not exist — every factory lives flat in
+        // database/factories/ as Database\Factories\{Model}Factory.
+        Factory::guessFactoryNamesUsing(
+            static fn (string $modelName): string => 'Database\\Factories\\'.class_basename($modelName).'Factory'
+        );
+
         $this->app->bind(
             DepartmentUsageChecker::class,
             NullDepartmentUsageChecker::class

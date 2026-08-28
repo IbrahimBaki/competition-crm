@@ -7,10 +7,13 @@ use App\Domains\Channels\WebForm\Http\Requests\UpdateWebFormRequest;
 use App\Domains\Channels\WebForm\Http\Resources\WebFormResource;
 use App\Domains\Channels\WebForm\Models\WebForm;
 use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
 class WebFormController
 {
+    use AuthorizesRequests;
+
     public function index(): JsonResponse
     {
         $this->authorize('viewAny', WebForm::class);
@@ -21,11 +24,11 @@ class WebFormController
             ->toResponse(request());
     }
 
-    public function show(WebForm $form): JsonResponse
+    public function show(WebForm $webForm): JsonResponse
     {
-        $this->authorize('view', $form);
+        $this->authorize('view', $webForm);
 
-        return ApiResponse::item(new WebFormResource($form))
+        return ApiResponse::item(new WebFormResource($webForm))
             ->toResponse(request());
     }
 
@@ -33,7 +36,7 @@ class WebFormController
     {
         $this->authorize('create', WebForm::class);
 
-        $form = WebForm::create([
+        $webForm = WebForm::create([
             'key' => $request->input('key'),
             'title' => $request->input('title'),
             'description' => $request->input('description'),
@@ -44,33 +47,33 @@ class WebFormController
             'is_active' => false,
         ]);
 
-        return ApiResponse::item(new WebFormResource($form), 201)
+        return ApiResponse::item(new WebFormResource($webForm), 201)
             ->toResponse(request());
     }
 
-    public function update(WebForm $form, UpdateWebFormRequest $request): JsonResponse
+    public function update(WebForm $webForm, UpdateWebFormRequest $request): JsonResponse
     {
-        $this->authorize('update', $form);
+        $this->authorize('update', $webForm);
 
-        $form->update([
-            'title' => $request->input('title', $form->title),
-            'description' => $request->input('description', $form->description),
-            'department_id' => $request->input('department_id', $form->department_id),
-            'ticket_category_id' => $request->input('ticket_category_id', $form->ticket_category_id),
-            'default_priority' => $request->input('default_priority', $form->default_priority),
-            'acknowledgement_template_key' => $request->input('acknowledgement_template_key', $form->acknowledgement_template_key),
-            'is_active' => $request->boolean('is_active', $form->is_active),
+        $webForm->update([
+            'title' => $request->input('title', $webForm->title),
+            'description' => $request->input('description', $webForm->description),
+            'department_id' => $request->input('department_id', $webForm->department_id),
+            'ticket_category_id' => $request->input('ticket_category_id', $webForm->ticket_category_id),
+            'default_priority' => $request->input('default_priority', $webForm->default_priority),
+            'acknowledgement_template_key' => $request->input('acknowledgement_template_key', $webForm->acknowledgement_template_key),
+            'is_active' => $request->boolean('is_active', $webForm->is_active),
         ]);
 
-        return ApiResponse::item(new WebFormResource($form))
+        return ApiResponse::item(new WebFormResource($webForm))
             ->toResponse(request());
     }
 
-    public function destroy(WebForm $form): JsonResponse
+    public function destroy(WebForm $webForm): JsonResponse
     {
-        $this->authorize('delete', $form);
+        $this->authorize('delete', $webForm);
 
-        $form->delete();
+        $webForm->delete();
 
         return ApiResponse::noContent()->toResponse(request());
     }

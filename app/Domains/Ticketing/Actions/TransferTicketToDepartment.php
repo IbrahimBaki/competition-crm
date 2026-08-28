@@ -7,6 +7,7 @@ use App\Domains\Ticketing\Exceptions\TicketAlreadyInDepartmentException;
 use App\Domains\Ticketing\Exceptions\TicketIsReadOnlyException;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
+use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
 use App\Domains\Ticketing\Services\Concurrency\TicketVersionGuard;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
 use App\Domains\Ticketing\Services\Routing\DepartmentTransferEvaluator;
