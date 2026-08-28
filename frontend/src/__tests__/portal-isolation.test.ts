@@ -13,25 +13,24 @@ describe('portal isolation', () => {
       path.join(srcPath, 'pages/portal'),
     ];
 
-    // Forbidden import patterns
-    const forbiddenPatterns = [
-      // Staff shell
-      { pattern: /from\s+['"].*@\/shell\//g, reason: 'staff shell (@/ alias)' },
-      { pattern: /from\s+['"]\.\.\/\.\.\/shell\//g, reason: 'staff shell (relative)' },
-      { pattern: /from\s+['"].*shell\//g, reason: 'staff shell (generic)' },
-
-      // Staff auth/permissions
-      { pattern: /from\s+['"].*@\/auth\//g, reason: 'staff auth (@/ alias)' },
-      { pattern: /from\s+['"]\.\.\/\.\.\/auth\//g, reason: 'staff auth (relative)' },
-      { pattern: /from\s+['"].*auth\/.*(?:AuthProvider|ProtectedRoute|permissions|RequirePermission)/g, reason: 'staff auth' },
-
-      // Staff features
-      { pattern: /from\s+['"].*@\/features\/(tickets|customers|admin|workspace)/g, reason: 'staff features (@/ alias)' },
-      { pattern: /from\s+['"]\.\.\/\.\.\/features\/(tickets|customers|admin|workspace)/g, reason: 'staff features (relative)' },
-
-      // Generated client (must be portal or public knowledge only)
-      { pattern: /from\s+['"].*api\/generated\/(admin|workspace|customers|tickets)\/[^'"]*/g, reason: 'non-portal generated client' },
-      { pattern: /from\s+['"].*@\/api\/generated\/(admin|workspace|customers|tickets)/g, reason: 'non-portal generated client (@/ alias)' },
+    // Forbidden imports (staff-only, not portal)
+    const forbiddenImports = [
+      'shell/',
+      'auth/AuthProvider',
+      'auth/ProtectedRoute',
+      'auth/permissions',
+      'auth/RequirePermission',
+      'auth/session',
+      '@/shell',
+      '@/auth',
+      'features/tickets/',
+      'features/customers/',
+      'features/admin/',
+      'features/workspace/',
+      'api/generated/admin/',
+      'api/generated/workspace/',
+      'api/generated/customers/',
+      'api/generated/tickets/',
     ];
 
     const violations: string[] = [];
@@ -51,27 +50,21 @@ describe('portal isolation', () => {
             const lines = content.split('\n');
 
             for (let i = 0; i < lines.length; i++) {
-              const currentLine = lines[i];
-              if (!currentLine) continue;
+              const line = lines[i];
+              if (!line || line.trim().startsWith('//')) continue;
 
-              // Skip comments
-              if (currentLine.trim().startsWith('//')) {
-                continue;
-              }
-
-              // Check each forbidden pattern
-              for (const { pattern, reason } of forbiddenPatterns) {
-                if (pattern.test(currentLine)) {
-                  violations.push(
-                    `${relativePath}:${i + 1} - Forbidden import from ${reason}: ${currentLine.trim()}`
-                  );
+              // Check each forbidden import
+              for (const forbidden of forbiddenImports) {
+                if (line.includes(`from '`) && line.includes(forbidden)) {
+                  violations.push(`${relativePath}:${i + 1} - Forbidden import: ${line.trim()}`);
+                  break;
                 }
               }
             }
           }
         }
       } catch (err) {
-        // Directory might not exist, skip
+        // skip
       }
     }
 

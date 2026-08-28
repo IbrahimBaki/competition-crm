@@ -32,6 +32,20 @@ export const NAVIGATION: readonly NavItem[] = [
     permission: 'customers.view',
   },
   {
+    id: 'reports',
+    labelKey: 'reports.navigation.reports',
+    path: '/reports',
+    icon: '📊',
+    permission: 'reports.view.any',
+  },
+  {
+    id: 'dashboard',
+    labelKey: 'reports.navigation.dashboard',
+    path: '/dashboard',
+    icon: '📈',
+    permission: 'reports.view.any',
+  },
+  {
     // No `permission`/`anyPermission` on the group itself: filterNavTree
     // drops a parent whose children are all filtered out, and keeps it
     // otherwise — that's the correct "show if any admin area is visible"

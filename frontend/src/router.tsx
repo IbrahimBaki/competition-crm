@@ -6,6 +6,21 @@ import { TicketsPage } from './pages/TicketsPage';
 import { TicketDetailPage } from './pages/TicketDetailPage';
 import { CustomersPage } from './pages/CustomersPage';
 import { CustomerDetailPage } from './pages/CustomerDetailPage';
+import { ReportsIndexPage } from './pages/reports/ReportsIndexPage';
+import { ReportDetailPage } from './pages/reports/ReportDetailPage';
+import { ManagementDashboardPage } from './pages/reports/ManagementDashboardPage';
+import { PortalAuthProvider } from './portal/auth/PortalAuthProvider';
+import { PortalProtectedRoute } from './portal/auth/PortalProtectedRoute';
+import { PortalLayout } from './portal/shell/PortalLayout';
+import { PortalLoginPage } from './pages/portal/PortalLoginPage';
+import { PortalRegisterPage } from './pages/portal/PortalRegisterPage';
+import { PortalVerifyPage } from './pages/portal/PortalVerifyPage';
+import { PortalTicketsPage } from './pages/portal/PortalTicketsPage';
+import { PortalTicketNewPage } from './pages/portal/PortalTicketNewPage';
+import { PortalTicketDetailPage } from './pages/portal/PortalTicketDetailPage';
+import { PortalHelpPage } from './pages/portal/PortalHelpPage';
+import { PortalHelpArticlePage } from './pages/portal/PortalHelpArticlePage';
+import { GuestTicketTrackingPage } from './pages/portal/GuestTicketTrackingPage';
 import { AdminIndexPage } from './pages/admin/AdminIndexPage';
 import { BranchesPage } from './pages/admin/BranchesPage';
 import { BranchDetailPage } from './pages/admin/BranchDetailPage';
@@ -86,6 +101,30 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute permission={PERMISSIONS.CUSTOMERS_VIEW}>
             <CustomerDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'reports',
+        element: (
+          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+            <ReportsIndexPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'reports/:reportId',
+        element: (
+          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+            <ReportDetailPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'dashboard',
+        element: (
+          <ProtectedRoute permission={PERMISSIONS.REPORTS_VIEW_ANY}>
+            <ManagementDashboardPage />
           </ProtectedRoute>
         ),
       },
@@ -205,6 +244,25 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+    ],
+  },
+  {
+    path: '/portal',
+    element: (
+      <PortalAuthProvider>
+        <PortalLayout />
+      </PortalAuthProvider>
+    ),
+    children: [
+      { path: 'login', element: <PortalLoginPage /> },
+      { path: 'register', element: <PortalRegisterPage /> },
+      { path: 'verify', element: <PortalVerifyPage /> },
+      { path: 'track/:token', element: <GuestTicketTrackingPage /> },
+      { path: 'help', element: <PortalHelpPage /> },
+      { path: 'help/:slug', element: <PortalHelpArticlePage /> },
+      { path: 'tickets', element: <PortalProtectedRoute><PortalTicketsPage /></PortalProtectedRoute> },
+      { path: 'tickets/new', element: <PortalProtectedRoute><PortalTicketNewPage /></PortalProtectedRoute> },
+      { path: 'tickets/:id', element: <PortalProtectedRoute><PortalTicketDetailPage /></PortalProtectedRoute> },
     ],
   },
   {

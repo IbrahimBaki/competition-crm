@@ -107,6 +107,13 @@ export const PERMISSIONS = {
   // Channels — messaging templates
   CHANNELS_MESSAGING_TEMPLATES_VIEW: 'channels.messaging.templates.view',
   CHANNELS_MESSAGING_TEMPLATES_MANAGE: 'channels.messaging.templates.manage',
+
+  // Reports
+  REPORTS_VIEW_OWN: 'reports.view.own',
+  REPORTS_VIEW_DEPARTMENT: 'reports.view.department',
+  REPORTS_VIEW_BRANCH: 'reports.view.branch',
+  REPORTS_VIEW_ANY: 'reports.view.any',
+  REPORTS_EXPORT_ANY: 'reports.export.any',
 } as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
