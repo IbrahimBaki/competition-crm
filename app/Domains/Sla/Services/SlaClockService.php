@@ -229,8 +229,14 @@ class SlaClockService
         CarbonImmutable $asOf,
     ): SlaPosition {
         $elapsed = $clock->elapsed_minutes;
+        $state = $clock->state instanceof SlaClockState
+            ? $clock->state
+            : SlaClockState::from($clock->state);
+        $targetType = $clock->target_type instanceof SlaTargetType
+            ? $clock->target_type
+            : SlaTargetType::from($clock->target_type);
 
-        if ($clock->state === SlaClockState::Running->value) {
+        if ($state === SlaClockState::Running) {
             $ticket = $clock->ticket;
             $branch = $ticket->department->branch;
 
@@ -246,8 +252,8 @@ class SlaClockService
         $remaining = $clock->target_minutes - $elapsed;
 
         return new SlaPosition(
-            targetType: SlaTargetType::from($clock->target_type),
-            state: SlaClockState::from($clock->state),
+            targetType: $targetType,
+            state: $state,
             dueAt: $clock->due_at,
             targetMinutes: $clock->target_minutes,
             elapsedMinutes: $elapsed,

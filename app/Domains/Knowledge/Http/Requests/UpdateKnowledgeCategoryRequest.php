@@ -14,6 +14,7 @@ class UpdateKnowledgeCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'parent_id' => ['sometimes', 'nullable', 'uuid', 'exists:knowledge_categories,uuid'],
             'name' => ['sometimes', 'array', 'size:2'],
             'name.ar' => ['required_with:name', 'string', 'max:255'],
             'name.en' => ['required_with:name', 'string', 'max:255'],

@@ -16,8 +16,9 @@ class TicketResource extends JsonResource
     public function toArray(Request $request): array
     {
         $availableTransitions = [];
+        $statusDefinition = $this->statusDefinition;
 
-        if (! $this->isMerged() && $this->status) {
+        if (! $this->isMerged()) {
             $transitionMap = app(TicketTransitionMap::class);
             $currentType = $this->lifecycleType();
 
@@ -48,13 +49,19 @@ class TicketResource extends JsonResource
             'assignee_id' => $this->assignee?->uuid,
             'subject' => $this->subject,
             'body' => $this->body,
-            'status' => $this->status ? [
-                'uuid' => $this->status->uuid,
-                'key' => $this->status->key,
-                'name' => $this->status->name,
-                'lifecycle_type' => $this->status->lifecycle_type->value,
-                'stops_sla_clock' => $this->status->stopsSlaClock(),
-            ] : null,
+            'status' => $statusDefinition ? [
+                'uuid' => $statusDefinition->uuid,
+                'key' => $statusDefinition->key,
+                'name' => $statusDefinition->name,
+                'lifecycle_type' => $statusDefinition->lifecycle_type->value,
+                'stops_sla_clock' => $statusDefinition->stopsSlaClock(),
+            ] : [
+                'uuid' => null,
+                'key' => $this->lifecycleType()->value,
+                'name' => ['en' => ucfirst($this->lifecycleType()->value), 'ar' => ucfirst($this->lifecycleType()->value)],
+                'lifecycle_type' => $this->lifecycleType()->value,
+                'stops_sla_clock' => $this->lifecycleType()->stopsSlaClock(),
+            ],
             'priority' => $this->priority?->value,
             'custom_fields' => $this->custom_fields,
             'available_transitions' => $availableTransitions,
@@ -77,16 +84,20 @@ class TicketResource extends JsonResource
         $clockService = app(SlaClockService::class);
         $now = CarbonImmutable::now('UTC');
 
-        $clocks = $this->whenLoaded('slaClocks', fn () => $this->slaClocks);
-
-        if (! $clocks) {
+        if (! $this->relationLoaded('slaClocks')) {
             return null;
         }
+
+        $clocks = $this->slaClocks;
 
         $result = [];
 
         foreach ([SlaTargetType::FirstResponse, SlaTargetType::Resolution] as $type) {
-            $clock = $clocks->firstWhere('target_type', $type->value);
+            $clock = $clocks->first(
+                fn ($candidate) => ($candidate->target_type instanceof SlaTargetType
+                    ? $candidate->target_type
+                    : SlaTargetType::from($candidate->target_type)) === $type
+            );
 
             if ($clock) {
                 $position = $clockService->position($clock, $now);

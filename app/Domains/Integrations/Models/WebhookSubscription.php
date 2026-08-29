@@ -18,6 +18,11 @@ final class WebhookSubscription extends Model
 
     protected $casts = ['event_types' => 'array'];
 
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_user_id');

@@ -42,7 +42,6 @@ class TicketMessageController extends Controller
             $query = $query->customerVisible();
         }
 
-        $query = $collectionQuery->applyTo($query);
         $paginated = $collectionQuery->paginate($query);
 
         return ApiResponse::collection($paginated, $collectionQuery->meta())

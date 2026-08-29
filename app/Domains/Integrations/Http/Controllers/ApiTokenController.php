@@ -28,14 +28,9 @@ final class ApiTokenController extends Controller
 
         $tokens = ApiToken::orderByDesc('created_at')->paginate();
 
-        return ApiResponse::success(
+        return ApiResponse::paginated(
             ApiTokenResource::collection($tokens),
-            meta: ['pagination' => [
-                'total' => $tokens->total(),
-                'per_page' => $tokens->perPage(),
-                'current_page' => $tokens->currentPage(),
-                'last_page' => $tokens->lastPage(),
-            ]]
+            $tokens,
         );
     }
 

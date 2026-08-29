@@ -11,49 +11,49 @@ class KnowledgeArticlePolicy
 {
     public function viewAny(User $user): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_VIEW)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_VIEW)
             ? Response::allow()
             : Response::deny();
     }
 
     public function view(User $user, KnowledgeArticle $article): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_VIEW)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_VIEW)
             ? Response::allow()
             : Response::deny();
     }
 
     public function create(User $user): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_CREATE)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_CREATE)
             ? Response::allow()
             : Response::deny();
     }
 
     public function update(User $user, KnowledgeArticle $article): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_UPDATE)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_UPDATE)
             ? Response::allow()
             : Response::deny();
     }
 
     public function publish(User $user, KnowledgeArticle $article): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_PUBLISH)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_PUBLISH)
             ? Response::allow()
             : Response::deny();
     }
 
     public function archive(User $user, KnowledgeArticle $article): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_ARCHIVE)
             ? Response::allow()
             : Response::deny();
     }
 
     public function restoreVersion(User $user, KnowledgeArticle $article): Response
     {
-        return $user->hasPermission(PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE)
+        return $user->can(PermissionKey::KNOWLEDGE_ARTICLES_VERSIONS_RESTORE)
             ? Response::allow()
             : Response::deny();
     }

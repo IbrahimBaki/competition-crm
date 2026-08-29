@@ -25,6 +25,7 @@ return [
         'Accept',
         'Accept-Language',
         'Content-Type',
+        'Authorization',
         'X-Request-Id',
         'Idempotency-Key',
         'X-XSRF-TOKEN',

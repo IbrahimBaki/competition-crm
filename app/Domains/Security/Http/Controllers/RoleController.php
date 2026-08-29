@@ -34,13 +34,12 @@ class RoleController extends Controller
             ->withSearchableColumns(['name']);
 
         $query = new CollectionQuery($request, $spec);
-        $data = $query->paginate(Role::query());
+        $data = $query->paginate(Role::query()->with('permissions'));
 
-        return ApiResponse::collection(
+        return ApiResponse::paginated(
+            RoleResource::collection(collect($data->items())),
             $data,
             $query->meta(),
-            $query->meta()['filters'] ?? [],
-            $request->input('sort'),
         );
     }
 

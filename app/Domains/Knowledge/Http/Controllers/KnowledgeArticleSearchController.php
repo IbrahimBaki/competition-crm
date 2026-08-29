@@ -7,30 +7,33 @@ use App\Domains\Knowledge\Models\Audience;
 use App\Domains\Knowledge\Services\Search\SearchArticles;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use App\Support\Http\ApiResponse;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class KnowledgeArticleSearchController
 {
+    use AuthorizesRequests;
+
     public function __construct(
         private SearchArticles $searchArticles,
     ) {}
 
-    public function index(Request $request, CollectionQuery $collectionQuery): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $this->authorize('viewAny', \App\Domains\Knowledge\Models\KnowledgeArticle::class);
         $query = $request->input('filter.q', '');
-        $spec = new CollectionQuerySpec(['id', 'title', 'created_at']);
+        $spec = (new CollectionQuerySpec)->withSorts(['id', 'title', 'created_at']);
+        $collectionQuery = new CollectionQuery($request, $spec);
 
         $results = $this->searchArticles->search($query, Audience::Staff);
-        $paginated = $collectionQuery->paginate($results, $spec);
+        $paginated = $collectionQuery->paginate($results);
 
-        return response()->json([
-            'data' => KnowledgeArticleResource::collection($paginated->items()),
-            'meta' => [
-                'total' => $paginated->total(),
-                'per_page' => $paginated->perPage(),
-                'current_page' => $paginated->currentPage(),
-            ],
-        ]);
+        return ApiResponse::paginated(
+            KnowledgeArticleResource::collection($paginated),
+            $paginated,
+            $collectionQuery->meta(),
+        )->toResponse($request);
     }
 }

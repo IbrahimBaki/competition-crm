@@ -17,7 +17,7 @@ class StoreKnowledgeArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'knowledge_category_id' => ['nullable', 'exists:knowledge_categories,id'],
+            'knowledge_category_id' => ['nullable', 'uuid', 'exists:knowledge_categories,uuid'],
             'title' => ['required', 'array', 'size:2'],
             'title.ar' => ['required', 'string', 'max:255'],
             'title.en' => ['required', 'string', 'max:255'],

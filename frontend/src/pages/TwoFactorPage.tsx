@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { normaliseApiError } from '@/api/http/errors';
+import { Button, Card, Field, Input } from '@/components/ui';
 
 export function TwoFactorPage() {
   const navigate = useNavigate();
@@ -30,9 +31,9 @@ export function TwoFactorPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <main className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-md">
-        <div className="bg-white py-8 px-6 shadow rounded-lg">
+        <Card className="p-6 sm:p-8">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold text-gray-900">{t('auth.two_factor_title')}</h1>
             <p className="mt-2 text-gray-600">{t('auth.two_factor_description')}</p>
@@ -45,34 +46,31 @@ export function TwoFactorPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('auth.code_label')}
-              </label>
-              <input
-                id="code"
+            <Field label={t('auth.code_label')} required>{({id}) => <Input
+                id={id}
                 type="text"
                 inputMode="numeric"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                maxLength={6}
+                onChange={(e) => setCode(e.target.value.trim().slice(0, 20))}
+                maxLength={20}
+                autoComplete="one-time-code"
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-center text-2xl tracking-widest"
+                className="text-center text-2xl tracking-widest"
                 disabled={loading}
                 placeholder="000000"
-              />
-            </div>
+              />}</Field>
 
-            <button
+            <Button
               type="submit"
-              disabled={loading || code.length !== 6}
-              className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition"
+              disabled={loading || code.length < 6}
+              className="w-full" busy={loading}
             >
-              {loading ? t('auth.verify_button') + '...' : t('auth.verify_button')}
-            </button>
+              {t('auth.verify_button')}
+            </Button>
           </form>
-        </div>
+          <p className="mt-4 text-center text-xs text-slate-500">Enter the six-digit authenticator code or one unused recovery code.</p>
+        </Card>
       </div>
-    </div>
+    </main>
   );
 }

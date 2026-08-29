@@ -13,9 +13,9 @@ class PortalAttachmentResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'original_name' => $this->original_name,
-            'size' => $this->size,
+            'size' => $this->size_bytes,
             'mime_type' => $this->mime_type,
-            'download_url' => route('attachments.show', $this->uuid),
+            'download_url' => '/api/v1/portal/attachments/'.$this->uuid,
         ];
     }
 }

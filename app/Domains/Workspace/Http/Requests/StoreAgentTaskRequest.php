@@ -18,7 +18,7 @@ class StoreAgentTaskRequest extends FormRequest
             'owner_id' => 'required|uuid|exists:users,uuid',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_at' => 'nullable|date_format:c',
+            'due_at' => 'nullable|date_format:Y-m-d\TH:i:sP',
             'due_in_working_time' => 'boolean',
             'branch_id' => 'nullable|uuid|exists:branches,id',
             'ticket_id' => 'nullable|uuid|exists:tickets,uuid',

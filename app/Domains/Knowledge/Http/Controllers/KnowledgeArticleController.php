@@ -8,10 +8,12 @@ use App\Domains\Knowledge\Http\Requests\StoreKnowledgeArticleRequest;
 use App\Domains\Knowledge\Http\Requests\UpdateKnowledgeArticleRequest;
 use App\Domains\Knowledge\Http\Resources\KnowledgeArticleResource;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class KnowledgeArticleController
 {
@@ -22,27 +24,19 @@ class KnowledgeArticleController
         private UpdateArticle $updateArticle,
     ) {}
 
-    public function index(CollectionQuery $query): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->authorize('viewAny', KnowledgeArticle::class);
 
-        $spec = new CollectionQuerySpec(['id', 'title', 'state', 'created_at']);
-        $articles = $query->paginate(KnowledgeArticle::class, $spec);
+        $spec = (new CollectionQuerySpec)->withSorts(['id', 'title', 'state', 'created_at']);
+        $query = new CollectionQuery($request, $spec);
+        $articles = $query->paginate(KnowledgeArticle::query());
 
-        return response()->json([
-            'data' => KnowledgeArticleResource::collection($articles->items()),
-            'meta' => [
-                'total' => $articles->total(),
-                'per_page' => $articles->perPage(),
-                'current_page' => $articles->currentPage(),
-            ],
-            'links' => [
-                'first' => $articles->url(1),
-                'last' => $articles->url($articles->lastPage()),
-                'prev' => $articles->previousPageUrl(),
-                'next' => $articles->nextPageUrl(),
-            ],
-        ]);
+        return ApiResponse::paginated(
+            KnowledgeArticleResource::collection($articles),
+            $articles,
+            $query->meta(),
+        )->toResponse($request);
     }
 
     public function store(StoreKnowledgeArticleRequest $request): JsonResponse

@@ -20,11 +20,11 @@ class ConfirmTwoFactor
             throw new InvalidTwoFactorCodeException('Invalid two-factor code.');
         }
 
-        $user->update([
+        $user->forceFill([
             'two_factor_secret' => $secret,
             'two_factor_recovery_codes' => $recoveryCodes,
             'two_factor_confirmed_at' => now(),
-        ]);
+        ])->save();
 
         $this->auditLogger->record($user, 'two_factor.enrolled', $user, null, [
             'recovery_codes_count' => count($recoveryCodes),

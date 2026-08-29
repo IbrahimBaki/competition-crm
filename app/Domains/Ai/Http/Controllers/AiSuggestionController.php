@@ -5,9 +5,11 @@ namespace App\Domains\Ai\Http\Controllers;
 use App\Domains\Ai\Actions\ResolveAiSuggestion;
 use App\Domains\Ai\Http\Resources\AiSuggestionResource;
 use App\Domains\Ai\Models\AiSuggestion;
+use App\Domains\Security\Permissions\PermissionKey;
 use App\Support\Http\ApiResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class AiSuggestionController extends Controller
 {
@@ -15,7 +17,7 @@ class AiSuggestionController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', AiSuggestion::class);
+        Gate::authorize(PermissionKey::AI_SUGGESTIONS_RESOLVE);
 
         $suggestions = AiSuggestion::paginate();
 
@@ -24,7 +26,7 @@ class AiSuggestionController extends Controller
 
     public function resolve(AiSuggestion $suggestion, ResolveAiSuggestion $action, string $decision)
     {
-        $this->authorize('resolve', $suggestion);
+        Gate::authorize(PermissionKey::AI_SUGGESTIONS_RESOLVE);
 
         $action->handle($suggestion, auth()->user(), $decision);
 

@@ -6,7 +6,7 @@ const PORTAL_USER_KEY = '__portal_user__';
 
 export interface PortalSession {
   token: string;
-  expiresAt: number;
+  expiresAt?: number;
 }
 
 export interface PortalUser {
@@ -20,7 +20,7 @@ export function getPortalSession(): PortalSession | null {
     const session = localStorage.getItem(PORTAL_SESSION_KEY);
     if (!session) return null;
     const parsed = JSON.parse(session);
-    if (parsed.expiresAt < Date.now()) {
+    if (typeof parsed.expiresAt === 'number' && parsed.expiresAt < Date.now()) {
       clearPortalSession();
       return null;
     }
@@ -30,7 +30,7 @@ export function getPortalSession(): PortalSession | null {
   }
 }
 
-export function setPortalSession(token: string, expiresAt: number): void {
+export function setPortalSession(token: string, expiresAt?: number): void {
   localStorage.setItem(PORTAL_SESSION_KEY, JSON.stringify({ token, expiresAt }));
 }
 

@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/auth/AuthProvider';
 import { useTranslation } from 'react-i18next';
 import { normaliseApiError } from '@/api/http/errors';
+import { Link } from 'react-router-dom';
+import { Button, Card, Field, Input } from '@/components/ui';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -34,61 +36,51 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <main className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-10">
       <div className="w-full max-w-md">
-        <div className="bg-white py-8 px-6 shadow rounded-lg">
+        <Card className="p-6 sm:p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">{import.meta.env.VITE_APP_NAME}</h1>
-            <h2 className="mt-2 text-lg text-gray-700">{t('auth.title')}</h2>
+            <p className="ui-eyebrow">Operations workspace</p><h1 className="mt-2 text-2xl font-bold">{import.meta.env.VITE_APP_NAME}</h1>
+            <h2 className="mt-2 text-base text-slate-600">{t('auth.title')}</h2>
           </div>
 
           {error && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+            <div role="alert" className="ui-alert ui-alert--danger mb-4">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('auth.email_label')}
-              </label>
-              <input
-                id="email"
+            <Field label={t('auth.email_label')} required>{({id}) => <Input
+                id={id}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={loading}
-              />
-            </div>
+              />}</Field>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                {t('auth.password_label')}
-              </label>
-              <input
-                id="password"
+            <Field label={t('auth.password_label')} required>{({id}) => <Input
+                id={id}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 disabled={loading}
-              />
-            </div>
+              />}</Field>
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full py-2 px-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:bg-gray-400 transition"
+              className="w-full"
+              busy={loading}
             >
-              {loading ? t('auth.sign_in_button') + '...' : t('auth.sign_in_button')}
-            </button>
+              {t('auth.sign_in_button')}
+            </Button>
+            <div className="flex justify-between text-sm"><Link to="/forgot-password" className="font-semibold text-blue-700">Forgot password?</Link><Link to="/portal/login" className="font-semibold text-blue-700">Customer portal</Link></div>
           </form>
-        </div>
+        </Card>
       </div>
-    </div>
+    </main>
   );
 }

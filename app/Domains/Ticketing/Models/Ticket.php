@@ -125,6 +125,11 @@ class Ticket extends Model
         return $this->belongsTo(TicketStatusDefinition::class, 'ticket_status_id');
     }
 
+    public function statusDefinition(): BelongsTo
+    {
+        return $this->belongsTo(TicketStatusDefinition::class, 'ticket_status_id');
+    }
+
     public function mergedInto(): BelongsTo
     {
         return $this->belongsTo(Ticket::class, 'merged_into_ticket_id');
@@ -179,7 +184,7 @@ class Ticket extends Model
 
     public function lifecycleType(): TicketStatus
     {
-        return $this->status?->lifecycle_type ?? TicketStatus::New;
+        return $this->statusDefinition?->lifecycle_type ?? $this->status ?? TicketStatus::New;
     }
 
     public function isMerged(): bool

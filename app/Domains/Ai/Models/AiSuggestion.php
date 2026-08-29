@@ -48,6 +48,11 @@ class AiSuggestion extends Model
         });
     }
 
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     public function ticket(): BelongsTo
     {
         return $this->belongsTo(Ticket::class);

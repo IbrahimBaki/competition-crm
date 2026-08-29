@@ -5,16 +5,20 @@ namespace App\Domains\Portal\Http\Controllers;
 use App\Domains\Portal\Models\PortalAccount;
 use App\Domains\Portal\Services\Visibility\PortalAttachmentGuard;
 use App\Support\Attachments\Attachment;
+use App\Support\Attachments\AttachmentStorage;
+use App\Support\Attachments\Exceptions\AttachmentInfectedException;
+use App\Support\Attachments\Exceptions\AttachmentPendingScanException;
+use App\Support\Attachments\ScanState;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PortalAttachmentController
 {
-    public function __construct(private PortalAttachmentGuard $guard) {}
+    public function __construct(private PortalAttachmentGuard $guard, private AttachmentStorage $storage) {}
 
-    public function show(Request $request, string $attachment): JsonResponse|BinaryFileResponse|Response
+    public function show(Request $request, string $attachment): JsonResponse|StreamedResponse|Response
     {
         /** @var PortalAccount|null $account */
         $account = $request->user('portal');
@@ -29,8 +33,14 @@ class PortalAttachmentController
             ], 404);
         }
 
-        $path = storage_path('app/attachments/'.$attachment->getAttribute('path'));
+        if ($attachment->scan_state === ScanState::Pending) {
+            throw new AttachmentPendingScanException;
+        }
 
-        return response()->download($path, $attachment->getAttribute('original_name'));
+        if (in_array($attachment->scan_state, [ScanState::Infected, ScanState::Failed], true)) {
+            throw new AttachmentInfectedException;
+        }
+
+        return $this->storage->stream($attachment);
     }
 }

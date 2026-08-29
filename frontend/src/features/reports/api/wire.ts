@@ -1,4 +1,4 @@
-import { getReports, getReport } from '@/api/generated/reporting/reporting';
+import { getReports } from '@/api/generated/reporting/reporting';
 import { apiRequest } from '@/api/http/mutator';
 import type {
   ReportDefinition,
@@ -44,8 +44,11 @@ export async function fetchReport(id: string, filters: Partial<ReportQuery>): Pr
     }
   });
 
-  const result = await getReport(id);
-  return (result as any) || {};
+  return apiRequest<ReportResult>({
+    method: 'GET',
+    url: `/reports/${id}`,
+    params: cleanedFilters,
+  });
 }
 
 /**
@@ -107,7 +110,7 @@ export async function requestExport(
 
   const response = await apiRequest<any>({
     method: 'POST',
-    url: `/v1/reports/${reportId}/export`,
+    url: `/reports/${reportId}/export`,
     data: body,
     headers: {
       'Idempotency-Key': idempotencyKey,

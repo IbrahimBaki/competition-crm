@@ -13,10 +13,10 @@ readonly class ArticleSearchIndexer
 
     public function build(KnowledgeArticle $article): array
     {
-        $arTitle = $article->title['ar'] ?? '';
-        $arBody = $article->body['ar'] ?? '';
-        $enTitle = $article->title['en'] ?? '';
-        $enBody = $article->body['en'] ?? '';
+        $arTitle = $article->title->ar ?? '';
+        $arBody = $article->body->ar ?? '';
+        $enTitle = $article->title->en ?? '';
+        $enBody = $article->body->en ?? '';
 
         $arText = $arTitle.' '.$arBody;
         $enText = $enTitle.' '.$enBody;

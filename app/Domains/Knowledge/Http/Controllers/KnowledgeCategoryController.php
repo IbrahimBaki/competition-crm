@@ -33,7 +33,7 @@ class KnowledgeCategoryController
 
     public function store(StoreKnowledgeCategoryRequest $request): JsonResponse
     {
-        $parent = $request->input('parent_id') ? KnowledgeCategory::find($request->input('parent_id')) : null;
+        $parent = $request->input('parent_id') ? KnowledgeCategory::where('uuid', $request->input('parent_id'))->first() : null;
         $this->categoryTree->assertCanNest($parent);
 
         $category = KnowledgeCategory::create([
@@ -53,7 +53,17 @@ class KnowledgeCategoryController
 
     public function update(UpdateKnowledgeCategoryRequest $request, KnowledgeCategory $category): JsonResponse
     {
-        $category->update($request->validated());
+        $data = $request->validated();
+        if (array_key_exists('parent_id', $data)) {
+            $parent = $data['parent_id']
+                ? KnowledgeCategory::where('uuid', $data['parent_id'])->firstOrFail()
+                : null;
+            $this->categoryTree->assertCanNest($parent);
+            $data['parent_id'] = $parent?->id;
+            $data['depth'] = ($parent?->depth ?? 0) + 1;
+        }
+
+        $category->update($data);
 
         return response()->json([
             'data' => new KnowledgeCategoryResource($category),

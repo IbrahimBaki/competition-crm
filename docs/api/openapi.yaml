@@ -3921,6 +3921,34 @@ paths:
         '200':
           description: Submission status
 
+  /channels/public/chat/departments:
+    get:
+      tags: [Channels]
+      operationId: getPublicChatDepartments
+      summary: List active departments available for public chat
+      security: []
+      responses:
+        '200':
+          description: Public-safe department choices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, name]
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        name:
+                          type: object
+                          additionalProperties:
+                            type: string
+
   /channels/chat/sessions:
     post:
       tags: [Channels]
@@ -3936,10 +3964,20 @@ paths:
             schema:
               type: object
               properties:
-                name:
+                department:
+                  type: string
+                  format: uuid
+                display_name:
                   type: string
                 email:
                   type: string
+                phone:
+                  type: string
+                locale:
+                  type: string
+                visitor_token:
+                  type: string
+              required: [department]
       responses:
         '201':
           description: Chat session created
@@ -4058,9 +4096,19 @@ paths:
             schema:
               type: object
               properties:
+                parent_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                code:
+                  type: string
+                  maxLength: 255
                 name:
                   $ref: '#/components/schemas/BilingualString'
-              required: [name]
+                position:
+                  type: integer
+                  minimum: 0
+              required: [code, name]
       responses:
         '201':
           description: Category created
@@ -4086,6 +4134,18 @@ paths:
           application/json:
             schema:
               type: object
+              properties:
+                parent_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                name:
+                  $ref: '#/components/schemas/BilingualString'
+                position:
+                  type: integer
+                  minimum: 0
+                is_active:
+                  type: boolean
       responses:
         '200':
           description: Category updated

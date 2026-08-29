@@ -10,14 +10,8 @@ class ReportPolicy
 {
     public function viewAny(User $user, string $reportKey): bool
     {
-        $permissionKey = $this->getPermissionKeyForReport($reportKey);
-
-        return $user->can($permissionKey);
-    }
-
-    private function getPermissionKeyForReport(string $reportKey): string
-    {
-        // Map report keys to permission keys - all use reports.view scope
-        return 'reports.view.any';
+        return $user->can('reports.view.any')
+            || $user->can('reports.view.department')
+            || $user->can('reports.view.own');
     }
 }

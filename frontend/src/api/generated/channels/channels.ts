@@ -23,6 +23,7 @@ import type {
   ErrorResponse,
   GetInboundEmailsParams,
   GetMessagingTemplatesParams,
+  GetPublicChatDepartments200,
   GetWebFormsParams,
   NotFoundResponse,
   PatchWebForm200,
@@ -50,21 +51,21 @@ export const getWebForms = (
     params?: GetWebFormsParams,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<CollectionResponse>(
       {url: `/channels/web-forms`, method: 'GET',
         params, signal
     },
       options);
     }
-  
+
 
 export const getGetWebFormsQueryKey = (params?: GetWebFormsParams,) => {
     return [`/channels/web-forms`, ...(params ? [params]: [])] as const;
     }
 
-    
+
 export const getGetWebFormsQueryOptions = <TData = Awaited<ReturnType<typeof getWebForms>>, TError = unknown>(params?: GetWebFormsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebForms>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -72,13 +73,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWebFormsQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebForms>>> = ({ signal }) => getWebForms(params, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebForms>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -111,8 +112,8 @@ export const useGetWebForms = <TData = Awaited<ReturnType<typeof getWebForms>>, 
 export const postWebForms = (
     postWebFormsBody: PostWebFormsBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/web-forms`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -120,7 +121,7 @@ export const postWebForms = (
     },
       options);
     }
-  
+
 
 
 export const getPostWebFormsMutationOptions = <TError = unknown,
@@ -128,7 +129,7 @@ export const getPostWebFormsMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postWebForms>>, TError,{data: PostWebFormsBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWebForms>>, {data: PostWebFormsBody}> = (props) => {
@@ -137,7 +138,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postWebForms(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -169,20 +170,20 @@ export const getWebForm = (
     webForm: string,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/web-forms/${webForm}`, method: 'GET', signal
     },
       options);
     }
-  
+
 
 export const getGetWebFormQueryKey = (webForm: string,) => {
     return [`/channels/web-forms/${webForm}`] as const;
     }
 
-    
+
 export const getGetWebFormQueryOptions = <TData = Awaited<ReturnType<typeof getWebForm>>, TError = unknown>(webForm: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebForm>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -190,13 +191,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWebFormQueryKey(webForm);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebForm>>> = ({ signal }) => getWebForm(webForm, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, enabled: !!(webForm), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebForm>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -230,8 +231,8 @@ export const putWebForm = (
     webForm: string,
     putWebFormBody: PutWebFormBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/web-forms/${webForm}`, method: 'PUT',
       headers: {'Content-Type': 'application/json', },
@@ -239,7 +240,7 @@ export const putWebForm = (
     },
       options);
     }
-  
+
 
 
 export const getPutWebFormMutationOptions = <TError = unknown,
@@ -247,7 +248,7 @@ export const getPutWebFormMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof putWebForm>>, TError,{webForm: string;data: PutWebFormBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof putWebForm>>, {webForm: string;data: PutWebFormBody}> = (props) => {
@@ -256,7 +257,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  putWebForm(webForm,data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -287,14 +288,14 @@ export const usePutWebForm = <TError = unknown,
 export const deleteWebForm = (
     webForm: string,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/web-forms/${webForm}`, method: 'DELETE'
     },
       options);
     }
-  
+
 
 
 export const getDeleteWebFormMutationOptions = <TError = unknown,
@@ -302,7 +303,7 @@ export const getDeleteWebFormMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteWebForm>>, TError,{webForm: string}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteWebForm>>, {webForm: string}> = (props) => {
@@ -311,13 +312,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  deleteWebForm(webForm,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
 
     export type DeleteWebFormMutationResult = NonNullable<Awaited<ReturnType<typeof deleteWebForm>>>
-    
+
     export type DeleteWebFormMutationError = unknown
 
     /**
@@ -343,8 +344,8 @@ export const patchWebForm = (
     webForm: string,
     patchWebFormBody: PatchWebFormBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<PatchWebForm200>(
       {url: `/channels/web-forms/${webForm}`, method: 'PATCH',
       headers: {'Content-Type': 'application/json', },
@@ -352,7 +353,7 @@ export const patchWebForm = (
     },
       options);
     }
-  
+
 
 
 export const getPatchWebFormMutationOptions = <TError = NotFoundResponse,
@@ -360,7 +361,7 @@ export const getPatchWebFormMutationOptions = <TError = NotFoundResponse,
 ): UseMutationOptions<Awaited<ReturnType<typeof patchWebForm>>, TError,{webForm: string;data: PatchWebFormBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof patchWebForm>>, {webForm: string;data: PatchWebFormBody}> = (props) => {
@@ -369,7 +370,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  patchWebForm(webForm,data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -401,20 +402,20 @@ export const getPublicWebForm = (
     formKey: string,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/public/web-forms/${formKey}`, method: 'GET', signal
     },
       options);
     }
-  
+
 
 export const getGetPublicWebFormQueryKey = (formKey: string,) => {
     return [`/channels/public/web-forms/${formKey}`] as const;
     }
 
-    
+
 export const getGetPublicWebFormQueryOptions = <TData = Awaited<ReturnType<typeof getPublicWebForm>>, TError = unknown>(formKey: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicWebForm>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -422,13 +423,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetPublicWebFormQueryKey(formKey);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicWebForm>>> = ({ signal }) => getPublicWebForm(formKey, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, enabled: !!(formKey), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicWebForm>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -462,8 +463,8 @@ export const postPublicWebFormSubmission = (
     formKey: string,
     postPublicWebFormSubmissionBody: PostPublicWebFormSubmissionBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/public/web-forms/${formKey}/submissions`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -471,7 +472,7 @@ export const postPublicWebFormSubmission = (
     },
       options);
     }
-  
+
 
 
 export const getPostPublicWebFormSubmissionMutationOptions = <TError = unknown,
@@ -479,7 +480,7 @@ export const getPostPublicWebFormSubmissionMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postPublicWebFormSubmission>>, TError,{formKey: string;data: PostPublicWebFormSubmissionBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postPublicWebFormSubmission>>, {formKey: string;data: PostPublicWebFormSubmissionBody}> = (props) => {
@@ -488,7 +489,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postPublicWebFormSubmission(formKey,data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -520,20 +521,20 @@ export const getWebFormSubmissionStatus = (
     trackingToken: string,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/public/web-forms/submissions/${trackingToken}`, method: 'GET', signal
     },
       options);
     }
-  
+
 
 export const getGetWebFormSubmissionStatusQueryKey = (trackingToken: string,) => {
     return [`/channels/public/web-forms/submissions/${trackingToken}`] as const;
     }
 
-    
+
 export const getGetWebFormSubmissionStatusQueryOptions = <TData = Awaited<ReturnType<typeof getWebFormSubmissionStatus>>, TError = unknown>(trackingToken: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getWebFormSubmissionStatus>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -541,13 +542,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetWebFormSubmissionStatusQueryKey(trackingToken);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getWebFormSubmissionStatus>>> = ({ signal }) => getWebFormSubmissionStatus(trackingToken, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, enabled: !!(trackingToken), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getWebFormSubmissionStatus>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -575,13 +576,74 @@ export const useGetWebFormSubmissionStatus = <TData = Awaited<ReturnType<typeof 
 
 
 /**
+ * @summary List active departments available for public chat
+ */
+export const getPublicChatDepartments = (
+
+ options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
+) => {
+
+
+      return apiRequest<GetPublicChatDepartments200>(
+      {url: `/channels/public/chat/departments`, method: 'GET', signal
+    },
+      options);
+    }
+
+
+export const getGetPublicChatDepartmentsQueryKey = () => {
+    return [`/channels/public/chat/departments`] as const;
+    }
+
+
+export const getGetPublicChatDepartmentsQueryOptions = <TData = Awaited<ReturnType<typeof getPublicChatDepartments>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicChatDepartments>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetPublicChatDepartmentsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getPublicChatDepartments>>> = ({ signal }) => getPublicChatDepartments(requestOptions, signal);
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getPublicChatDepartments>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetPublicChatDepartmentsQueryResult = NonNullable<Awaited<ReturnType<typeof getPublicChatDepartments>>>
+export type GetPublicChatDepartmentsQueryError = unknown
+
+/**
+ * @summary List active departments available for public chat
+ */
+export const useGetPublicChatDepartments = <TData = Awaited<ReturnType<typeof getPublicChatDepartments>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getPublicChatDepartments>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
+
+  ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } => {
+
+  const queryOptions = getGetPublicChatDepartmentsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+/**
  * @summary Start chat session
  */
 export const postChatSession = (
     postChatSessionBody: PostChatSessionBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/chat/sessions`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -589,7 +651,7 @@ export const postChatSession = (
     },
       options);
     }
-  
+
 
 
 export const getPostChatSessionMutationOptions = <TError = unknown,
@@ -597,7 +659,7 @@ export const getPostChatSessionMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postChatSession>>, TError,{data: PostChatSessionBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postChatSession>>, {data: PostChatSessionBody}> = (props) => {
@@ -606,7 +668,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postChatSession(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -638,21 +700,21 @@ export const getInboundEmails = (
     params?: GetInboundEmailsParams,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<CollectionResponse>(
       {url: `/channels/email/inbound`, method: 'GET',
         params, signal
     },
       options);
     }
-  
+
 
 export const getGetInboundEmailsQueryKey = (params?: GetInboundEmailsParams,) => {
     return [`/channels/email/inbound`, ...(params ? [params]: [])] as const;
     }
 
-    
+
 export const getGetInboundEmailsQueryOptions = <TData = Awaited<ReturnType<typeof getInboundEmails>>, TError = unknown>(params?: GetInboundEmailsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getInboundEmails>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -660,13 +722,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetInboundEmailsQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getInboundEmails>>> = ({ signal }) => getInboundEmails(params, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getInboundEmails>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -700,8 +762,8 @@ export const useGetInboundEmails = <TData = Awaited<ReturnType<typeof getInbound
 export const postInboundEmailWebhook = (
     postInboundEmailWebhookBody: PostInboundEmailWebhookBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/email/inbound`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -709,7 +771,7 @@ export const postInboundEmailWebhook = (
     },
       options);
     }
-  
+
 
 
 export const getPostInboundEmailWebhookMutationOptions = <TError = ErrorResponse,
@@ -717,7 +779,7 @@ export const getPostInboundEmailWebhookMutationOptions = <TError = ErrorResponse
 ): UseMutationOptions<Awaited<ReturnType<typeof postInboundEmailWebhook>>, TError,{data: PostInboundEmailWebhookBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postInboundEmailWebhook>>, {data: PostInboundEmailWebhookBody}> = (props) => {
@@ -726,7 +788,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postInboundEmailWebhook(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -757,14 +819,14 @@ export const usePostInboundEmailWebhook = <TError = ErrorResponse,
 export const postInboundEmailReplay = (
     record: string,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/email/inbound/${record}/replay`, method: 'POST'
     },
       options);
     }
-  
+
 
 
 export const getPostInboundEmailReplayMutationOptions = <TError = unknown,
@@ -772,7 +834,7 @@ export const getPostInboundEmailReplayMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postInboundEmailReplay>>, TError,{record: string}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postInboundEmailReplay>>, {record: string}> = (props) => {
@@ -781,13 +843,13 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postInboundEmailReplay(record,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
 
     export type PostInboundEmailReplayMutationResult = NonNullable<Awaited<ReturnType<typeof postInboundEmailReplay>>>
-    
+
     export type PostInboundEmailReplayMutationError = unknown
 
     /**
@@ -813,21 +875,21 @@ export const getMessagingTemplates = (
     params?: GetMessagingTemplatesParams,
  options?: SecondParameter<typeof apiRequest>,signal?: AbortSignal
 ) => {
-      
-      
+
+
       return apiRequest<CollectionResponse>(
       {url: `/messaging/templates`, method: 'GET',
         params, signal
     },
       options);
     }
-  
+
 
 export const getGetMessagingTemplatesQueryKey = (params?: GetMessagingTemplatesParams,) => {
     return [`/messaging/templates`, ...(params ? [params]: [])] as const;
     }
 
-    
+
 export const getGetMessagingTemplatesQueryOptions = <TData = Awaited<ReturnType<typeof getMessagingTemplates>>, TError = unknown>(params?: GetMessagingTemplatesParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMessagingTemplates>>, TError, TData>>, request?: SecondParameter<typeof apiRequest>}
 ) => {
 
@@ -835,13 +897,13 @@ const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getGetMessagingTemplatesQueryKey(params);
 
-  
+
 
     const queryFn: QueryFunction<Awaited<ReturnType<typeof getMessagingTemplates>>> = ({ signal }) => getMessagingTemplates(params, requestOptions, signal);
 
-      
 
-      
+
+
 
    return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMessagingTemplates>>, TError, TData> & { queryKey: QueryKey }
 }
@@ -875,8 +937,8 @@ export const useGetMessagingTemplates = <TData = Awaited<ReturnType<typeof getMe
 export const postWhatsappInbound = (
     postWhatsappInboundBody: PostWhatsappInboundBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/whatsapp/inbound`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -884,7 +946,7 @@ export const postWhatsappInbound = (
     },
       options);
     }
-  
+
 
 
 export const getPostWhatsappInboundMutationOptions = <TError = ErrorResponse,
@@ -892,7 +954,7 @@ export const getPostWhatsappInboundMutationOptions = <TError = ErrorResponse,
 ): UseMutationOptions<Awaited<ReturnType<typeof postWhatsappInbound>>, TError,{data: PostWhatsappInboundBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWhatsappInbound>>, {data: PostWhatsappInboundBody}> = (props) => {
@@ -901,7 +963,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postWhatsappInbound(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -932,8 +994,8 @@ export const usePostWhatsappInbound = <TError = ErrorResponse,
 export const postWhatsappReceipts = (
     postWhatsappReceiptsBody: PostWhatsappReceiptsBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/whatsapp/receipts`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -941,7 +1003,7 @@ export const postWhatsappReceipts = (
     },
       options);
     }
-  
+
 
 
 export const getPostWhatsappReceiptsMutationOptions = <TError = unknown,
@@ -949,7 +1011,7 @@ export const getPostWhatsappReceiptsMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postWhatsappReceipts>>, TError,{data: PostWhatsappReceiptsBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postWhatsappReceipts>>, {data: PostWhatsappReceiptsBody}> = (props) => {
@@ -958,7 +1020,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postWhatsappReceipts(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -990,8 +1052,8 @@ export const usePostWhatsappReceipts = <TError = unknown,
 export const postSmsInbound = (
     postSmsInboundBody: PostSmsInboundBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/sms/inbound`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -999,7 +1061,7 @@ export const postSmsInbound = (
     },
       options);
     }
-  
+
 
 
 export const getPostSmsInboundMutationOptions = <TError = ErrorResponse,
@@ -1007,7 +1069,7 @@ export const getPostSmsInboundMutationOptions = <TError = ErrorResponse,
 ): UseMutationOptions<Awaited<ReturnType<typeof postSmsInbound>>, TError,{data: PostSmsInboundBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postSmsInbound>>, {data: PostSmsInboundBody}> = (props) => {
@@ -1016,7 +1078,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postSmsInbound(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -1047,8 +1109,8 @@ export const usePostSmsInbound = <TError = ErrorResponse,
 export const postSmsReceipts = (
     postSmsReceiptsBody: PostSmsReceiptsBody,
  options?: SecondParameter<typeof apiRequest>,) => {
-      
-      
+
+
       return apiRequest<void>(
       {url: `/channels/sms/receipts`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
@@ -1056,7 +1118,7 @@ export const postSmsReceipts = (
     },
       options);
     }
-  
+
 
 
 export const getPostSmsReceiptsMutationOptions = <TError = unknown,
@@ -1064,7 +1126,7 @@ export const getPostSmsReceiptsMutationOptions = <TError = unknown,
 ): UseMutationOptions<Awaited<ReturnType<typeof postSmsReceipts>>, TError,{data: PostSmsReceiptsBody}, TContext> => {
 const {mutation: mutationOptions, request: requestOptions} = options ?? {};
 
-      
+
 
 
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof postSmsReceipts>>, {data: PostSmsReceiptsBody}> = (props) => {
@@ -1073,7 +1135,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?? {};
           return  postSmsReceipts(data,requestOptions)
         }
 
-        
+
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -1098,4 +1160,3 @@ export const usePostSmsReceipts = <TError = unknown,
 
       return useMutation(mutationOptions);
     }
-    

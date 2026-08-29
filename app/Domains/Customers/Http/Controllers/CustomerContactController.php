@@ -69,7 +69,7 @@ class CustomerContactController extends Controller
 
         $contact->update($request->validated());
 
-        return ApiResponse::item(new CustomerContactResource($contact));
+        return ApiResponse::item(new CustomerContactResource($contact))->toResponse($request);
     }
 
     public function destroy(Customer $customer, CustomerContact $contact, RemoveCustomerContact $action): JsonResponse
@@ -82,6 +82,6 @@ class CustomerContactController extends Controller
 
         $action->execute($customer, $contact, auth()->user());
 
-        return ApiResponse::noContent();
+        return ApiResponse::noContent()->toResponse(request());
     }
 }

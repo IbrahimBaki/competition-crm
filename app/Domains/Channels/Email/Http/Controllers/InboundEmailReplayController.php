@@ -9,27 +9,28 @@ use App\Domains\Channels\Email\Models\InboundState;
 use App\Domains\Security\Permissions\PermissionKey;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
 
 class InboundEmailReplayController
 {
-    public function index(Request $request): AnonymousResourceCollection
+    public function index(Request $request): ApiResponse
     {
         Gate::authorize(PermissionKey::CHANNELS_EMAIL_REPLAY_LIST);
 
-        $query = InboundEmailMessage::query();
+        $spec = CollectionQuerySpec::create()
+            ->withSorts(['received_at', 'state', 'attempts'])
+            ->withFilters(['state' => ['eq', 'neq']])
+            ->withSearchableColumns(['from_address', 'subject', 'message_id']);
+        $collection = (new CollectionQuery($request, $spec))
+            ->paginate(InboundEmailMessage::query()->with('ticket'));
 
-        $state = $request->query('state');
-        if ($state) {
-            $query->where('state', $state);
-        }
-
-        $collection = CollectionQuery::paginate($query, $request);
-
-        return InboundEmailMessageResource::collection($collection);
+        return ApiResponse::paginated(
+            InboundEmailMessageResource::collection(collect($collection->items())),
+            $collection,
+        );
     }
 
     public function replay(InboundEmailMessage $record): Response

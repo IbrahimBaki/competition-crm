@@ -71,6 +71,20 @@ class PublicChatSessionHttpTest extends TestCase
         $this->assertNotEmpty($response->json('data.visitor_token'));
     }
 
+    public function test_public_department_discovery_exposes_only_active_names_and_ids(): void
+    {
+        $active = Department::factory()->create(['is_active' => true]);
+        Department::factory()->create(['is_active' => false]);
+
+        $response = $this->getJson('/api/v1/channels/public/chat/departments');
+
+        $response->assertOk();
+        $this->assertCount(1, $response->json('data'));
+        $response->assertJsonPath('data.0.id', (string) $active->id)
+            ->assertJsonStructure(['data' => [['id', 'name']]]);
+        $this->assertSame(['id', 'name'], array_keys($response->json('data.0')));
+    }
+
     public function test_visitor_can_fetch_transcript_with_correct_token(): void
     {
         $token = Str::random(32);

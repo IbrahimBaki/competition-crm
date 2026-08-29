@@ -24,11 +24,11 @@ class DisableTwoFactor
             throw new TwoFactorRequiredException('Organization policy requires two-factor authentication.');
         }
 
-        $user->update([
+        $user->forceFill([
             'two_factor_secret' => null,
             'two_factor_confirmed_at' => null,
             'two_factor_recovery_codes' => null,
-        ]);
+        ])->save();
 
         $this->auditLogger->record($user, 'two_factor.disabled', $user, null, [
             'user_uuid' => $user->uuid,

@@ -8,5 +8,11 @@
 import type { BilingualString } from './bilingualString';
 
 export type PostKnowledgeCategoriesBody = {
+  /** @maxLength 255 */
+  code: string;
   name: BilingualString;
+  /** @nullable */
+  parent_id?: string | null;
+  /** @minimum 0 */
+  position?: number;
 };

@@ -26,9 +26,11 @@ readonly class QuickReplyController
         private DeleteQuickReply $deleteAction,
     ) {}
 
-    public function index(CollectionQuery $collectionQuery): JsonResponse
+    public function index(): JsonResponse
     {
         $this->authorize('viewAny', QuickReply::class);
+
+        $request = request();
 
         $spec = (new CollectionQuerySpec)
             ->withSorts(['created_at'])
@@ -41,20 +43,16 @@ readonly class QuickReplyController
             $q->where('owner_id', auth()->id())->orWhereNull('owner_id');
         });
 
+        $collectionQuery = new CollectionQuery($request, $spec);
         $paginated = $collectionQuery->paginate($query);
 
         $meta = $collectionQuery->meta();
 
-        // Create a new paginator with Resources as items
-        $resourcePaginator = $paginated->setCollection(
-            QuickReplyResource::collection($paginated->items())
-        );
-
-        return ApiResponse::collection(
-            $resourcePaginator,
-            filters: $meta['filters'] ?? [],
-            sort: $meta['sort'] ?? null
-        )->toResponse(request());
+        return ApiResponse::paginated(
+            QuickReplyResource::collection($paginated),
+            $paginated,
+            $meta,
+        )->toResponse($request);
     }
 
     public function store(StoreQuickReplyRequest $request): JsonResponse

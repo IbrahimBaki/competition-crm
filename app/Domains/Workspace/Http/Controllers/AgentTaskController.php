@@ -28,43 +28,58 @@ readonly class AgentTaskController
         private UpdateAgentTask $updateTask,
     ) {}
 
-    public function index(CollectionQuery $collectionQuery): JsonResponse
+    public function index(): JsonResponse
     {
         $this->authorize('viewAny', AgentTask::class);
+
+        $request = request();
+
+        // owner_id/ticket_id arrive as UUIDs (API contract); resolve to internal IDs
+        // before CollectionQuery filters agent_tasks' numeric foreign key columns.
+        if ($request->filled('filter.owner_id.eq')) {
+            $ownerId = User::where('uuid', $request->input('filter.owner_id.eq'))->value('id');
+            $request->merge(['filter' => array_replace($request->input('filter', []), [
+                'owner_id' => ['eq' => $ownerId],
+            ])]);
+        }
+
+        if ($request->filled('filter.ticket_id.eq')) {
+            $ticketId = Ticket::where('uuid', $request->input('filter.ticket_id.eq'))->value('id');
+            $request->merge(['filter' => array_replace($request->input('filter', []), [
+                'ticket_id' => ['eq' => $ticketId],
+            ])]);
+        }
 
         $spec = (new CollectionQuerySpec)
             ->withSorts(['due_at', 'created_at'])
             ->withFilters([
                 'state' => ['eq'],
-                'owner' => ['eq'],
-                'ticket' => ['eq'],
+                'owner_id' => ['eq'],
+                'ticket_id' => ['eq'],
                 'due_before' => ['lte'],
                 'due_after' => ['gte'],
             ])
             ->withSearchableColumns([]);
 
-        $query = AgentTask::query();
+        $query = AgentTask::query()->with('owner');
 
         // Handle special overdue filter
-        if (request()->has('filter.overdue')) {
+        if ($request->has('filter.overdue')) {
             $query->overdue();
         }
+
+        $collectionQuery = new CollectionQuery($request, $spec);
 
         // Apply standard filters and pagination
         $paginated = $collectionQuery->paginate($query);
 
         $meta = $collectionQuery->meta();
 
-        // Create a new paginator with Resources as items
-        $resourcePaginator = $paginated->setCollection(
-            AgentTaskResource::collection($paginated->items())
-        );
-
-        return ApiResponse::collection(
-            $resourcePaginator,
-            filters: $meta['filters'] ?? [],
-            sort: $meta['sort'] ?? null
-        )->toResponse(request());
+        return ApiResponse::paginated(
+            AgentTaskResource::collection($paginated),
+            $paginated,
+            $meta,
+        )->toResponse($request);
     }
 
     public function store(StoreAgentTaskRequest $request): JsonResponse

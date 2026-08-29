@@ -10,7 +10,7 @@ final class ApiTokenPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasPermission(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
+        return $user->can(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
     }
 
     public function view(User $user, ApiToken $token): bool
@@ -20,7 +20,7 @@ final class ApiTokenPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasPermission(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
+        return $user->can(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
     }
 
     public function update(User $user, ApiToken $token): bool
@@ -30,6 +30,6 @@ final class ApiTokenPolicy
 
     public function delete(User $user, ApiToken $token): bool
     {
-        return $user->hasPermission(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
+        return $user->can(PermissionKey::INTEGRATIONS_API_TOKENS_MANAGE);
     }
 }

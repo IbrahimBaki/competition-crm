@@ -6,6 +6,7 @@ use App\Domains\Reporting\Http\Requests\StoreReportScheduleRequest;
 use App\Domains\Reporting\Http\Requests\UpdateReportScheduleRequest;
 use App\Domains\Reporting\Http\Resources\ReportScheduleResource;
 use App\Domains\Reporting\Models\ReportSchedule;
+use App\Domains\Security\Permissions\PermissionKey;
 use App\Support\Http\ApiResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Routing\Controller;
@@ -16,14 +17,14 @@ class ReportScheduleController extends Controller
 
     public function index()
     {
-        $this->authorize('viewAny', ReportSchedule::class);
+        $this->authorize(PermissionKey::REPORTS_SCHEDULE_MANAGE);
 
         return ApiResponse::collection(ReportSchedule::paginate());
     }
 
     public function store(StoreReportScheduleRequest $request)
     {
-        $this->authorize('create', ReportSchedule::class);
+        $this->authorize(PermissionKey::REPORTS_SCHEDULE_MANAGE);
 
         $schedule = ReportSchedule::create($request->validated());
 
@@ -32,14 +33,14 @@ class ReportScheduleController extends Controller
 
     public function show(ReportSchedule $schedule)
     {
-        $this->authorize('view', $schedule);
+        $this->authorize(PermissionKey::REPORTS_SCHEDULE_MANAGE);
 
         return ApiResponse::ok(new ReportScheduleResource($schedule));
     }
 
     public function update(UpdateReportScheduleRequest $request, ReportSchedule $schedule)
     {
-        $this->authorize('update', $schedule);
+        $this->authorize(PermissionKey::REPORTS_SCHEDULE_MANAGE);
 
         $schedule->update($request->validated());
 
@@ -48,7 +49,7 @@ class ReportScheduleController extends Controller
 
     public function destroy(ReportSchedule $schedule)
     {
-        $this->authorize('delete', $schedule);
+        $this->authorize(PermissionKey::REPORTS_SCHEDULE_MANAGE);
 
         $schedule->delete();
 

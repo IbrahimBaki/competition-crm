@@ -10,8 +10,12 @@ use App\Domains\Security\Http\Requests\ConfirmTwoFactorRequest;
 use App\Domains\Security\Http\Requests\DisableTwoFactorRequest;
 use App\Domains\Security\Http\Requests\EnableTwoFactorRequest;
 use App\Domains\Security\Http\Requests\TwoFactorChallengeRequest;
+use App\Domains\Security\Http\Resources\UserResource;
+use App\Models\User;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class TwoFactorController extends Controller
 {
@@ -62,9 +66,26 @@ class TwoFactorController extends Controller
 
     public function challenge(TwoFactorChallengeRequest $request, CompleteTwoFactorChallenge $action)
     {
-        $action->execute($request->user(), $request->input('code'));
+        $userId = $request->session()->get('auth.two_factor_pending_user');
+        $user = $userId ? User::query()->find($userId) : null;
 
-        return response()->json(status: 204);
+        if (! $user) {
+            throw new AuthenticationException('No two-factor challenge is in progress.');
+        }
+
+        $action->execute($user, $request->input('code'));
+
+        Auth::guard('web')->login($user);
+        $request->session()->forget('auth.two_factor_pending_user');
+        $request->session()->regenerate();
+
+        $token = $user->createToken('web')->plainTextToken;
+
+        return (new UserResource($user))->additional([
+            'meta' => [
+                'token' => $token,
+            ],
+        ]);
     }
 
     public function recoveryCodes(Request $request)
@@ -73,7 +94,7 @@ class TwoFactorController extends Controller
 
         $codes = array_map(fn () => bin2hex(random_bytes(4)), range(1, 10));
 
-        $user->update(['two_factor_recovery_codes' => $codes]);
+        $user->forceFill(['two_factor_recovery_codes' => $codes])->save();
 
         return response()->json([
             'meta' => [

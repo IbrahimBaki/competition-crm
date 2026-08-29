@@ -8,16 +8,16 @@ export class MalformedEnvelopeError extends Error {
 }
 
 const apiPageMetaSchema = z.object({
-  request_id: z.string(),
+  request_id: z.string().default(''),
   page: z.number(),
   per_page: z.number(),
   total: z.number(),
-  total_pages: z.number(),
-  sort: z.string().optional(),
-  filters: z.record(z.unknown()).optional(),
+  total_pages: z.number().optional(),
+  sort: z.string().nullable().optional(),
+  filters: z.record(z.unknown()).nullable().optional(),
 });
 
-export type ApiPageMeta = z.infer<typeof apiPageMetaSchema>;
+export type ApiPageMeta = Omit<z.infer<typeof apiPageMetaSchema>, 'total_pages'> & { total_pages: number };
 
 const apiSuccessSchema = z.object({
   data: z.unknown(),
@@ -51,9 +51,10 @@ export function unwrapPage<T>(body: unknown): ApiPage<T> {
   try {
     const parsed = apiSuccessSchema.parse(body);
     const meta = apiPageMetaSchema.parse(parsed.meta);
+    const normalisedMeta: ApiPageMeta = { ...meta, total_pages: meta.total_pages ?? Math.max(1, Math.ceil(meta.total / Math.max(meta.per_page, 1))) };
     return {
       items: Array.isArray(parsed.data) ? (parsed.data as T[]) : [],
-      meta,
+      meta: normalisedMeta,
     };
   } catch (error) {
     throw new MalformedEnvelopeError(

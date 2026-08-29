@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Domains\Knowledge\Models\ArticleState;
 use App\Domains\Knowledge\Models\ArticleVisibility;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Domains\Knowledge\Models\KnowledgeArticleVersion;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -61,7 +62,18 @@ class KnowledgeArticleFactory extends Factory
             'current_version' => 1,
             'published_at' => now(),
             'published_by' => User::factory(),
-        ]);
+        ])->afterCreating(function (KnowledgeArticle $article): void {
+            KnowledgeArticleVersion::factory()->create([
+                'knowledge_article_id' => $article->id,
+                'version' => 1,
+                'title' => $article->title,
+                'body' => $article->body,
+                'visibility' => $article->visibility->value,
+                'knowledge_category_id' => $article->knowledge_category_id,
+                'published_by' => $article->published_by,
+                'published_at' => $article->published_at,
+            ]);
+        });
     }
 
     public function archived(): self

@@ -16,7 +16,7 @@ class UpdateAgentTaskRequest extends FormRequest
         return [
             'title' => 'string|max:255',
             'description' => 'nullable|string',
-            'due_at' => 'nullable|date_format:c',
+            'due_at' => 'nullable|date_format:Y-m-d\TH:i:sP',
         ];
     }
 }

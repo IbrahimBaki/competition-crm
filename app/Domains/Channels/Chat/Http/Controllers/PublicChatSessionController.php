@@ -21,6 +21,20 @@ class PublicChatSessionController
         private readonly RequestChatSession $requestSession,
     ) {}
 
+    public function departments(Request $request): JsonResponse
+    {
+        $departments = Department::query()
+            ->where('is_active', true)
+            ->orderBy('code')
+            ->get()
+            ->map(fn (Department $department) => [
+                'id' => $department->getKey(),
+                'name' => $department->name,
+            ]);
+
+        return response()->json(['data' => $departments->values()]);
+    }
+
     public function store(Request $request): JsonResponse
     {
         $dept = Department::findOrFail($request->input('department'));

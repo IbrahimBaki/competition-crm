@@ -3,7 +3,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { LoadingState } from './states/LoadingState';
 import { EmptyState } from './states/EmptyState';
 import { ErrorState } from './states/ErrorState';
-import { NormalisedApiError } from '@/api/http/errors';
+import { isApiError, NormalisedApiError } from '@/api/http/errors';
 
 interface AsyncBoundaryProps<T> {
   query: UseQueryResult<T, unknown>;
@@ -23,6 +23,13 @@ export function AsyncBoundary<T>({
   children,
 }: AsyncBoundaryProps<T>) {
   if (query.isLoading) {
+    return <>{loading}</>;
+  }
+
+  // A cancelled request (superseded fetch, StrictMode dev double-mount) is
+  // not a real failure — a fresh request is already in flight. Keep showing
+  // the loading state instead of flashing an error.
+  if (query.isError && isApiError(query.error) && query.error.kind === 'cancelled') {
     return <>{loading}</>;
   }
 

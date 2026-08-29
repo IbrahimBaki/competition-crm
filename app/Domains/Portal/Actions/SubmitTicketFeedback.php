@@ -24,7 +24,11 @@ class SubmitTicketFeedback
                 'source' => $source,
             ]);
         } catch (QueryException $e) {
-            if (strpos($e->getMessage(), 'Unique constraint failed') !== false) {
+            if (
+                str_contains($e->getMessage(), 'Unique constraint failed')
+                || str_contains($e->getMessage(), 'Duplicate entry')
+                || ($e->errorInfo[1] ?? null) === 1062
+            ) {
                 throw new TicketFeedbackAlreadySubmittedException;
             }
 

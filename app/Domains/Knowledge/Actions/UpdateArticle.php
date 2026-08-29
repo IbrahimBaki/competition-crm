@@ -5,6 +5,7 @@ namespace App\Domains\Knowledge\Actions;
 use App\Domains\Knowledge\Exceptions\IllegalArticleTransitionException;
 use App\Domains\Knowledge\Models\ArticleState;
 use App\Domains\Knowledge\Models\KnowledgeArticle;
+use App\Domains\Knowledge\Models\KnowledgeCategory;
 use App\Domains\Knowledge\Services\Search\ArticleSearchIndexer;
 use App\Domains\Security\Services\AuditLogger;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -27,11 +28,18 @@ class UpdateArticle
 
             $before = $article->toArray();
 
+            $categoryId = $article->knowledge_category_id;
+            if (array_key_exists('knowledge_category_id', $data)) {
+                $categoryId = empty($data['knowledge_category_id'])
+                    ? null
+                    : KnowledgeCategory::where('uuid', $data['knowledge_category_id'])->firstOrFail()->id;
+            }
+
             $updateData = [
                 'title' => $data['title'] ?? $article->title,
                 'body' => $data['body'] ?? $article->body,
                 'visibility' => $data['visibility'] ?? $article->visibility,
-                'knowledge_category_id' => $data['knowledge_category_id'] ?? $article->knowledge_category_id,
+                'knowledge_category_id' => $categoryId,
             ];
 
             $tempArticle = new KnowledgeArticle($updateData);

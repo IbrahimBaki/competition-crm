@@ -4,11 +4,13 @@ namespace App\Domains\Security\Http\Controllers;
 
 use App\Domains\Security\Actions\AnonymisePersonalData;
 use App\Domains\Security\Http\Requests\EraseUserDataRequest;
+use App\Domains\Security\Permissions\PermissionKey;
 use App\Models\User;
 use App\Support\Http\ApiResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Gate;
 
 class DataProtectionController extends Controller
 {
@@ -23,7 +25,7 @@ class DataProtectionController extends Controller
 
     public function retention(Request $request)
     {
-        $this->authorize('view', User::class);
+        Gate::authorize(PermissionKey::DATAPROTECTION_RETENTION_VIEW);
 
         $config = config('retention.classes', []);
         $minimumDays = config('retention.audit_minimum_days', 365);

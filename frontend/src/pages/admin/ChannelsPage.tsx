@@ -1,21 +1,35 @@
+import React, { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
+import { CollectionPage } from '@/features/operations/CollectionPage';
+import { ResourceField, ResourceFormDialog } from '@/features/operations/ResourceFormDialog';
+import { ApiPage } from '@/api/http/envelope';
+import { apiRequest } from '@/api/http/mutator';
+import { AsyncBoundary } from '@/shell/AsyncBoundary';
+import { Button, Dialog, Field, Input, useToast } from '@/components/ui';
+import { usePermissions } from '@/auth/usePermissions';
+import { PERMISSIONS } from '@/auth/permissions';
+
+type Row = Record<string, unknown>;
+const formFields: ResourceField[] = [
+  {key:'key',label:'Public key',required:true},{key:'title_en',label:'English title',required:true},{key:'title_ar',label:'Arabic title',required:true},
+  {key:'description_en',label:'English description'},{key:'description_ar',label:'Arabic description'},{key:'department_id',label:'Department ID',required:true},
+  {key:'ticket_category_id',label:'Ticket category ID'},{key:'default_priority',label:'Default priority',kind:'select',required:true,options:['low','normal','high','urgent'].map(value=>({value,label:value}))},{key:'is_active',label:'Active',kind:'checkbox'},
+];
+const transferFields: ResourceField[] = [
+  {key:'target_type',label:'Transfer target',kind:'select',required:true,options:[{value:'agent',label:'Agent'},{value:'queue',label:'Queue'},{value:'bot',label:'Bot'}]},
+  {key:'target_agent_uuid',label:'Target agent UUID'},{key:'reason',label:'Reason',kind:'textarea',required:true},
+];
 
 export function ChannelsPage() {
-  const { t } = useTranslation();
-
-  return (
-    <div>
-      <h1 className="mb-6 text-3xl font-bold text-gray-900">{t('admin.channels.title')}</h1>
-      <div className="rounded border border-yellow-200 bg-yellow-50 p-4">
-        <p className="text-sm text-yellow-800">
-          {t('admin.channels.blocked_by_backend_note')}
-          <br />
-          <span className="text-xs text-yellow-700">
-            TODO(FE-06): Channel health and email replay are blocked by missing generated client operations
-            for inbound email state transitions. See .squad/gaps/36-483.md.
-          </span>
-        </p>
-      </div>
-    </div>
-  );
+  const { t }=useTranslation(); const { can }=usePermissions(); const client=useQueryClient(); const { notify }=useToast();
+  const [section,setSection]=useState<'email'|'forms'|'templates'|'chat'>('email'); const [editing,setEditing]=useState<Row|null|undefined>(undefined); const [detail,setDetail]=useState<Row|null>(null); const [transfer,setTransfer]=useState<Row|null>(null); const [chatBody,setChatBody]=useState('');
+  const id=(row:Row)=>String(row.id??row.uuid);
+  const configs={email:{title:'Inbound email',description:'Inspect failed or pending inbound messages and replay processing.',endpoint:'/channels/email/inbound',columns:[{key:'subject',label:'Subject'},{key:'state',label:'State'},{key:'received_at',label:'Received'}]},forms:{title:'Web forms',description:'Manage public request intake forms.',endpoint:'/channels/web-forms',columns:[{key:'title',label:'Form'},{key:'key',label:'Key'},{key:'is_active',label:'State'}]},templates:{title:'Messaging templates',description:'Review provider-approved WhatsApp and SMS templates.',endpoint:'/messaging/templates',columns:[{key:'name',label:'Template'},{key:'channel',label:'Channel'},{key:'status',label:'State'}]},chat:{title:'Live chat',description:'Monitor, accept, transfer, reply to, and end customer chat sessions.',endpoint:'/channels/chat/sessions',columns:[{key:'id',label:'Session'},{key:'state',label:'State'},{key:'requested_at',label:'Started'}]}} as const;
+  const config=configs[section];
+  const transcript=useQuery({queryKey:['channels','chat',detail? id(detail):'', 'messages'],queryFn:()=>apiRequest<ApiPage<Row>>({url:`/channels/chat/sessions/${id(detail!)}/messages`,method:'GET',params:{per_page:100}}),enabled:Boolean(detail)});
+  const action=async(url:string,data?:unknown)=>{try{await apiRequest({url,method:'POST',data,headers:{'Idempotency-Key':crypto.randomUUID()}});await client.invalidateQueries({queryKey:['channels']});notify('Channel action completed.');}catch{notify('The channel action failed.','danger');}};
+  const send=async(event:React.FormEvent)=>{event.preventDefault();if(!detail||!chatBody.trim())return;await action(`/channels/chat/sessions/${id(detail)}/messages`,{body:chatBody,client_message_id:crypto.randomUUID()});setChatBody('');await transcript.refetch();};
+  const formManage=can(PERMISSIONS.CHANNELS_WEB_FORM_CREATE)||can(PERMISSIONS.CHANNELS_WEB_FORM_UPDATE);
+  return <div><div className="mb-5 flex flex-wrap gap-2" role="tablist" aria-label={t('admin.channels.title')}>{(['email','forms','templates','chat'] as const).map(item=><Button key={item} variant={section===item?'primary':'secondary'} role="tab" aria-selected={section===item} onClick={()=>{setSection(item);setEditing(undefined);}}>{item==='email'?'Email':item==='forms'?'Web forms':item==='templates'?'Templates':'Live chat'}</Button>)}</div><CollectionPage key={section} title={config.title} description={config.description} endpoint={config.endpoint} queryKey={['channels',section]} columns={[...config.columns]} actions={section==='forms'&&formManage?<Button onClick={()=>setEditing(null)}>New web form</Button>:undefined} rowActions={(row)=><>{section==='email'&&can(PERMISSIONS.CHANNELS_EMAIL_REPLAY_ACTION)&&<Button onClick={()=>void action(`/channels/email/inbound/${id(row)}/replay`)}>Replay</Button>}{section==='forms'&&can(PERMISSIONS.CHANNELS_WEB_FORM_UPDATE)&&<Button variant="secondary" onClick={()=>setEditing(row)}>Edit</Button>}{section==='chat'&&<Button variant="secondary" onClick={()=>setDetail(row)}>Transcript</Button>}{section==='chat'&&can(PERMISSIONS.CHANNELS_CHAT_ACCEPT)&&String(row.state)==='queued'&&<Button onClick={()=>void action(`/channels/chat/sessions/${id(row)}/accept`)}>Accept</Button>}{section==='chat'&&can(PERMISSIONS.CHANNELS_CHAT_TRANSFER)&&<Button variant="secondary" onClick={()=>setTransfer(row)}>Transfer</Button>}{section==='chat'&&can(PERMISSIONS.CHANNELS_CHAT_MANAGE)&&<Button variant="danger" onClick={()=>void action(`/channels/chat/sessions/${id(row)}/end`,{reason:'Ended by staff'})}>End</Button>}</>} deleteEndpoint={section==='forms'&&can(PERMISSIONS.CHANNELS_WEB_FORM_DELETE)?row=>`/channels/web-forms/${id(row)}`:undefined}/>{section==='forms'&&formManage&&<ResourceFormDialog open={editing!==undefined} title={editing?'Edit web form':'New web form'} endpoint={editing?`/channels/web-forms/${id(editing)}`:'/channels/web-forms'} method={editing?'PUT':'POST'} queryKey={['channels','forms']} fields={formFields} initial={editing?{...editing,title_en:(editing.title as Row)?.en,title_ar:(editing.title as Row)?.ar,description_en:(editing.description as Row)?.en,description_ar:(editing.description as Row)?.ar}:{default_priority:'normal',is_active:false}} transform={values=>{const {title_en,title_ar,description_en,description_ar,...rest}=values;return {...rest,title:{en:title_en,ar:title_ar},description:{en:description_en,ar:description_ar}};}} onClose={()=>setEditing(undefined)}/>}<ResourceFormDialog open={Boolean(transfer)} title="Transfer chat session" endpoint={transfer?`/channels/chat/sessions/${id(transfer)}/transfer`:''} queryKey={['channels','chat']} fields={transferFields} initial={{target_type:'queue'}} onClose={()=>setTransfer(null)}/><Dialog open={Boolean(detail)} title="Chat transcript" description={detail?`Session ${id(detail)}`:undefined} onClose={()=>setDetail(null)} footer={<Button variant="secondary" onClick={()=>setDetail(null)}>Close</Button>}><AsyncBoundary query={transcript}>{page=><div className="max-h-80 space-y-3 overflow-y-auto" aria-live="polite">{page.items.length===0?<p className="text-sm text-slate-500">No messages yet.</p>:page.items.map((message,index)=><article key={String(message.id??message.uuid??index)} className="rounded-lg bg-slate-50 p-3"><p className="text-xs font-semibold uppercase text-slate-500">{String(message.author_type??'participant')}</p><p className="mt-1 whitespace-pre-wrap text-sm">{String(message.body??'')}</p></article>)}</div>}</AsyncBoundary><form className="mt-4 flex gap-2" onSubmit={send}><Field label="Reply" required>{({id:fieldId})=><Input id={fieldId} value={chatBody} onChange={event=>setChatBody(event.target.value)} required/>}</Field><Button type="submit" disabled={!chatBody.trim()}>Send</Button></form></Dialog></div>;
 }

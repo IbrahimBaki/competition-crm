@@ -18,6 +18,7 @@ export const queryClient = new QueryClient({
               'csrf',
               'two_factor_required',
               'account_deactivated',
+              'cancelled',
             ].includes(e.kind)
           ) {
             return false;

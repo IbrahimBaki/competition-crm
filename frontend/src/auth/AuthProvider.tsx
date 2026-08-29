@@ -6,6 +6,19 @@ import { unwrap } from '@/api/http/envelope';
 import { normaliseApiError } from '@/api/http/errors';
 import { setSession, on, User } from './session';
 
+let bootstrapInFlight: Promise<User> | null = null;
+
+function bootstrapSession(): Promise<User> {
+  bootstrapInFlight ??= ensureCsrfCookie()
+    .then(() => httpClient.get('/auth/me'))
+    .then((response) => unwrap<User>(response.data))
+    .finally(() => {
+      bootstrapInFlight = null;
+    });
+
+  return bootstrapInFlight;
+}
+
 export type AuthStatus = 'loading' | 'authenticated' | 'unauthenticated' | 'two_factor_required';
 
 interface AuthContextType {
@@ -39,15 +52,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   // Bootstrap session on mount
   useEffect(() => {
+    let active = true;
+
     const bootstrap = async () => {
       try {
-        await ensureCsrfCookie();
-        const response = await httpClient.get('/auth/me');
-        const currentUser = unwrap<User>(response.data);
+        const currentUser = await bootstrapSession();
+        if (!active) return;
         setSession(currentUser);
         setUser(currentUser);
         setStatus('authenticated');
       } catch (error) {
+        if (!active) return;
         const normalised = normaliseApiError(error);
         if (normalised.kind === 'unauthenticated') {
           setSession(null);
@@ -60,7 +75,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
     };
 
-    bootstrap();
+    void bootstrap();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Subscribe to session:expired event

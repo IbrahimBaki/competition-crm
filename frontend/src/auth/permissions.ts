@@ -83,6 +83,8 @@ export const PERMISSIONS = {
   // Ticket catalogue (statuses/categories) — admin
   TICKETS_CATEGORIES_MANAGE: 'tickets.categories.manage',
   TICKETS_STATUSES_MANAGE: 'tickets.statuses.manage',
+  TICKET_CATEGORIES_MANAGE: 'tickets.categories.manage',
+  TICKET_STATUSES_MANAGE: 'tickets.statuses.manage',
 
   // SLA
   SLA_POLICIES_VIEW: 'sla.policies.view',
@@ -114,6 +116,32 @@ export const PERMISSIONS = {
   REPORTS_VIEW_BRANCH: 'reports.view.branch',
   REPORTS_VIEW_ANY: 'reports.view.any',
   REPORTS_EXPORT_ANY: 'reports.export.any',
+  REPORTS_SCHEDULE_MANAGE: 'reports.schedule.manage',
+
+  KNOWLEDGE_ARTICLES_VIEW: 'knowledge.articles.view',
+  KNOWLEDGE_ARTICLES_CREATE: 'knowledge.articles.create',
+  KNOWLEDGE_ARTICLES_UPDATE: 'knowledge.articles.update',
+  KNOWLEDGE_ARTICLES_PUBLISH: 'knowledge.articles.publish',
+  KNOWLEDGE_ARTICLES_ARCHIVE: 'knowledge.articles.archive',
+  KNOWLEDGE_ARTICLES_VERSIONS_RESTORE: 'knowledge.articles.versions.restore',
+  KNOWLEDGE_CATEGORIES_MANAGE: 'knowledge.categories.manage',
+
+  CHANNELS_CHAT_VIEW: 'channels.chat.view',
+  CHANNELS_CHAT_ACCEPT: 'channels.chat.accept',
+  CHANNELS_CHAT_TRANSFER: 'channels.chat.transfer',
+  CHANNELS_CHAT_MANAGE: 'channels.chat.manage',
+
+  AI_ASSISTANCE_USE: 'ai.assistance.use',
+  AI_SUGGESTIONS_RESOLVE: 'ai.suggestions.resolve',
+  AI_USAGE_VIEW: 'ai.usage.view',
+  AI_SETTINGS_MANAGE: 'ai.settings.manage',
+
+  INTEGRATIONS_API_TOKENS_MANAGE: 'integrations.api_tokens.manage',
+  INTEGRATIONS_WEBHOOKS_MANAGE: 'integrations.webhooks.manage',
+  INTEGRATIONS_IMPORT_MANAGE: 'integrations.import.manage',
+
+  DATAPROTECTION_ERASURE_EXECUTE: 'dataprotection.erasure.execute',
+  DATAPROTECTION_RETENTION_VIEW: 'dataprotection.retention.view',
 } as const;
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];

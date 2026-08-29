@@ -11,6 +11,7 @@ use App\Domains\Ticketing\Models\TicketCategory;
 use App\Domains\Ticketing\Models\TicketEventType;
 use App\Domains\Ticketing\Models\TicketPriority;
 use App\Domains\Ticketing\Models\TicketStatus;
+use App\Domains\Ticketing\Models\TicketStatusDefinition;
 use App\Domains\Ticketing\Services\Automation\TicketAutomationHooks;
 use App\Domains\Ticketing\Services\RecordTicketEvent;
 use App\Domains\Ticketing\Services\Sla\SlaClockHooks;
@@ -63,6 +64,12 @@ class CreateTicket
             $validatedFields = $this->fieldValidator->validate($category, $customFields);
 
             $normaliser = app(TextNormaliser::class);
+            $defaultStatus = TicketStatusDefinition::query()
+                ->where('lifecycle_type', TicketStatus::New->value)
+                ->where('is_active', true)
+                ->orderByDesc('is_default')
+                ->orderBy('position')
+                ->first();
 
             $ticket = Ticket::create([
                 'customer_id' => $customer->id,
@@ -76,6 +83,7 @@ class CreateTicket
                 'body' => $body,
                 'body_normalised' => $normaliser->normaliseName($body),
                 'status' => TicketStatus::New,
+                'ticket_status_id' => $defaultStatus?->id,
                 'priority' => $priority,
                 'custom_fields' => $validatedFields ?: null,
             ]);

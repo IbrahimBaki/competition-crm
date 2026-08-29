@@ -5,5 +5,13 @@
  * Support CRM platform API with integrated automation, reporting, and external integrations
  * OpenAPI spec version: 1.0.0
  */
+import type { BilingualString } from './bilingualString';
 
-export type PatchKnowledgeCategoryBody = { [key: string]: unknown };
+export type PatchKnowledgeCategoryBody = {
+  is_active?: boolean;
+  name?: BilingualString;
+  /** @nullable */
+  parent_id?: string | null;
+  /** @minimum 0 */
+  position?: number;
+};

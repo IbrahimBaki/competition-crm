@@ -15,7 +15,7 @@ class StoreKnowledgeCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_id' => ['nullable', 'exists:knowledge_categories,id'],
+            'parent_id' => ['nullable', 'uuid', 'exists:knowledge_categories,uuid'],
             'code' => ['required', 'string', 'unique:knowledge_categories,code'],
             'name' => ['required', 'array', 'size:2'],
             'name.ar' => ['required', 'string', 'max:255'],

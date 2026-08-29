@@ -85,4 +85,32 @@ class ReportScopeTest extends TestCase
         // Should resolve without error (silently narrow to empty)
         $this->assertNotNull($resolved);
     }
+
+    public function test_user_with_any_scope_can_list_reports(): void
+    {
+        $user = User::factory()->create();
+        $this->grantPermission($user, PermissionKey::REPORTS_VIEW_ANY);
+
+        $this->actingAs($user)
+            ->getJson('/api/v1/reports')
+            ->assertOk()
+            ->assertJsonPath('meta.available_reports', 6);
+    }
+
+    public function test_user_with_own_scope_can_list_reports(): void
+    {
+        $user = User::factory()->create();
+        $this->grantPermission($user, PermissionKey::REPORTS_VIEW_OWN);
+
+        $this->actingAs($user)
+            ->getJson('/api/v1/reports')
+            ->assertOk();
+    }
+
+    public function test_user_without_report_scope_cannot_list_reports(): void
+    {
+        $this->actingAs(User::factory()->create())
+            ->getJson('/api/v1/reports')
+            ->assertForbidden();
+    }
 }

@@ -41,7 +41,7 @@ class NotificationPreferenceController
 
         return ApiResponse::success([
             'data' => $preferences,
-        ]);
+        ])->toResponse($request);
     }
 
     public function update(UpdateNotificationPreferencesRequest $request): JsonResponse
@@ -63,6 +63,6 @@ class NotificationPreferenceController
 
         return ApiResponse::success([
             'message' => 'Preferences updated successfully',
-        ]);
+        ])->toResponse($request);
     }
 }

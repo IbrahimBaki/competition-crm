@@ -4,6 +4,7 @@ namespace App\Support\Http;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -98,7 +99,7 @@ final class CollectionQuery
         }
     }
 
-    public function applyTo(Builder $query): Builder
+    public function applyTo(Builder|Relation $query): Builder|Relation
     {
         if ($this->sort) {
             $field = ltrim($this->sort, '-');
@@ -135,7 +136,7 @@ final class CollectionQuery
         return $query;
     }
 
-    public function paginate(Builder $query): LengthAwarePaginator
+    public function paginate(Builder|Relation $query): LengthAwarePaginator
     {
         return $this->applyTo($query)
             ->paginate($this->perPage, ['*'], 'page', $this->page)
@@ -149,9 +150,16 @@ final class CollectionQuery
 
     public function meta(): array
     {
-        return [
-            'sort' => $this->sort,
-            'filters' => $this->filters,
-        ];
+        $meta = [];
+
+        if ($this->sort) {
+            $meta['sort'] = $this->sort;
+        }
+
+        if (! empty($this->filters)) {
+            $meta['filters'] = $this->filters;
+        }
+
+        return $meta;
     }
 }

@@ -17,6 +17,7 @@ import { CustomerContextPanel } from '@/features/tickets/detail/CustomerContextP
 import { TicketHistoryPanel } from '@/features/tickets/detail/TicketHistoryPanel';
 import { TicketTasksPanel } from '@/features/tickets/detail/TicketTasksPanel';
 import { TicketWatchersPanel } from '@/features/tickets/detail/TicketWatchersPanel';
+import { TicketAiPanel } from '@/features/tickets/detail/TicketAiPanel';
 
 export function TicketDetailPage() {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -47,6 +48,7 @@ export function TicketDetailPage() {
 
           <div className="order-1 flex flex-col gap-4 lg:order-2">
             <TicketHeader ticket={ticket} />
+            <TicketAiPanel ticketId={ticket.id} />
             <TicketConversation ticketId={ticket.id} />
             <TicketComposer ticket={ticket} />
             <TicketHistoryPanel ticketId={ticket.id} />

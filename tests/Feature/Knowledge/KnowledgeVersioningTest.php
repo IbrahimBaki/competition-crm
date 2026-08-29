@@ -3,8 +3,8 @@
 namespace Tests\Feature\Knowledge;
 
 use App\Domains\Knowledge\Models\ArticleState;
-use App\Domains\Security\Models\Permission;
 use App\Domains\Security\Models\Role;
+use App\Domains\Security\Models\RolePermission;
 use App\Models\User;
 use Database\Factories\KnowledgeArticleFactory;
 use Tests\TestCase;
@@ -81,17 +81,20 @@ class KnowledgeVersioningTest extends TestCase
             ->postJson("/api/v1/knowledge/articles/{$article->uuid}/versions/{$version->version}/restore");
 
         $article->refresh();
-        $this->assertEquals(ArticleState::Draft->value, $article->state);
+        $this->assertSame(ArticleState::Draft, $article->state);
     }
 
     private function createUserWithPermission(string $permission): User
     {
         $user = User::factory()->create();
-        $role = Role::firstOrCreate(['name' => 'test-role']);
-        Permission::firstOrCreate(
-            ['permission_key' => $permission],
-            ['role_id' => $role->id]
+        $role = Role::firstOrCreate(
+            ['name' => 'test-role'],
+            ['display_name' => ['en' => 'Test role', 'ar' => 'دور اختباري'], 'is_system' => false],
         );
+        RolePermission::firstOrCreate([
+            'role_id' => $role->id,
+            'permission_key' => $permission,
+        ]);
         $user->roles()->attach($role);
 
         return $user;

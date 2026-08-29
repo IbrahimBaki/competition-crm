@@ -12,7 +12,7 @@ class AgentTaskEventResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'type' => $this->type->value,
-            'actor' => fn () => [
+            'actor' => [
                 'uuid' => $this->actor?->uuid,
                 'name' => $this->actor?->name,
             ],

@@ -22,8 +22,9 @@ class CreateArticle
     public function execute(array $data, ?Authenticatable $actor = null): KnowledgeArticle
     {
         return \DB::transaction(function () use ($data, $actor) {
-            if (isset($data['knowledge_category_id'])) {
-                $category = KnowledgeCategory::findOrFail($data['knowledge_category_id']);
+            $category = null;
+            if (! empty($data['knowledge_category_id'])) {
+                $category = KnowledgeCategory::where('uuid', $data['knowledge_category_id'])->firstOrFail();
                 $this->categoryTree->assertCanNest($category->parent);
             }
 
@@ -34,7 +35,7 @@ class CreateArticle
 
             $article = KnowledgeArticle::create([
                 'uuid' => Str::uuid(),
-                'knowledge_category_id' => $data['knowledge_category_id'] ?? null,
+                'knowledge_category_id' => $category?->id,
                 'slug' => $slug,
                 'title' => $data['title'],
                 'body' => $data['body'],
@@ -50,6 +51,8 @@ class CreateArticle
                 $actor,
                 'knowledge.article.created',
                 $article,
+                null,
+                $article->toArray(),
             );
 
             return $article;

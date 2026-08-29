@@ -64,6 +64,6 @@ class CustomerAttachmentController extends Controller
         $attachment->attachable_id = null;
         $attachment->save();
 
-        return ApiResponse::noContent();
+        return ApiResponse::noContent()->toResponse(request());
     }
 }

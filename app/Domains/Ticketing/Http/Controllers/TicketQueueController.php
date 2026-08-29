@@ -9,6 +9,7 @@ use App\Domains\Ticketing\Services\TicketSearch;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
@@ -22,7 +23,10 @@ class TicketQueueController extends Controller
         OrganisationStructureScopeFilter $scopeFilter,
     ): JsonResponse {
         $this->authorize('viewQueue', Ticket::class);
-        $scopeFilter->apply($department);
+
+        if (! $scopeFilter->allows(request()->user(), $department)) {
+            throw new AuthorizationException;
+        }
 
         $spec = (new CollectionQuerySpec)
             ->withSorts(['created_at', 'updated_at', 'priority', 'status', 'reference'])

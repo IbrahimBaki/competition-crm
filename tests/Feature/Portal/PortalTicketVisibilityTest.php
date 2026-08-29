@@ -3,8 +3,10 @@
 namespace Tests\Feature\Portal;
 
 use App\Domains\Customers\Models\Customer;
+use App\Domains\Organisation\Models\Department;
 use App\Domains\Portal\Models\PortalAccount;
 use App\Domains\Ticketing\Models\Ticket;
+use App\Domains\Ticketing\Models\TicketMessage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -59,5 +61,50 @@ class PortalTicketVisibilityTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertCount(3, $response->json('data'));
+    }
+
+    public function test_portal_account_can_create_ticket_and_reply_without_exposing_internal_messages(): void
+    {
+        Department::factory()->create(['is_active' => true]);
+        $customer = Customer::factory()->create();
+        $account = PortalAccount::create([
+            'uuid' => (string) Str::uuid(),
+            'email' => 'portal-workflow@example.com',
+            'password' => bcrypt('password'),
+            'customer_id' => $customer->id,
+            'email_verified_at' => now(),
+        ]);
+        $token = $account->createToken('portal', ['portal'])->plainTextToken;
+
+        $created = $this->withHeader('Authorization', "Bearer $token")
+            ->postJson('/api/v1/portal/tickets', [
+                'subject' => 'Cannot sign in',
+                'message' => 'The reset link does not work.',
+            ]);
+
+        $created->assertCreated()->assertJsonPath('data.subject', 'Cannot sign in');
+        $ticketUuid = $created->json('data.uuid');
+
+        $this->withHeader('Authorization', "Bearer $token")
+            ->postJson("/api/v1/portal/tickets/{$ticketUuid}/messages", [
+                'body' => 'This is still happening.',
+            ])->assertCreated()->assertJsonPath('data.author_type', 'customer');
+
+        $ticket = Ticket::where('uuid', $ticketUuid)->firstOrFail();
+        TicketMessage::create([
+            'ticket_id' => $ticket->id,
+            'direction' => 'outbound',
+            'author_type' => 'agent',
+            'channel' => 'internal',
+            'is_internal' => true,
+            'body' => 'Private staff note',
+        ]);
+
+        $messages = $this->withHeader('Authorization', "Bearer $token")
+            ->getJson("/api/v1/portal/tickets/{$ticketUuid}/messages");
+
+        $messages->assertOk();
+        $this->assertCount(2, $messages->json('data'));
+        $this->assertNotContains('Private staff note', collect($messages->json('data'))->pluck('body')->all());
     }
 }

@@ -1,24 +1,22 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
+import { useEffect, useState } from 'react';
 
 export function AppLayout() {
-  const isRTL = document.documentElement.dir === 'rtl';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  useEffect(() => { document.getElementById('main-content')?.focus(); }, [location.pathname]);
 
   return (
-    <div className="flex h-screen bg-white">
-      {/* Sidebar */}
-      <div className={isRTL ? 'mr-0 ml-auto' : ''}>
-        <Sidebar />
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col">
-        <TopBar />
-
-        {/* Page content */}
-        <main className="flex-1 overflow-auto">
-          <div className="p-6">
+    <div className="app-shell">
+      <a className="skip-link" href="#main-content">Skip to main content</a>
+      <button className={`mobile-scrim ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen(false)} aria-label="Close navigation" />
+      <Sidebar open={menuOpen} onNavigate={() => setMenuOpen(false)} />
+      <div className="app-column">
+        <TopBar onMenu={() => setMenuOpen(true)} />
+        <main id="main-content" className="app-main" tabIndex={-1}>
+          <div className="app-content">
             <Outlet />
           </div>
         </main>

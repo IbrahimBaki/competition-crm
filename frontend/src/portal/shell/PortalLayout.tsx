@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui';
 import { usePortalAuth } from '../auth/PortalAuthProvider';
 
 export function PortalLayout() {
@@ -12,20 +13,18 @@ export function PortalLayout() {
   const isAuthPage = pathname.includes('/login') || pathname.includes('/register') || pathname.includes('/verify') || pathname.includes('/track');
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <a className="skip-link" href="#portal-main">Skip to main content</a>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">{t('portal.title')}</h1>
+          <button className="flex items-center gap-3 text-left" onClick={() => navigate('/portal/help')}><span className="brand-mark" aria-hidden="true">S</span><span className="text-xl font-bold text-gray-900">{t('portal.title')}</span></button>
           {isAuthenticated && !isAuthPage && (
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{user?.email}</span>
-              <button
-                onClick={logout}
-                className="px-3 py-1 text-sm text-blue-600 hover:text-blue-900"
-              >
+              <Button variant="secondary" onClick={() => void logout()}>
                 {t('portal.navigation.sign_out')}
-              </button>
+              </Button>
             </div>
           )}
         </div>
@@ -35,24 +34,19 @@ export function PortalLayout() {
       {isAuthenticated && !isAuthPage && (
         <nav className="bg-gray-50 border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-4 py-3 flex gap-6">
-            <button
-              onClick={() => navigate('/portal/tickets')}
-              className="text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
+            <NavLink to="/portal/tickets" className={({ isActive }) => `text-sm font-semibold ${isActive ? 'text-blue-700' : 'text-slate-600'}`}>
               {t('portal.navigation.my_requests')}
-            </button>
-            <button
-              onClick={() => navigate('/portal/help')}
-              className="text-sm font-medium text-gray-700 hover:text-gray-900"
-            >
+            </NavLink>
+            <NavLink to="/portal/help" className={({ isActive }) => `text-sm font-semibold ${isActive ? 'text-blue-700' : 'text-slate-600'}`}>
               {t('portal.navigation.help')}
-            </button>
+            </NavLink>
+            <NavLink to="/portal/account" className={({ isActive }) => `text-sm font-semibold ${isActive ? 'text-blue-700' : 'text-slate-600'}`}>Account</NavLink>
           </div>
         </nav>
       )}
 
       {/* Content */}
-      <main className="flex-1">
+      <main id="portal-main" className="flex-1" tabIndex={-1}>
         <Outlet />
       </main>
 

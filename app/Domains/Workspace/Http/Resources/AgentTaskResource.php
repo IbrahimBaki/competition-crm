@@ -18,7 +18,7 @@ class AgentTaskResource extends JsonResource
             'completed_at' => $this->completed_at?->toIso8601String(),
             'cancelled_at' => $this->cancelled_at?->toIso8601String(),
             'is_overdue' => $this->computeIsOverdue(),
-            'owner' => fn () => [
+            'owner' => [
                 'uuid' => $this->owner?->uuid,
                 'name' => $this->owner?->name,
             ],

@@ -7,6 +7,10 @@
  */
 
 export type PostChatSessionBody = {
+  department: string;
+  display_name?: string;
   email?: string;
-  name?: string;
+  locale?: string;
+  phone?: string;
+  visitor_token?: string;
 };

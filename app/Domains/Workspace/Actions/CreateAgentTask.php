@@ -20,7 +20,7 @@ readonly class CreateAgentTask
         ?int $ticketId = null,
         ?string $branchId = null,
     ): AgentTask {
-        if (! $owner->is_active) {
+        if (! $owner->isActive()) {
             throw new AgentTaskOwnerUnavailableException;
         }
 

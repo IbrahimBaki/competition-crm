@@ -23,6 +23,11 @@ final class ImportRun extends Model
 
     protected $casts = ['error_report' => 'array'];
 
+    public function getRouteKeyName(): string
+    {
+        return 'uuid';
+    }
+
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_user_id');

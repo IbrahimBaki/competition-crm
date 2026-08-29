@@ -6,6 +6,8 @@ import { PERMISSIONS } from '@/auth/permissions';
 import { useCustomerListQuery } from '@/features/customers/list/useCustomerListQuery';
 import { CustomerSearchBar } from '@/features/customers/list/CustomerSearchBar';
 import { CustomerListTable } from '@/features/customers/list/CustomerListTable';
+import { Link } from 'react-router-dom';
+import { PageHeader } from '@/components/ui';
 
 export function CustomersPage() {
   const { t } = useTranslation();
@@ -16,9 +18,7 @@ export function CustomersPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">{t('pages.customers.title')}</h1>
-      </div>
+      <PageHeader title={t('pages.customers.title')} actions={<RequirePermission permission={PERMISSIONS.CUSTOMERS_CREATE}><Link className="ui-button ui-button--primary" to="/customers/new">{t('pages.customers.create_customer')}</Link></RequirePermission>} />
 
       <RequirePermission permission={PERMISSIONS.CUSTOMERS_VIEW}>
         <div className="mb-4">

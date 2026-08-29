@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useGetDepartments } from '@/api/generated/organization/organization';
+import { pickBilingual, type BilingualValue } from '../utils/bilingual';
 import type { ApiPage } from '@/api/http/envelope';
 import { ActionGuard } from '@/shell/ActionGuard';
 import { PERMISSIONS } from '@/auth/permissions';
@@ -17,7 +18,7 @@ import type { TicketDetail } from '../types';
 
 interface DepartmentOption {
   id: string;
-  name: string;
+  name: BilingualValue;
 }
 
 interface TicketAssignmentControlProps {
@@ -25,7 +26,7 @@ interface TicketAssignmentControlProps {
 }
 
 export function TicketAssignmentControl({ ticket }: TicketAssignmentControlProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [assigneeUuid, setAssigneeUuid] = useState('');
   const [transferUuid, setTransferUuid] = useState('');
   const [departmentId, setDepartmentId] = useState('');
@@ -134,7 +135,7 @@ export function TicketAssignmentControl({ ticket }: TicketAssignmentControlProps
               <option value="">{t('tickets.assignment.choose_department')}</option>
               {(departmentsQuery.data?.items ?? []).map((department) => (
                 <option key={department.id} value={department.id}>
-                  {department.name}
+                  {pickBilingual(department.name, i18n.language)}
                 </option>
               ))}
             </select>

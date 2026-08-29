@@ -5,6 +5,7 @@ namespace App\Domains\Ticketing\Http\Controllers;
 use App\Domains\Ticketing\Actions\CreateTicketCategory;
 use App\Domains\Ticketing\Actions\UpdateTicketCategory;
 use App\Domains\Ticketing\Http\Resources\TicketCategoryResource;
+use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketCategory;
 use App\Support\Http\ApiResponse;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -16,11 +17,11 @@ class TicketCategoryController extends Controller
 
     public function index(): JsonResponse
     {
-        $categories = TicketCategory::with('children', 'fields')->whereNull('parent_id')->get();
+        $categories = TicketCategory::with('children', 'fields')->whereNull('parent_id')->paginate(100);
 
-        return ApiResponse::collection(
+        return ApiResponse::paginated(
             TicketCategoryResource::collection($categories),
-            paginate: false
+            $categories,
         )->toResponse(request());
     }
 

@@ -8,6 +8,7 @@ use App\Domains\Notifications\Models\Notification;
 use App\Domains\Notifications\Models\NotificationDeliveryAttempt;
 use App\Support\Http\ApiResponse;
 use App\Support\Http\CollectionQuery;
+use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class NotificationDeliveryController
 {
     use AuthorizesRequests;
 
-    public function index(Request $request, CollectionQuery $collectionQuery): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $this->authorize('viewDeliveryLog', Notification::class);
 
@@ -24,12 +25,14 @@ class NotificationDeliveryController
             ->whereHas('notification', fn ($q) => $q->where('state', NotificationState::Failed->value))
             ->orderBy('attempted_at', 'desc');
 
-        $spec = $collectionQuery->parseSpec($request->query());
-        $paginated = $collectionQuery->apply($query, $spec);
+        $spec = (new CollectionQuerySpec)->withSorts(['attempted_at']);
+        $collectionQuery = new CollectionQuery($request, $spec);
+        $query = $collectionQuery->applyTo($query);
+        $paginated = $collectionQuery->paginate($query);
 
         return ApiResponse::paginated(
             NotificationDeliveryAttemptResource::collection($paginated),
             $paginated,
-        );
+        )->toResponse($request);
     }
 }

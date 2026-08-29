@@ -32,7 +32,7 @@ class CompleteTwoFactorChallenge
 
         if (in_array($code, $codes, true)) {
             $codes = array_values(array_diff($codes, [$code]));
-            $user->update(['two_factor_recovery_codes' => $codes]);
+            $user->forceFill(['two_factor_recovery_codes' => $codes])->save();
 
             $this->auditLogger->record($user, 'two_factor.verified', $user, null, [
                 'method' => 'recovery_code',

@@ -6,7 +6,7 @@ import { ForbiddenState } from '@/shell/states/ForbiddenState';
 import { NotFoundState } from '@/shell/states/NotFoundState';
 import { ActionGuard } from '@/shell/ActionGuard';
 import { RequirePermission } from '@/auth/RequirePermission';
-import { PERMISSIONS } from '@/auth/permissions';
+import { PERMISSIONS, TICKETS_VIEW_SCOPES } from '@/auth/permissions';
 import { useGetDepartments } from '@/api/generated/organization/organization';
 import type { ApiPage } from '@/api/http/envelope';
 import { useTicketListQuery, type TicketQueueMode } from '@/features/tickets/list/useTicketListQuery';
@@ -15,14 +15,17 @@ import { TicketListTable } from '@/features/tickets/list/TicketListTable';
 import { TicketFilterBar } from '@/features/tickets/list/TicketFilterBar';
 import { SavedViewsBar } from '@/features/tickets/list/SavedViewsBar';
 import { TicketBulkActions } from '@/features/tickets/list/TicketBulkActions';
+import { Link } from 'react-router-dom';
+import { PageHeader } from '@/components/ui';
+import { pickBilingual, type BilingualValue } from '@/features/tickets/utils/bilingual';
 
 interface DepartmentOption {
   id: string;
-  name: string;
+  name: BilingualValue;
 }
 
 export function TicketsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [mode, setMode] = useState<TicketQueueMode>('all');
   const [departmentId, setDepartmentId] = useState<string | undefined>(undefined);
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -63,10 +66,8 @@ export function TicketsPage() {
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">{t('pages.tickets.title')}</h1>
-
-        <div className="flex gap-2">
+      <PageHeader title={t('pages.tickets.title')} actions={<RequirePermission permission={PERMISSIONS.TICKETS_CREATE}><Link className="ui-button ui-button--primary" to="/tickets/new">{t('pages.tickets.create_ticket')}</Link></RequirePermission>} />
+        <div className="mb-5 flex flex-wrap gap-2" role="tablist" aria-label="Ticket queues">
           <button
             type="button"
             onClick={() => handleModeChange('all')}
@@ -91,7 +92,6 @@ export function TicketsPage() {
             </button>
           </ActionGuard>
         </div>
-      </div>
 
       {mode === 'department' && (
         <div className="mb-4">
@@ -107,14 +107,14 @@ export function TicketsPage() {
             <option value="">{t('tickets.mode.department_select_placeholder')}</option>
             {(departmentsQuery.data?.items ?? []).map((department) => (
               <option key={department.id} value={department.id}>
-                {department.name}
+                {pickBilingual(department.name, i18n.language)}
               </option>
             ))}
           </select>
         </div>
       )}
 
-      <RequirePermission permission={PERMISSIONS.TICKETS_VIEW_ANY} fallback={<ForbiddenState />}>
+      <RequirePermission anyPermission={TICKETS_VIEW_SCOPES} fallback={<ForbiddenState />}>
         <div className="mb-4 flex flex-col gap-3">
           <SavedViewsBar
             currentSort={state.sort}

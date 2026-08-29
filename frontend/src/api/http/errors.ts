@@ -1,4 +1,5 @@
-import { AxiosError } from 'axios';
+import axios, { AxiosError } from 'axios';
+import { MalformedEnvelopeError } from './envelope';
 
 export type NormalisedApiError = {
   status: number;
@@ -18,7 +19,9 @@ export type NormalisedApiError = {
     | 'network'
     | 'unknown'
     | 'two_factor_required'
-    | 'account_deactivated';
+    | 'account_deactivated'
+    | 'cancelled'
+    | 'client_error';
 };
 
 export function isApiError(value: unknown): value is NormalisedApiError {
@@ -156,6 +159,35 @@ function determineErrorKind(status: number, code: string | null): NormalisedApiE
 }
 
 export function normaliseApiError(error: unknown): NormalisedApiError {
+  // A request aborted by the caller (e.g. TanStack Query cancelling a
+  // superseded fetch, or React StrictMode's dev-only double-mount) is not a
+  // failure — a fresh request is already in flight. Never surface this as
+  // "Network error".
+  if (axios.isCancel(error) || (error instanceof AxiosError && error.code === 'ERR_CANCELED')) {
+    return {
+      status: 0,
+      code: null,
+      message: 'Request cancelled',
+      fieldErrors: {},
+      requestId: null,
+      kind: 'cancelled',
+    };
+  }
+
+  // The HTTP round-trip succeeded but the response body didn't match the
+  // expected envelope shape — a client-side parsing problem, not a network
+  // failure.
+  if (error instanceof MalformedEnvelopeError) {
+    return {
+      status: 0,
+      code: null,
+      message: 'Received an unexpected response shape from the server.',
+      fieldErrors: {},
+      requestId: null,
+      kind: 'client_error',
+    };
+  }
+
   // Handle network errors
   if (!(error instanceof AxiosError)) {
     return {

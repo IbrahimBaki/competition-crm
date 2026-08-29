@@ -246,7 +246,6 @@ enum ErrorCode: string
 
             self::PortalGuestGrantExpired => 410,
 
-            self::AccountLocked,
             self::CannotDeactivateSelf,
             self::CannotDeactivateLastAdmin,
             self::CannotAnonymiseLastAdmin,
@@ -286,6 +285,8 @@ enum ErrorCode: string
             self::ChatSessionAlreadyEnded,
             self::ChatSessionNotReconnectable,
             self::ChatAgentAtCapacity => 409,
+
+            self::AccountLocked => 423,
 
             self::IdempotencyKeyConflict => 409,
             self::InternalError => 500,

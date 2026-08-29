@@ -61,6 +61,6 @@ class CustomerNoteController extends Controller
 
         $note->delete();
 
-        return ApiResponse::noContent();
+        return ApiResponse::noContent()->toResponse(request());
     }
 }

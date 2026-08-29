@@ -4,8 +4,8 @@ A Laravel-based customer support management system with a React SPA frontend, su
 
 ## Architecture
 
-- **Backend**: Laravel 11 API (`/api/v1/...`) served at `support-crm.localhost`
-- **Frontend**: React 18 SPA served at `app.support-crm.localhost`
+- **Backend**: Laravel 12 API (`/api/v1/...`) served at `competition-crm.azmsquad.localhost`
+- **Frontend**: React 18 SPA served at `app.competition-crm.azmsquad.localhost`
 - **Authentication**: Sanctum cookie-based (stateful)
 - **Database**: MySQL in Docker
 - **API Client**: Generated from OpenAPI spec with orval
@@ -59,12 +59,13 @@ npm run test && npm run typecheck && npm run lint
 
 Add to `/etc/hosts`:
 ```
-127.0.0.1  support-crm.localhost api.support-crm.localhost app.support-crm.localhost
+127.0.0.1  competition-crm.azmsquad.localhost app.competition-crm.azmsquad.localhost
 ```
 
 Then open:
-- **Frontend (SPA)**: http://app.support-crm.localhost
-- **API**: http://api.support-crm.localhost/api/v1/
+- **Frontend (SPA)**: http://app.competition-crm.azmsquad.localhost
+- **Vite development**: http://app.competition-crm.azmsquad.localhost:5174
+- **API**: http://competition-crm.azmsquad.localhost/api/v1/
 - **Mailpit (email preview)**: http://localhost:8025
 
 ## API Contract
@@ -115,9 +116,9 @@ Then open:
 
 For cookie-based authentication across the domain split:
 
-- `SESSION_DOMAIN`: `.support-crm.localhost` (shared parent domain with leading dot)
-- `SANCTUM_STATEFUL_DOMAINS`: `app.support-crm.localhost` (SPA origin)
-- `CORS_ALLOWED_ORIGINS`: `http://app.support-crm.localhost` (SPA can call API)
+- `SESSION_DOMAIN`: `.competition-crm.azmsquad.localhost` (shared parent domain with leading dot)
+- `SANCTUM_STATEFUL_DOMAINS`: `app.competition-crm.azmsquad.localhost,app.competition-crm.azmsquad.localhost:5174`
+- `CORS_ALLOWED_ORIGINS`: `http://app.competition-crm.azmsquad.localhost,http://app.competition-crm.azmsquad.localhost:5174`
 
 **Important**: Deploy backend config **before** publishing SPA vhost, or users will see login loop.
 
@@ -166,8 +167,8 @@ make fe-dev          # cd frontend && npm run dev
 ## Troubleshooting
 
 ### Login immediately bounces to login page
-- Check `SESSION_DOMAIN` matches `.support-crm.localhost`
-- Check `SANCTUM_STATEFUL_DOMAINS` includes `app.support-crm.localhost`
+- Check `SESSION_DOMAIN` matches `.competition-crm.azmsquad.localhost`
+- Check `SANCTUM_STATEFUL_DOMAINS` includes the active SPA origin
 - Check CORS `exposed_headers` includes `X-Request-Id`
 - Check vhost serves from `frontend/dist` for SPA (not `public/`)
 

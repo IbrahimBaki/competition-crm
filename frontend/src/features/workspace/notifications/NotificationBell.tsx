@@ -14,9 +14,9 @@ export function NotificationBell() {
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-label={t('workspace.notifications.bell_label')}
-        className="relative rounded p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+        className="relative ui-button ui-button--ghost"
       >
-        <span aria-hidden="true">🔔</span>
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg>
         {unreadCount > 0 && (
           <span className="absolute -end-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-semibold text-white">
             {unreadCount > 99 ? '99+' : unreadCount}

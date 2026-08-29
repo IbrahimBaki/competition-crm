@@ -21,6 +21,11 @@ import { PortalTicketDetailPage } from './pages/portal/PortalTicketDetailPage';
 import { PortalHelpPage } from './pages/portal/PortalHelpPage';
 import { PortalHelpArticlePage } from './pages/portal/PortalHelpArticlePage';
 import { GuestTicketTrackingPage } from './pages/portal/GuestTicketTrackingPage';
+import { PortalAccountPage } from './pages/portal/PortalAccountPage';
+import { ForgotPasswordPage, ResetPasswordPage, InvitationAcceptancePage } from './pages/auth/RecoveryPages';
+import { KnowledgePage, AuditLogPage, ReportSchedulesPage, IntegrationsPage, AiOperationsPage, DataProtectionPage, StaffAccountPage } from './pages/operations/OperationsPages';
+import { NewTicketPage, NewCustomerPage, NewKnowledgeArticlePage, KnowledgeArticlePage, EditKnowledgeArticlePage } from './pages/operations/CreationPages';
+import { PublicWebFormPage, PublicSubmissionStatusPage, PublicChatPage } from './pages/public/PublicChannelPages';
 import { AdminIndexPage } from './pages/admin/AdminIndexPage';
 import { BranchesPage } from './pages/admin/BranchesPage';
 import { BranchDetailPage } from './pages/admin/BranchDetailPage';
@@ -51,6 +56,9 @@ export const router = createBrowserRouter([
     path: '/login/two-factor',
     element: <TwoFactorPage />,
   },
+  { path: '/forgot-password', element: <ForgotPasswordPage /> },
+  { path: '/reset-password', element: <ResetPasswordPage /> },
+  { path: '/invitations/:token', element: <InvitationAcceptancePage /> },
   {
     path: '/',
     element: (
@@ -76,6 +84,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: 'tickets/new', element: <ProtectedRoute permission={PERMISSIONS.TICKETS_CREATE}><NewTicketPage /></ProtectedRoute> },
       {
         path: 'tickets/:ticketId',
         element: (
@@ -92,6 +101,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      { path: 'customers/new', element: <ProtectedRoute permission={PERMISSIONS.CUSTOMERS_CREATE}><NewCustomerPage /></ProtectedRoute> },
       {
         path: 'customers/:customerId',
         element: (
@@ -100,6 +110,14 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: 'knowledge',
+        element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_VIEW}><KnowledgePage /></ProtectedRoute>,
+      },
+      { path: 'knowledge/new', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_CREATE}><NewKnowledgeArticlePage /></ProtectedRoute> },
+      { path: 'knowledge/:articleId', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_VIEW}><KnowledgeArticlePage /></ProtectedRoute> },
+      { path: 'knowledge/:articleId/edit', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_UPDATE}><EditKnowledgeArticlePage /></ProtectedRoute> },
+      { path: 'account', element: <StaffAccountPage /> },
       {
         path: 'reports',
         element: (
@@ -123,6 +141,10 @@ export const router = createBrowserRouter([
             <ManagementDashboardPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'report-schedules',
+        element: <ProtectedRoute permission={PERMISSIONS.REPORTS_SCHEDULE_MANAGE}><ReportSchedulesPage /></ProtectedRoute>,
       },
       {
         path: 'admin',
@@ -203,7 +225,7 @@ export const router = createBrowserRouter([
       {
         path: 'admin/ticket-catalogue',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.TICKETS_STATUSES_MANAGE}>
+          <ProtectedRoute anyPermission={[PERMISSIONS.TICKETS_STATUSES_MANAGE, PERMISSIONS.TICKETS_CATEGORIES_MANAGE]}>
             <TicketCataloguePage />
           </ProtectedRoute>
         ),
@@ -227,7 +249,7 @@ export const router = createBrowserRouter([
       {
         path: 'admin/channels',
         element: (
-          <ProtectedRoute permission={PERMISSIONS.CHANNELS_EMAIL_REPLAY_LIST}>
+          <ProtectedRoute anyPermission={[PERMISSIONS.CHANNELS_EMAIL_REPLAY_LIST, PERMISSIONS.CHANNELS_WEB_FORM_VIEW, PERMISSIONS.CHANNELS_MESSAGING_TEMPLATES_VIEW, PERMISSIONS.CHANNELS_CHAT_VIEW]}>
             <ChannelsPage />
           </ProtectedRoute>
         ),
@@ -239,6 +261,22 @@ export const router = createBrowserRouter([
             <AdminSettingsPage />
           </ProtectedRoute>
         ),
+      },
+      {
+        path: 'admin/audit',
+        element: <ProtectedRoute permission={PERMISSIONS.ADMIN_AUDIT_VIEW}><AuditLogPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/data-protection',
+        element: <ProtectedRoute permission={PERMISSIONS.DATAPROTECTION_RETENTION_VIEW}><DataProtectionPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/integrations',
+        element: <ProtectedRoute anyPermission={[PERMISSIONS.INTEGRATIONS_API_TOKENS_MANAGE, PERMISSIONS.INTEGRATIONS_WEBHOOKS_MANAGE, PERMISSIONS.INTEGRATIONS_IMPORT_MANAGE]}><IntegrationsPage /></ProtectedRoute>,
+      },
+      {
+        path: 'admin/ai',
+        element: <ProtectedRoute anyPermission={[PERMISSIONS.AI_USAGE_VIEW, PERMISSIONS.AI_SETTINGS_MANAGE]}><AiOperationsPage /></ProtectedRoute>,
       },
     ],
   },
@@ -259,8 +297,12 @@ export const router = createBrowserRouter([
       { path: 'tickets', element: <PortalProtectedRoute><PortalTicketsPage /></PortalProtectedRoute> },
       { path: 'tickets/new', element: <PortalProtectedRoute><PortalTicketNewPage /></PortalProtectedRoute> },
       { path: 'tickets/:id', element: <PortalProtectedRoute><PortalTicketDetailPage /></PortalProtectedRoute> },
+      { path: 'account', element: <PortalProtectedRoute><PortalAccountPage /></PortalProtectedRoute> },
     ],
   },
+  { path: '/forms/:formKey', element: <PublicWebFormPage /> },
+  { path: '/forms/submissions/:trackingToken', element: <PublicSubmissionStatusPage /> },
+  { path: '/chat', element: <PublicChatPage /> },
   {
     path: '*',
     element: <NotFoundState />,

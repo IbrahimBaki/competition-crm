@@ -9,12 +9,16 @@ import { UserListTable } from '@/features/admin/security/UserListTable';
 import { InviteUserDialog } from '@/features/admin/security/InviteUserDialog';
 import { UserPlacementPanel } from '@/features/admin/security/UserPlacementPanel';
 import type { AdminUser } from '@/features/admin/types';
+import { Button, Dialog, useToast } from '@/components/ui';
+import { apiRequest } from '@/api/http/mutator';
 
 export function UsersPage() {
   const { t } = useTranslation();
   const { setState, query } = useUserListQuery();
   const [inviteOpen, setInviteOpen] = useState(false);
   const [placementUser, setPlacementUser] = useState<AdminUser | null>(null);
+  const [eraseUser,setEraseUser]=useState<AdminUser|null>(null); const [erasing,setErasing]=useState(false); const { notify }=useToast();
+  const erase=async()=>{if(!eraseUser)return;setErasing(true);try{await apiRequest({url:`/users/${eraseUser.id}/erase-personal-data`,method:'POST',headers:{'Idempotency-Key':crypto.randomUUID()}});await query.refetch();notify('Personal data erased.');setEraseUser(null);}catch{notify('Personal data could not be erased.','danger');}finally{setErasing(false);}};
 
   return (
     <div>
@@ -39,7 +43,7 @@ export function UsersPage() {
         >
           {(page) => (
             <>
-              <UserListTable rows={page.items} onManagePlacement={setPlacementUser} />
+              <UserListTable rows={page.items} onManagePlacement={setPlacementUser} onErase={setEraseUser} />
               <div className="flex items-center justify-between border-t border-gray-100 px-3 py-2 text-sm text-gray-600">
                 <span>
                   {t('admin.organisation.pagination_summary', {
@@ -95,6 +99,7 @@ export function UsersPage() {
           </div>
         </div>
       )}
+      <Dialog open={Boolean(eraseUser)} title="Erase personal data?" description="This irreversible action anonymises the selected staff identity and removes security credentials." onClose={()=>setEraseUser(null)} footer={<><Button variant="secondary" onClick={()=>setEraseUser(null)}>Cancel</Button><Button variant="danger" busy={erasing} onClick={()=>void erase()}>Erase personal data</Button></>}><p className="text-sm">Selected account: <strong>{eraseUser?.email}</strong></p></Dialog>
     </div>
   );
 }

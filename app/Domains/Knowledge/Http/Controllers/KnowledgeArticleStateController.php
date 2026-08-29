@@ -14,7 +14,7 @@ use Illuminate\Http\JsonResponse;
 
 class KnowledgeArticleStateController
 {
-    use AuthorizesRequests;
+    use AuthorizesRequests { authorize as authorizeAbility; }
 
     public function __construct(
         private SubmitArticleForReview $submitForReview,
@@ -28,8 +28,8 @@ class KnowledgeArticleStateController
 
         $updated = match ($state) {
             ArticleState::InReview => $this->submitForReview->execute($article, $request->user()),
-            ArticleState::Published => $this->authorize('publish', $article, fn () => $this->publishArticle->execute($article, $request->user())),
-            ArticleState::Archived => $this->authorize('archive', $article, fn () => $this->archiveArticle->execute($article, $request->user())),
+            ArticleState::Published => $this->performAuthorized('publish', $article, fn () => $this->publishArticle->execute($article, $request->user())),
+            ArticleState::Archived => $this->performAuthorized('archive', $article, fn () => $this->archiveArticle->execute($article, $request->user())),
             default => $article,
         };
 
@@ -38,9 +38,9 @@ class KnowledgeArticleStateController
         ]);
     }
 
-    private function authorize(string $ability, KnowledgeArticle $article, callable $callback)
+    private function performAuthorized(string $ability, KnowledgeArticle $article, callable $callback)
     {
-        $this->authorize($ability, $article);
+        $this->authorizeAbility($ability, $article);
 
         return $callback();
     }

@@ -114,6 +114,7 @@ Route::prefix('v1')->middleware(['throttle:public', 'bot.protect'])->group(funct
         ->middleware(['public.protect', 'throttle:web-form']);
     Route::get('channels/public/web-forms/submissions/{trackingToken}', [PublicWebFormController::class, 'status']);
 
+    Route::get('channels/public/chat/departments', [PublicChatSessionController::class, 'departments']);
     Route::post('channels/chat/sessions', [PublicChatSessionController::class, 'store'])
         ->middleware(['public.protect', 'throttle:chat']);
 
@@ -245,6 +246,7 @@ Route::middleware(['auth:sanctum', 'portal.deny'])->prefix('v1')->group(function
     Route::get('ticket-statuses', [TicketStatusController::class, 'index']);
     Route::post('ticket-statuses', [TicketStatusController::class, 'store']);
     Route::patch('ticket-statuses/{status}', [TicketStatusController::class, 'update']);
+    Route::delete('ticket-statuses/{status}', [TicketStatusController::class, 'destroy']);
 
     Route::get('tickets', [TicketController::class, 'index']);
     Route::post('tickets', [TicketController::class, 'store']);

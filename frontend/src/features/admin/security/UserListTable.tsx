@@ -1,10 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import type { AdminUser } from '../types';
 import { UserLifecycleActions } from './UserLifecycleActions';
+import { ActionGuard } from '@/shell/ActionGuard';
+import { PERMISSIONS } from '@/auth/permissions';
 
 interface UserListTableProps {
   rows: AdminUser[];
   onManagePlacement: (user: AdminUser) => void;
+  onErase: (user: AdminUser) => void;
 }
 
 // Columns are deliberately limited to identity + status: UserResource
@@ -12,7 +15,7 @@ interface UserListTableProps {
 // endpoint (see .squad/gaps/36-483.md #5), so there is no detail route to
 // link to either — lifecycle and placement actions are driven from this row
 // directly, using only the fields the list response already returned.
-export function UserListTable({ rows, onManagePlacement }: UserListTableProps) {
+export function UserListTable({ rows, onManagePlacement, onErase }: UserListTableProps) {
   const { t } = useTranslation();
 
   return (
@@ -60,6 +63,7 @@ export function UserListTable({ rows, onManagePlacement }: UserListTableProps) {
                     {t('admin.security.user.manage_placement')}
                   </button>
                   <UserLifecycleActions user={user} />
+                  <ActionGuard permission={PERMISSIONS.DATAPROTECTION_ERASURE_EXECUTE}><button type="button" onClick={()=>onErase(user)} className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50">Erase personal data</button></ActionGuard>
                 </div>
               </td>
             </tr>

@@ -10,6 +10,7 @@ use App\Domains\Ticketing\Http\Requests\StoreTicketRequest;
 use App\Domains\Ticketing\Http\Requests\UpdateTicketRequest;
 use App\Domains\Ticketing\Http\Resources\TicketResource;
 use App\Domains\Ticketing\Models\Ticket;
+use App\Domains\Ticketing\Models\TicketCategory;
 use App\Domains\Ticketing\Models\TicketPriority;
 use App\Domains\Ticketing\Services\TicketSearch;
 use App\Support\Http\ApiResponse;
@@ -17,6 +18,7 @@ use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 class TicketController extends Controller
 {
@@ -75,8 +77,8 @@ class TicketController extends Controller
         StoreTicketRequest $request,
         CreateTicket $action,
     ): JsonResponse {
-        $customer = Customer::findByUuidOrFail($request->input('customer_uuid'));
-        $department = Department::find($request->input('department_uuid'));
+        $customer = Customer::where('uuid', $request->input('customer_uuid'))->firstOrFail();
+        $department = Department::findOrFail($request->input('department_uuid'));
 
         $ticket = $action->handle(
             customer: $customer,

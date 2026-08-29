@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 // Priorities are a fixed system enum, not a CRUD resource.
 // They are defined in app/Domains/Ticketing/Models/TicketPriority.php
 // and cannot be modified via the API.
-const PRIORITY_ENUM = ['critical', 'high', 'medium', 'low'] as const;
+const PRIORITY_ENUM = ['urgent', 'high', 'normal', 'low'] as const;
 
 export function TicketPrioritiesPanel() {
   const { t } = useTranslation();
@@ -30,7 +30,7 @@ export function TicketPrioritiesPanel() {
             {PRIORITY_ENUM.map((priority) => (
               <tr key={priority} className="hover:bg-gray-50">
                 <td className="px-3 py-2 font-medium text-gray-900">
-                  {t(`admin.catalogue.priorities.${priority}`)}
+                  {priority.charAt(0).toUpperCase() + priority.slice(1)}
                 </td>
                 <td className="px-3 py-2 text-gray-600">{priority}</td>
               </tr>

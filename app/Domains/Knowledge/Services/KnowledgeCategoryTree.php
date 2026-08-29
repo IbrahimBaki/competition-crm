@@ -54,6 +54,9 @@ class KnowledgeCategoryTree
             'code' => $category->code,
             'name' => $category->name,
             'depth' => $category->depth,
+            'position' => $category->position,
+            'is_active' => $category->is_active,
+            'parent_id' => $category->parent?->uuid,
             'article_count' => $articleCount,
             'children' => $children,
         ];

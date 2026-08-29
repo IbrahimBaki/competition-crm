@@ -16,7 +16,7 @@ class UpdateKnowledgeArticleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'knowledge_category_id' => ['nullable', 'exists:knowledge_categories,id'],
+            'knowledge_category_id' => ['nullable', 'uuid', 'exists:knowledge_categories,uuid'],
             'title' => ['sometimes', 'array', 'size:2'],
             'title.ar' => ['required_with:title', 'string', 'max:255'],
             'title.en' => ['required_with:title', 'string', 'max:255'],
