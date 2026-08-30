@@ -18,7 +18,7 @@ class TicketStatusDefinition extends Model
 
     protected $guarded = ['*'];
 
-    protected $fillable = ['name', 'lifecycle_type', 'is_default', 'position', 'is_active'];
+    protected $fillable = ['key', 'name', 'lifecycle_type', 'is_default', 'position', 'is_active'];
 
     protected $casts = [
         'name' => BilingualStringCast::class,

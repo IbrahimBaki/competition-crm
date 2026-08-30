@@ -13,7 +13,7 @@ class CustomerEvent extends Model
 
     protected $guarded = ['*'];
 
-    protected $fillable = ['type', 'payload', 'occurred_at'];
+    protected $fillable = ['type', 'actor_user_id', 'payload', 'occurred_at'];
 
     protected $casts = [
         'type' => CustomerEventType::class,

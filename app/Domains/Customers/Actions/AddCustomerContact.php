@@ -43,7 +43,6 @@ class AddCustomerContact
         ) {
             try {
                 $contact = CustomerContact::create([
-                    'id' => Str::uuid(),
                     'customer_id' => $customer->id,
                     'type' => $contactType->value,
                     'value' => $value,

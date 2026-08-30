@@ -1,0 +1,35 @@
+{
+  "cookies": [
+    {
+      "name": "XSRF-TOKEN",
+      "value": "eyJpdiI6InBidXc3OFE5bUxGU3Q4TlpFVW92cXc9PSIsInZhbHVlIjoibzQ4MGVTeTR5MGliRWsyV1I4aVZuN3JwbmtRQWo5dzM3S2RGL2k5clVtR3k0VktLZ2xnWU1PeTZ1SFpLaTZkNllHejUyVjNGQXl1djBmazg0WDI5YW5qNTVZcHdZVUFNWHhQaHRDR2VSbGl2T09oUDdNVE51c1lpcmFKendab2kiLCJtYWMiOiJkZGY0MTNjNWJjYTUyNWIyMTdjMTAyMjk5OGE0ZmQ0YTIzMmJmMWEwZWJmODZkNDlhMzJlM2MxMWFlNTBmYmIwIiwidGFnIjoiIn0%3D",
+      "domain": ".competition-crm.azmsquad.localhost",
+      "path": "/",
+      "expires": 1788054844.430768,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "support-crm-session",
+      "value": "eyJpdiI6Im1GNmg5NFJqMGNFanlaaTlLM3Ura0E9PSIsInZhbHVlIjoiMjJDMjVxK2pST3RJaG9XZ3NwTUFNNmRVUDBCVE45VHVNU1ZtZDNXbkh6clJCSktDZGVYSDdsc2VZS2ZENVhiUW11dlNPcktMR0RSemV6RkxkbTczeFkzZ0ZqUTRaVGp1bGorc0x3L1N1UVZydjVidnU4Y3J2N3Z2MzFUUGxpYTQiLCJtYWMiOiJkZDMyMTY4NzcwOGFkZGNlOThhYmVmZDBhMjI4NGRkZTE0N2ExY2Q2NjA4NTcxMDllZjFlODU4ODg0MGMwODRkIiwidGFnIjoiIn0%3D",
+      "domain": ".competition-crm.azmsquad.localhost",
+      "path": "/",
+      "expires": 1788054844.430895,
+      "httpOnly": true,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://app.competition-crm.azmsquad.localhost:5174",
+      "localStorage": [
+        {
+          "name": "locale",
+          "value": "en"
+        }
+      ]
+    }
+  ]
+}

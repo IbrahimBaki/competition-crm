@@ -18,19 +18,20 @@ class AuthenticatePortalAccount
             throw new PortalSessionInvalidException;
         }
 
-        RateLimiter::hit($key, 15 * 60);
-
         $account = PortalAccount::where('email', $email)->first();
 
         if (! $account || $account->email_verified_at === null || $account->deactivated_at !== null) {
+            RateLimiter::hit($key, 15 * 60);
             throw new PortalAccountNotVerifiedException;
         }
 
         if ($account->locked_until && now()->isBefore($account->locked_until)) {
+            RateLimiter::hit($key, 15 * 60);
             throw new PortalSessionInvalidException;
         }
 
         if (! Hash::check($password, $account->password)) {
+            RateLimiter::hit($key, 15 * 60);
             $account->increment('failed_login_attempts');
 
             if ($account->failed_login_attempts >= 10) {
@@ -45,6 +46,7 @@ class AuthenticatePortalAccount
             'locked_until' => null,
             'last_login_at' => now(),
         ]);
+        RateLimiter::clear($key);
 
         return $account->createToken('portal', ['portal'])->plainTextToken;
     }

@@ -15,8 +15,10 @@ class CustomerContact extends Model
     protected $guarded = ['*'];
 
     protected $fillable = [
+        'customer_id',
         'type',
         'value',
+        'value_normalised',
         'label',
         'is_primary',
         'whatsapp_opted_in_at',

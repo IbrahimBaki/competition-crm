@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { toBranch, toDepartment, toTeam, toBranchWorkingHour, toBranchHoliday } from '../wire';
+import { toAdminUser, toBranch, toDepartment, toTeam, toBranchWorkingHour, toBranchHoliday } from '../wire';
 
 describe('admin organisation wire mappers', () => {
   it('toBranch maps BranchResource payload (single-locale name, not bilingual)', () => {
@@ -87,5 +87,10 @@ describe('admin organisation wire mappers', () => {
     });
     expect(holiday.date).toBeNull();
     expect(holiday.recurringMonthDay).toBe('01-01');
+  });
+
+  it('toAdminUser uses the public UUID when raw Eloquent also exposes a numeric id', () => {
+    const user = toAdminUser({ id: 42, uuid: 'user-uuid', name: 'Agent', email: 'agent@example.test' });
+    expect(user.id).toBe('user-uuid');
   });
 });

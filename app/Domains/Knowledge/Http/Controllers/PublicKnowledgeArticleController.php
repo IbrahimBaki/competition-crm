@@ -9,6 +9,7 @@ use App\Domains\Knowledge\Services\Visibility\ArticleAudienceResolver;
 use App\Domains\Knowledge\Services\Visibility\ArticleQueryScope;
 use App\Support\Http\CollectionQuery;
 use App\Support\Http\CollectionQuerySpec;
+use App\Support\Http\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -37,33 +38,25 @@ class PublicKnowledgeArticleController
         $articles = $this->queryScope->forAudience($audience);
         $paginated = $collectionQuery->paginate($articles, $spec);
 
-        return response()->json([
-            'data' => PublicKnowledgeArticleResource::collection($paginated->items()),
-            'meta' => [
-                'total' => $paginated->total(),
-                'per_page' => $paginated->perPage(),
-                'current_page' => $paginated->currentPage(),
-            ],
-        ]);
+        return ApiResponse::paginated(
+            PublicKnowledgeArticleResource::collection($paginated->items()),
+            $paginated,
+        )->toResponse(request());
     }
 
     public function search(Request $request, CollectionQuery $collectionQuery): JsonResponse
     {
         $audience = $this->audienceResolver->resolve(auth()->user(), false);
-        $query = $request->input('filter.q', '');
+        $query = $request->string('q', $request->input('filter.q', ''))->toString();
         $spec = new CollectionQuerySpec(['id', 'title', 'created_at']);
 
         $results = $this->searchArticles->search($query, $audience);
         $paginated = $collectionQuery->paginate($results, $spec);
 
-        return response()->json([
-            'data' => PublicKnowledgeArticleResource::collection($paginated->items()),
-            'meta' => [
-                'total' => $paginated->total(),
-                'per_page' => $paginated->perPage(),
-                'current_page' => $paginated->currentPage(),
-            ],
-        ]);
+        return ApiResponse::paginated(
+            PublicKnowledgeArticleResource::collection($paginated->items()),
+            $paginated,
+        )->toResponse($request);
     }
 
     public function show(Request $request, string $uuid): JsonResponse

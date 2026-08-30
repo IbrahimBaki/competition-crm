@@ -159,6 +159,8 @@ function determineErrorKind(status: number, code: string | null): NormalisedApiE
 }
 
 export function normaliseApiError(error: unknown): NormalisedApiError {
+  if (isApiError(error)) return error;
+
   // A request aborted by the caller (e.g. TanStack Query cancelling a
   // superseded fetch, or React StrictMode's dev-only double-mount) is not a
   // failure — a fresh request is already in flight. Never surface this as

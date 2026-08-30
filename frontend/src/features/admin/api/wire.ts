@@ -180,7 +180,7 @@ export function toAdminUser(raw: unknown): AdminUser {
   const data = (raw ?? {}) as Record<string, unknown>;
   const isActive = data.is_active !== undefined ? Boolean(data.is_active) : !data.deactivated_at;
   return {
-    id: str(data.id ?? data.uuid),
+    id: str(data.uuid ?? data.id),
     name: str(data.name),
     email: str(data.email),
     status: isActive ? 'active' : 'deactivated',

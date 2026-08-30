@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { httpClient } from '@/api/http/client';
 import { ensureCsrfCookie } from '@/api/http/csrf';
 import { unwrap } from '@/api/http/envelope';
@@ -7,6 +8,16 @@ import { normaliseApiError } from '@/api/http/errors';
 import { setSession, on, User } from './session';
 
 let bootstrapInFlight: Promise<User> | null = null;
+
+/** Reads the server's `Retry-After` (seconds) off a 429, capped to a sane range. */
+function retryAfterMs(error: unknown): number {
+  const fallbackMs = 2000;
+  if (!(error instanceof AxiosError)) return fallbackMs;
+  const header = error.response?.headers?.['retry-after'];
+  const seconds = Number(header);
+  if (!Number.isFinite(seconds) || seconds <= 0) return fallbackMs;
+  return Math.min(seconds, 10) * 1000;
+}
 
 function bootstrapSession(): Promise<User> {
   bootstrapInFlight ??= ensureCsrfCookie()
@@ -64,6 +75,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } catch (error) {
         if (!active) return;
         const normalised = normaliseApiError(error);
+
+        // A 429 here means the browser was rate-limited, not that the
+        // session cookie is invalid — treating it as `unauthenticated`
+        // would bounce a real, still-logged-in user to /login. Retry once
+        // after a short backoff before giving up.
+        if (normalised.kind === 'rate_limited') {
+          await new Promise((resolve) => setTimeout(resolve, retryAfterMs(error)));
+          if (!active) return;
+          try {
+            const currentUser = await bootstrapSession();
+            if (!active) return;
+            setSession(currentUser);
+            setUser(currentUser);
+            setStatus('authenticated');
+            return;
+          } catch (retryError) {
+            if (!active) return;
+            const retryNormalised = normaliseApiError(retryError);
+            if (retryNormalised.kind !== 'unauthenticated') {
+              console.error('Session bootstrap failed after retry:', retryNormalised);
+              setStatus('unauthenticated');
+              return;
+            }
+          }
+        }
+
         if (normalised.kind === 'unauthenticated') {
           setSession(null);
           setUser(null);

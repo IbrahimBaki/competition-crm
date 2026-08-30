@@ -3,6 +3,7 @@
 namespace Tests\Feature\Portal;
 
 use App\Domains\Portal\Models\PortalAccount;
+use App\Domains\Portal\Actions\AuthenticatePortalAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -88,6 +89,22 @@ class PortalAuthTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonPath('data.token', fn ($token) => is_string($token) && strlen($token) > 0);
+    }
+
+    public function test_repeated_valid_logins_do_not_trigger_the_failed_login_limiter(): void
+    {
+        PortalAccount::create([
+            'uuid' => (string) Str::uuid(),
+            'email' => 'repeat@example.com',
+            'password' => bcrypt('SecureP@ss123'),
+            'email_verified_at' => now(),
+        ]);
+
+        $action = app(AuthenticatePortalAccount::class);
+        foreach (range(1, 6) as $attempt) {
+            $token = $action->execute('repeat@example.com', 'SecureP@ss123', '127.0.0.1');
+            $this->assertNotEmpty($token);
+        }
     }
 
     public function test_logout_revokes_token(): void

@@ -23,7 +23,6 @@ class AddCustomerNote
 
         return \DB::transaction(function () use ($customer, $body, $actor, $actorId) {
             $note = CustomerNote::create([
-                'id' => Str::uuid(),
                 'customer_id' => $customer->id,
                 'author_user_id' => $actorId,
                 'body' => $body,

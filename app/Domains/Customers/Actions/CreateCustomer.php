@@ -40,7 +40,7 @@ class CreateCustomer
                 $customer->toArray()
             );
 
-            return $customer;
+            return $customer->refresh();
         });
     }
 }

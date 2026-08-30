@@ -17,11 +17,11 @@ export function PortalLayout() {
       <a className="skip-link" href="#portal-main">Skip to main content</a>
       {/* Header */}
       <header className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
           <button className="flex items-center gap-3 text-left" onClick={() => navigate('/portal/help')}><span className="brand-mark" aria-hidden="true">S</span><span className="text-xl font-bold text-gray-900">{t('portal.title')}</span></button>
           {isAuthenticated && !isAuthPage && (
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600">{user?.email}</span>
+            <div className="flex w-full min-w-0 items-center justify-between gap-2 sm:w-auto sm:justify-end sm:gap-4">
+              <span className="min-w-0 truncate text-sm text-gray-600">{user?.email}</span>
               <Button variant="secondary" onClick={() => void logout()}>
                 {t('portal.navigation.sign_out')}
               </Button>

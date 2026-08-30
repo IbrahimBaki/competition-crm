@@ -15,7 +15,7 @@ class CustomerNote extends Model
 
     protected $guarded = ['*'];
 
-    protected $fillable = ['body'];
+    protected $fillable = ['customer_id', 'author_user_id', 'body'];
 
     protected $casts = [];
 
