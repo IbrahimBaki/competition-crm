@@ -18,6 +18,7 @@ export interface CollectionColumn {
 interface Props {
   title: string;
   description: string;
+  eyebrow?: string;
   endpoint: string;
   searchEndpoint?: string;
   queryKey: readonly unknown[];
@@ -41,7 +42,7 @@ function display(value: unknown): ReactNode {
   return String(value);
 }
 
-export function CollectionPage({ title, description, endpoint, searchEndpoint, queryKey, columns, sorts = [], emptyTitle = 'No records found', deleteEndpoint, actions, rowActions }: Props) {
+export function CollectionPage({ title, description, eyebrow, endpoint, searchEndpoint, queryKey, columns, sorts = [], emptyTitle = 'No records found', deleteEndpoint, actions, rowActions }: Props) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('');
@@ -75,13 +76,13 @@ export function CollectionPage({ title, description, endpoint, searchEndpoint, q
   const hasRowActions = Boolean(deleteEndpoint || rowActions);
   return (
     <div className="min-w-0">
-      <PageHeader title={title} description={description} actions={actions} />
-      <div className="mb-4 grid gap-3 sm:max-w-2xl sm:grid-cols-[minmax(0,1fr)_auto]">
-        <Input type="search" aria-label={t('common.search_collection', { title })} placeholder={t('common.search_records')} value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} />
-        {sorts.length > 0 && <select className="ui-input" aria-label={`Sort ${title}`} value={sort} onChange={(event) => { setSort(event.target.value); setPage(1); }}><option value="">Default order</option>{sorts.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select>}
+      <PageHeader title={title} description={description} eyebrow={eyebrow} actions={actions} />
+      <div className="collection-toolbar mb-4" role="search" aria-label={`Search and sort ${title}`}>
+        <div className="min-w-0"><label className="sr-only" htmlFor={`${title.toLowerCase().replace(/\s+/g, '-')}-search`}>{t('common.search_collection', { title })}</label><Input id={`${title.toLowerCase().replace(/\s+/g, '-')}-search`} type="search" aria-label={t('common.search_collection', { title })} placeholder={t('common.search_records')} value={search} onChange={(event) => { setSearch(event.target.value); setPage(1); }} /></div>
+        {sorts.length > 0 && <div className="min-w-0"><label className="sr-only" htmlFor={`${title.toLowerCase().replace(/\s+/g, '-')}-sort`}>Sort {title}</label><select id={`${title.toLowerCase().replace(/\s+/g, '-')}-sort`} className="ui-input" value={sort} onChange={(event) => { setSort(event.target.value); setPage(1); }}><option value="">Default order</option>{sorts.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}</select></div>}
       </div>
       <AsyncBoundary query={query} loading={<TableSkeleton columns={columns.length + (hasRowActions ? 1 : 0)} />} isEmpty={(data) => data.items.length === 0} empty={<EmptyState title={emptyTitle} action={actions} />}>
-        {(data) => <Card className="overflow-hidden"><div className="table-scroll"><table><thead><tr>{columns.map((column) => <th key={column.key} scope="col">{column.label}</th>)}{hasRowActions && <th scope="col">{t('common.actions')}</th>}</tr></thead><tbody>{data.items.map((row, index) => { const rowKey = String(row.uuid ?? row.id ?? row.key ?? `${page}-${index}`); return <tr key={rowKey}>{columns.map((column) => <td key={column.key}>{column.render ? column.render(row[column.key], row) : display(row[column.key])}</td>)}{hasRowActions && <td><div className="flex flex-wrap gap-2">{rowActions?.(row)}{deleteEndpoint && <Button variant="danger" onClick={() => setPendingDelete(row)}>{t('common.delete')}</Button>}</div></td>}</tr>; })}</tbody></table></div><Pagination page={data.meta.page} totalPages={data.meta.total_pages} total={data.meta.total} onPageChange={setPage} /></Card>}
+        {(data) => <Card className="collection-table overflow-hidden"><div className="table-scroll"><table className="ui-data-table"><thead><tr>{columns.map((column) => <th key={column.key} scope="col">{column.label}</th>)}{hasRowActions && <th scope="col">{t('common.actions')}</th>}</tr></thead><tbody>{data.items.map((row, index) => { const rowKey = String(row.uuid ?? row.id ?? row.key ?? `${page}-${index}`); return <tr key={rowKey}>{columns.map((column) => <td key={column.key} data-label={column.label}>{column.render ? column.render(row[column.key], row) : display(row[column.key])}</td>)}{hasRowActions && <td data-label={t('common.actions')}><div className="flex flex-wrap gap-2">{rowActions?.(row)}{deleteEndpoint && <Button variant="danger" onClick={() => setPendingDelete(row)}>{t('common.delete')}</Button>}</div></td>}</tr>; })}</tbody></table></div><Pagination page={data.meta.page} totalPages={data.meta.total_pages} total={data.meta.total} onPageChange={setPage} /></Card>}
       </AsyncBoundary>
       <Dialog open={Boolean(pendingDelete)} title={t('common.delete_title')} description={t('common.delete_warning')} onClose={() => setPendingDelete(null)} footer={<><Button variant="secondary" onClick={() => setPendingDelete(null)}>{t('common.cancel')}</Button><Button variant="danger" onClick={() => void remove()}>{t('common.delete_permanently')}</Button></>}><p>{t('common.delete_confirm')}</p></Dialog>
     </div>

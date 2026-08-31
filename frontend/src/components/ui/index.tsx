@@ -14,6 +14,17 @@ import {
   type SelectHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const arabicFieldLabels: Record<string, string> = {
+  'Active': 'نشط', 'Actions (JSON array)': 'الإجراءات (مصفوفة JSON)', 'Arabic article': 'المقالة العربية', 'Arabic name': 'الاسم بالعربية', 'Arabic title': 'العنوان بالعربية', 'Category': 'الفئة', 'Code': 'الرمز', 'Conditions (JSON array)': 'الشروط (مصفوفة JSON)', 'Cooldown minutes': 'دقائق الانتظار', 'Customer': 'العميل', 'Customer name': 'اسم العميل', 'Default priority': 'الأولوية الافتراضية', 'Department': 'الإدارة', 'Department ID': 'معرّف الإدارة', 'English article': 'المقالة الإنجليزية', 'English description': 'الوصف بالإنجليزية', 'English name': 'الاسم بالإنجليزية', 'English title': 'العنوان بالإنجليزية', 'Execution priority': 'أولوية التنفيذ', 'First response minutes': 'دقائق الاستجابة الأولى', 'Lifecycle': 'دورة الحياة', 'Message': 'الرسالة', 'Parent category UUID': 'معرّف الفئة الأب', 'Preferred language': 'اللغة المفضلة', 'Priority': 'الأولوية', 'Public key': 'المفتاح العام', 'Reason': 'السبب', 'Resolution minutes': 'دقائق الحل', 'Rule key': 'مفتاح القاعدة', 'Stop after this rule matches': 'توقف بعد تطابق هذه القاعدة', 'Subject': 'الموضوع', 'Target agent UUID': 'معرّف الموظف المستهدف', 'Target category UUID': 'معرّف الفئة المستهدفة', 'Target type': 'نوع الوجهة', 'Ticket category ID': 'معرّف فئة التذكرة', 'Token name': 'اسم الرمز', 'Transfer target': 'وجهة التحويل', 'Trigger': 'المحفّز', 'Visibility': 'مستوى الظهور',
+};
+
+const arabicPageTitles: Record<string, string> = {
+  'Create ticket': 'إنشاء تذكرة',
+  'Create customer': 'إنشاء عميل',
+  'New knowledge article': 'مقالة معرفة جديدة',
+};
 
 export function cn(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(' ');
@@ -48,11 +59,13 @@ interface FieldProps {
 }
 
 export function Field({ label, error, hint, required, children }: FieldProps) {
+  const { i18n } = useTranslation();
   const id = useId();
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
+  const localizedLabel = typeof label === 'string' && i18n.language.startsWith('ar') ? arabicFieldLabels[label] ?? label : label;
   return (
     <div className="ui-field">
-      <label htmlFor={id} className="ui-label">{label}{required && <span className="ui-required" aria-hidden="true"> *</span>}</label>
+      <label htmlFor={id} className="ui-label">{localizedLabel}{required && <span className="ui-required" aria-hidden="true"> *</span>}</label>
       {children({ id, describedBy })}
       {hint && !error && <p id={`${id}-hint`} className="ui-hint">{hint}</p>}
       {error && <p id={`${id}-error`} className="ui-field-error" role="alert">{error}</p>}
@@ -68,11 +81,13 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
 Textarea.displayName = 'Textarea';
 
 export function PageHeader({ title, description, actions, eyebrow }: { title: ReactNode; description?: ReactNode; actions?: ReactNode; eyebrow?: ReactNode }) {
+  const { i18n } = useTranslation();
+  const localizedTitle = typeof title === 'string' && i18n.language.startsWith('ar') ? arabicPageTitles[title] ?? title : title;
   return (
     <header className="ui-page-header">
       <div className="min-w-0">
         {eyebrow && <p className="ui-eyebrow">{eyebrow}</p>}
-        <h1 className="ui-page-title" tabIndex={-1}>{title}</h1>
+        <h1 className="ui-page-title" tabIndex={-1}>{localizedTitle}</h1>
         {description && <p className="ui-page-description">{description}</p>}
       </div>
       {actions && <div className="ui-page-actions">{actions}</div>}

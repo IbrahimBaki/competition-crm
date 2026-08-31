@@ -11,7 +11,7 @@ export function Sidebar({ open = false, onNavigate }: { open?: boolean; onNaviga
   const { t } = useTranslation();
 
   return (
-    <aside className={`app-sidebar ${open ? 'is-open' : ''}`} aria-label="Main navigation">
+    <aside id="primary-navigation" className={`app-sidebar ${open ? 'is-open' : ''}`} aria-label="Main navigation">
       <div className="app-sidebar__brand">
         <span className="brand-mark" aria-hidden="true">S</span>
         <div><strong>Support CRM</strong><div className="text-xs text-slate-400">Operations workspace</div></div>

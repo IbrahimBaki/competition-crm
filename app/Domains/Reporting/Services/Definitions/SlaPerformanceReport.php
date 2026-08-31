@@ -11,6 +11,7 @@ use App\Domains\Ticketing\Models\Ticket;
 use Carbon\CarbonImmutable;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -54,7 +55,7 @@ class SlaPerformanceReport implements ReportDefinition
                 $filter->from->toDateTimeString(),
                 $filter->to->toDateTimeString(),
             ])
-            ->where('tickets.is_spam', false);
+            ->whereNull('tickets.spam_marked_at');
 
         // Apply organizational scoping
         $ticketQuery = Ticket::query();
@@ -136,7 +137,7 @@ class SlaPerformanceReport implements ReportDefinition
         return $totals;
     }
 
-    private function applyScope(Builder $query, Builder $ticketQuery): Builder
+    private function applyScope(QueryBuilder $query, Builder $ticketQuery): QueryBuilder
     {
         // Apply scope filters from ticket query
         return $query;

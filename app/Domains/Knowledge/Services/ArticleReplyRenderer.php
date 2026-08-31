@@ -22,8 +22,8 @@ readonly class ArticleReplyRenderer
         $locale ??= $this->localeResolver->resolveLocale();
 
         return match ($locale) {
-            'ar' => $article->body['ar'] ?? '',
-            default => $article->body['en'] ?? '',
+            'ar' => $article->body->ar ?? '',
+            default => $article->body->en ?? '',
         };
     }
 }

@@ -7,8 +7,10 @@ namespace App\Domains\Reporting\Services\Definitions;
 use App\Domains\Reporting\Services\Filters\ReportFilter;
 use App\Domains\Sla\Models\SlaClockState;
 use App\Domains\Sla\Models\SlaTargetType;
+use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEvent;
 use App\Domains\Ticketing\Models\TicketEventType;
+use App\Domains\Ticketing\Models\TicketStatus;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Closure;
@@ -51,16 +53,16 @@ class AgentPerformanceReport implements ReportDefinition
                 continue;
             }
 
-            $assigned = TicketEvent::where('user_id', $agentId)
-                ->where('type', TicketEventType::Assigned->value)
-                ->whereBetween('created_at', [
+            $assigned = Ticket::where('assigned_user_id', $agentId)
+                ->whereBetween('assigned_at', [
                     $filter->from->toDateTimeString(),
                     $filter->to->toDateTimeString(),
                 ])
                 ->count();
 
-            $resolved = TicketEvent::where('user_id', $agentId)
-                ->where('type', TicketEventType::Resolved->value)
+            $resolved = TicketEvent::where('actor_user_id', $agentId)
+                ->where('type', TicketEventType::StatusChanged->value)
+                ->where('payload->to', TicketStatus::Resolved->value)
                 ->whereBetween('created_at', [
                     $filter->from->toDateTimeString(),
                     $filter->to->toDateTimeString(),
@@ -131,13 +133,13 @@ class AgentPerformanceReport implements ReportDefinition
             return [$filter->agentId];
         }
 
-        return TicketEvent::distinct('user_id')
-            ->where('type', TicketEventType::Assigned->value)
-            ->whereBetween('created_at', [
+        return Ticket::whereNotNull('assigned_user_id')
+            ->whereBetween('assigned_at', [
                 $filter->from->toDateTimeString(),
                 $filter->to->toDateTimeString(),
             ])
-            ->pluck('user_id')
+            ->distinct()
+            ->pluck('assigned_user_id')
             ->all();
     }
 

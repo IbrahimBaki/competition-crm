@@ -7,9 +7,11 @@ namespace App\Domains\Reporting\Services\Definitions;
 use App\Domains\Reporting\Services\Filters\ReportFilter;
 use App\Domains\Ticketing\Models\Ticket;
 use App\Domains\Ticketing\Models\TicketEventType;
+use App\Domains\Ticketing\Models\TicketStatus;
 use Carbon\CarbonImmutable;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\DB;
 
 class TicketVolumeReport implements ReportDefinition
@@ -37,7 +39,7 @@ class TicketVolumeReport implements ReportDefinition
     public function build(ReportFilter $filter, Closure $scope): ReportResult
     {
         // Determine bucketing strategy based on range length
-        $daysDiff = $filter->to->diffInDays($filter->from);
+        $daysDiff = (int) $filter->to->diffInDays($filter->from);
         $bucketFormat = $this->getBucketFormat($daysDiff);
 
         // Build the query
@@ -76,7 +78,7 @@ class TicketVolumeReport implements ReportDefinition
                 $filter->from->toDateTimeString(),
                 $filter->to->toDateTimeString(),
             ])
-            ->where('tickets.is_spam', false);
+            ->whereNull('tickets.spam_marked_at');
 
         // Apply scope
         $ticketQuery = Ticket::query();
@@ -92,12 +94,13 @@ class TicketVolumeReport implements ReportDefinition
                 DB::raw('COUNT(*) as resolved_count')
             )
             ->join('tickets', 'tickets.id', '=', 'ticket_events.ticket_id')
-            ->where('ticket_events.type', TicketEventType::Resolved->value)
+            ->where('ticket_events.type', TicketEventType::StatusChanged->value)
+            ->where('ticket_events.payload->to', TicketStatus::Resolved->value)
             ->whereBetween('ticket_events.created_at', [
                 $filter->from->toDateTimeString(),
                 $filter->to->toDateTimeString(),
             ])
-            ->where('tickets.is_spam', false)
+            ->whereNull('tickets.spam_marked_at')
             ->groupBy(DB::raw("$bucketExpr"));
 
         // Query reopened events
@@ -112,7 +115,7 @@ class TicketVolumeReport implements ReportDefinition
                 $filter->from->toDateTimeString(),
                 $filter->to->toDateTimeString(),
             ])
-            ->where('tickets.is_spam', false)
+            ->whereNull('tickets.spam_marked_at')
             ->groupBy(DB::raw("$bucketExpr"));
 
         // Combine results
@@ -218,7 +221,7 @@ class TicketVolumeReport implements ReportDefinition
         return $totals;
     }
 
-    private function applyScopeToQuery(Builder $query, Builder $ticketQuery): Builder
+    private function applyScopeToQuery(QueryBuilder $query, Builder $ticketQuery): QueryBuilder
     {
         // Apply scope directly by joining to scoped query or copying where clauses
         // For now, use the ticket query's bindings as a template

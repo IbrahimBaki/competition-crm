@@ -64,22 +64,22 @@ class BacklogAgingReport implements ReportDefinition
                 ->join('departments', 'departments.id', '=', 'tickets.department_id')
                 ->select(
                     DB::raw("'{$ageBand}' as age_band"),
-                    'departments.uuid',
+                    'departments.id as uuid',
                     'departments.name',
                     'tickets.priority',
                     DB::raw('COUNT(*) as count')
                 )
-                ->whereIn('tickets.status_id', $openStatusIds)
-                ->where('tickets.is_spam', false)
+                ->whereIn('tickets.ticket_status_id', $openStatusIds)
+                ->whereNull('tickets.spam_marked_at')
                 ->whereBetween('tickets.created_at', [$minAge, $maxAge])
-                ->groupBy('departments.id', 'departments.uuid', 'departments.name', 'tickets.priority');
+                ->groupBy('departments.id', 'departments.name', 'tickets.priority');
 
             $results = $query->get();
             foreach ($results as $row) {
                 $rows[] = [
                     'age_band' => $row->age_band,
                     'department_uuid' => $row->uuid,
-                    'department_name' => $row->name,
+                    'department_name' => json_decode($row->name, true),
                     'priority' => $row->priority,
                     'count' => (int) $row->count,
                 ];

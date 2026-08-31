@@ -14,7 +14,7 @@ export function AppLayout() {
       <button className={`mobile-scrim ${menuOpen ? 'is-open' : ''}`} onClick={() => setMenuOpen(false)} aria-label="Close navigation" />
       <Sidebar open={menuOpen} onNavigate={() => setMenuOpen(false)} />
       <div className="app-column">
-        <TopBar onMenu={() => setMenuOpen(true)} />
+        <TopBar menuOpen={menuOpen} onMenu={() => setMenuOpen((open) => !open)} />
         <main id="main-content" className="app-main" tabIndex={-1}>
           <div className="app-content">
             <Outlet />
