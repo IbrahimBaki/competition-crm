@@ -1,27 +1,52 @@
-import { useState, type FormEvent, type ReactNode } from 'react';
+import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { apiRequest } from '@/api/http/mutator';
+import { useTranslation } from 'react-i18next';
+import { acceptInvitation, requestPasswordReset, resetPassword } from '@/auth/api/recovery';
 import { normaliseApiError } from '@/api/http/errors';
-import { Button, Card, Field, FormErrorSummary, Input } from '@/components/ui';
+import { Button } from '@/design-system/primitives/Button';
+import { AuthErrorSummary, AuthField, AuthFrame, Input, styles } from './AuthFrame';
 
-function AuthFrame({ title, description, children }: { title: string; description: string; children: ReactNode }) {
-  return <main className="grid min-h-screen place-items-center bg-slate-100 p-4"><Card className="w-full max-w-md p-6 sm:p-8"><div className="mb-6 flex items-center gap-3"><span className="brand-mark" aria-hidden="true">S</span><div><h1 className="text-xl font-bold">{title}</h1><p className="mt-1 text-sm text-slate-600">{description}</p></div></div>{children}</Card></main>;
+type Errors = Record<string, string[]>;
+
+function toErrors(error: unknown): Errors {
+  const apiError = normaliseApiError(error);
+  return Object.keys(apiError.fieldErrors).length ? apiError.fieldErrors : { form: [apiError.message] };
 }
 
 export function ForgotPasswordPage() {
-  const [email, setEmail] = useState(''); const [busy, setBusy] = useState(false); const [sent, setSent] = useState(false); const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const submit = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setErrors({}); try { await apiRequest({ url: '/auth/password/forgot', method: 'POST', data: { email } }); setSent(true); } catch (error) { const apiError = normaliseApiError(error); setErrors(Object.keys(apiError.fieldErrors).length ? apiError.fieldErrors : { form: [apiError.message] }); } finally { setBusy(false); } };
-  return <AuthFrame title="Reset your password" description="We will send reset instructions if the account exists.">{sent ? <div className="ui-alert ui-alert--info">Check your inbox for the reset link.</div> : <><FormErrorSummary errors={errors}/><form onSubmit={submit} className="space-y-5"><Field label="Work email" error={errors.email?.[0]} required>{({ id }) => <Input id={id} type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>}</Field><Button type="submit" busy={busy} className="w-full">Send reset link</Button></form></>}<Link className="mt-5 block text-center text-sm font-semibold text-blue-700" to="/login">Back to sign in</Link></AuthFrame>;
+  const { t } = useTranslation();
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const submit = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setErrors({}); try { await requestPasswordReset(email); setSent(true); } catch (error) { setErrors(toErrors(error)); } finally { setBusy(false); } };
+  return <AuthFrame title={t('auth.forgot_title')} description={t('auth.forgot_description')} step={t('auth.recovery_step')}>
+    {sent ? <p className={styles.successNotice} role="status">{t('auth.forgot_sent')}</p> : <form className={styles.form} onSubmit={submit}><AuthErrorSummary errors={errors} /><AuthField label={t('auth.work_email_label')} error={errors.email?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="email" inputMode="email" autoComplete="email" dir="ltr" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} />}</AuthField><Button type="submit" loading={busy} className={styles.action}>{t('auth.send_reset_link')}</Button></form>}
+    <Link className={`${styles.link} ${styles.singleLink}`} to="/login">{t('auth.back_to_sign_in')}</Link>
+  </AuthFrame>;
 }
 
 export function ResetPasswordPage() {
-  const [params] = useSearchParams(); const navigate = useNavigate(); const [email, setEmail] = useState(params.get('email') ?? ''); const [password, setPassword] = useState(''); const [confirmation, setConfirmation] = useState(''); const [busy, setBusy] = useState(false); const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const submit = async (event: FormEvent) => { event.preventDefault(); setErrors({}); if (password !== confirmation) { setErrors({ password_confirmation: ['Passwords do not match.'] }); return; } setBusy(true); try { await apiRequest({ url: '/auth/password/reset', method: 'POST', data: { email, password, password_confirmation: confirmation, token: params.get('token') ?? '' } }); navigate('/login', { replace: true }); } catch (error) { const apiError = normaliseApiError(error); setErrors(Object.keys(apiError.fieldErrors).length ? apiError.fieldErrors : { form: [apiError.message] }); } finally { setBusy(false); } };
-  return <AuthFrame title="Choose a new password" description="Use a strong password unique to this account."><FormErrorSummary errors={errors}/><form onSubmit={submit} className="space-y-5"><Field label="Email" error={errors.email?.[0]} required>{({ id }) => <Input id={id} type="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>}</Field><Field label="New password" error={errors.password?.[0]} required>{({ id }) => <Input id={id} type="password" minLength={12} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required/>}</Field><Field label="Confirm password" error={errors.password_confirmation?.[0]} required>{({ id }) => <Input id={id} type="password" autoComplete="new-password" value={confirmation} onChange={(e) => setConfirmation(e.target.value)} required/>}</Field><Button type="submit" busy={busy} className="w-full">Reset password</Button></form></AuthFrame>;
+  const { t } = useTranslation();
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState(params.get('email') ?? '');
+  const [password, setPassword] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const submit = async (event: FormEvent) => { event.preventDefault(); setErrors({}); if (password !== confirmation) { setErrors({ password_confirmation: [t('auth.password_mismatch')] }); return; } setBusy(true); try { await resetPassword({ email, password, password_confirmation: confirmation, token: params.get('token') ?? '' }); navigate('/login', { replace: true }); } catch (error) { setErrors(toErrors(error)); } finally { setBusy(false); } };
+  return <AuthFrame title={t('auth.reset_title')} description={t('auth.reset_description')} step={t('auth.recovery_step')}><form className={styles.form} onSubmit={submit}><AuthErrorSummary errors={errors} /><AuthField label={t('auth.email_label')} error={errors.email?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="email" inputMode="email" autoComplete="email" dir="ltr" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} />}</AuthField><AuthField label={t('auth.new_password_label')} error={errors.password?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="password" minLength={12} autoComplete="new-password" dir="ltr" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={busy} />}</AuthField><AuthField label={t('auth.confirm_password_label')} error={errors.password_confirmation?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="password" autoComplete="new-password" dir="ltr" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required disabled={busy} />}</AuthField><Button type="submit" loading={busy} className={styles.action}>{t('auth.reset_password')}</Button></form></AuthFrame>;
 }
 
 export function InvitationAcceptancePage() {
-  const { token = '' } = useParams(); const navigate = useNavigate(); const [name, setName] = useState(''); const [password, setPassword] = useState(''); const [busy, setBusy] = useState(false); const [errors, setErrors] = useState<Record<string, string[]>>({});
-  const submit = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setErrors({}); try { await apiRequest({ url: `/invitations/${token}/accept`, method: 'POST', data: { token, name, password } }); navigate('/login', { replace: true }); } catch (error) { const apiError = normaliseApiError(error); setErrors(Object.keys(apiError.fieldErrors).length ? apiError.fieldErrors : { form: [apiError.message] }); } finally { setBusy(false); } };
-  return <AuthFrame title="Accept your invitation" description="Set up your staff account to join Support CRM."><FormErrorSummary errors={errors}/><form onSubmit={submit} className="space-y-5"><Field label="Full name" error={errors.name?.[0]} required>{({ id }) => <Input id={id} autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} required/>}</Field><Field label="Password" hint="Use at least 12 characters." error={errors.password?.[0]} required>{({ id }) => <Input id={id} type="password" minLength={12} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required/>}</Field><Button type="submit" busy={busy} className="w-full">Create account</Button></form></AuthFrame>;
+  const { t } = useTranslation();
+  const { token = '' } = useParams();
+  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [errors, setErrors] = useState<Errors>({});
+  const submit = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setErrors({}); try { await acceptInvitation(token, { token, name, password }); navigate('/login', { replace: true }); } catch (error) { setErrors(toErrors(error)); } finally { setBusy(false); } };
+  return <AuthFrame title={t('auth.invitation_title')} description={t('auth.invitation_description')} step={t('auth.invitation_step')}><form className={styles.form} onSubmit={submit}><AuthErrorSummary errors={errors} /><AuthField label={t('auth.full_name_label')} error={errors.name?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} required disabled={busy} />}</AuthField><AuthField label={t('auth.password_label')} hint={t('auth.password_hint')} error={errors.password?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="password" minLength={12} autoComplete="new-password" dir="ltr" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={busy} />}</AuthField><Button type="submit" loading={busy} className={styles.action}>{t('auth.create_account')}</Button></form></AuthFrame>;
 }

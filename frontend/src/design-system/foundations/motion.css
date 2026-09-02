@@ -1,0 +1,15 @@
+[data-ui='v2'] {
+  --ds-motion-press: 100ms;
+  --ds-motion-hover: 120ms;
+  --ds-motion-menu: 160ms;
+  --ds-motion-dialog: 200ms;
+  --ds-motion-drawer: 220ms;
+  --ds-motion-list: 140ms;
+  --ds-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ds-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-ui='v2'], [data-ui='v2'] * { scroll-behavior: auto !important; animation: none !important; transition-property: none !important; }
+}

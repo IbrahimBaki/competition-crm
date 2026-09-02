@@ -1,0 +1,17 @@
+.root { min-height: 2.5rem; display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-space-2); border: 1px solid transparent; border-radius: var(--ds-radius-control); padding-inline: var(--ds-space-4); font-size: var(--ds-font-size-body); font-weight: 600; line-height: var(--ds-line-body); transition: background-color var(--ds-motion-hover) var(--ds-ease-standard), border-color var(--ds-motion-hover) var(--ds-ease-standard), color var(--ds-motion-hover) var(--ds-ease-standard), opacity var(--ds-motion-press) var(--ds-ease-standard); }
+.root:disabled { cursor: not-allowed; opacity: .55; }
+.root:not(:disabled):active { transition-duration: var(--ds-motion-press); opacity: .86; }
+.primary { background: var(--ds-brand-primary); color: var(--ds-text-inverse); }
+.primary:not(:disabled):hover { background: var(--ds-brand-primary-hover); }
+.secondary { background: var(--ds-surface-base); color: var(--ds-text-primary); border-color: var(--ds-border-default); }
+.secondary:not(:disabled):hover { background: var(--ds-surface-subtle); border-color: var(--ds-border-strong); }
+.ghost { background: transparent; color: var(--ds-text-secondary); }
+.ghost:not(:disabled):hover { background: var(--ds-surface-subtle); color: var(--ds-text-primary); }
+.danger { background: var(--ds-semantic-danger-fg); color: var(--ds-text-inverse); }
+.danger:not(:disabled):hover { background: var(--ds-semantic-danger-hover); }
+.compact { min-height: 2.25rem; padding-inline: var(--ds-space-3); }
+.touch { min-height: 2.75rem; }
+.icon { width: 1.125rem; height: 1.125rem; flex: 0 0 auto; }
+.spinner { width: 1.125rem; height: 1.125rem; flex: 0 0 auto; animation: spin 800ms linear infinite; }
+.label { min-width: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }

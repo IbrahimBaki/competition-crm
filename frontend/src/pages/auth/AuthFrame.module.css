@@ -1,0 +1,151 @@
+.page {
+  min-block-size: 100dvh;
+  display: grid;
+  place-items: center;
+  background: var(--ds-surface-canvas);
+  padding: clamp(var(--ds-space-4), 4vw, var(--ds-space-12));
+}
+
+.frame {
+  width: min(100%, 75rem);
+  min-block-size: min(44rem, calc(100dvh - (2 * clamp(var(--ds-space-4), 4vw, var(--ds-space-12)))));
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-items: stretch;
+  background: var(--ds-surface-base);
+}
+
+.context {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-space-6);
+  padding: clamp(var(--ds-space-6), 4vw, var(--ds-space-12));
+  border-inline-end: 1px solid var(--ds-border-default);
+}
+
+.identity {
+  color: var(--ds-text-primary);
+  font-size: var(--ds-font-size-band);
+  font-weight: 600;
+  line-height: var(--ds-line-band);
+}
+
+.contextCopy {
+  max-inline-size: 17rem;
+  margin: 0;
+  color: var(--ds-text-secondary);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-line-body);
+}
+
+.step {
+  margin-block-start: auto;
+  color: var(--ds-text-muted);
+  font-size: var(--ds-font-size-meta);
+  font-weight: 600;
+  line-height: var(--ds-line-meta);
+}
+
+.work {
+  grid-column: 5 / span 5;
+  align-self: center;
+  width: min(100%, 27.5rem);
+  padding: clamp(var(--ds-space-6), 4vw, var(--ds-space-12));
+}
+
+.heading {
+  margin: 0;
+  color: var(--ds-text-primary);
+  font-size: var(--ds-font-size-page);
+  font-weight: 600;
+  line-height: var(--ds-line-page);
+  letter-spacing: -0.02em;
+}
+
+.description {
+  max-inline-size: 26rem;
+  margin: var(--ds-space-2) 0 0;
+  color: var(--ds-text-secondary);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-line-body);
+}
+
+.body { margin-block-start: var(--ds-space-8); }
+
+.form { display: grid; gap: var(--ds-space-5); }
+
+.field { display: grid; gap: var(--ds-space-2); }
+
+.required { color: var(--ds-semantic-danger-fg); }
+
+.hint, .fieldError, .errorSummary, .successNotice {
+  margin: 0;
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-line-body);
+  overflow-wrap: anywhere;
+}
+
+.hint { color: var(--ds-text-muted); }
+.fieldError { color: var(--ds-semantic-danger-fg); }
+
+.errorSummary, .successNotice {
+  border-block-start: 1px solid var(--ds-semantic-danger-fg);
+  padding-block-start: var(--ds-space-3);
+  color: var(--ds-semantic-danger-fg);
+}
+
+.successNotice {
+  border-block-start-color: var(--ds-semantic-info-fg);
+  color: var(--ds-semantic-info-fg);
+}
+
+.errorSummary ul { margin: var(--ds-space-2) 0 0; padding-inline-start: var(--ds-space-5); }
+
+.action { width: 100%; margin-block-start: var(--ds-space-1); }
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ds-space-3);
+  margin: var(--ds-space-1) 0 0;
+}
+
+.link {
+  color: var(--ds-text-link);
+  font-size: var(--ds-font-size-body);
+  font-weight: 500;
+  line-height: var(--ds-line-body);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.singleLink { display: inline-block; margin-block-start: var(--ds-space-6); }
+
+.code { text-align: center; font-family: var(--ds-font-latin); font-size: 1.5rem; letter-spacing: 0.18em; }
+
+@media (max-width: 63.9375rem) {
+  .page { place-items: stretch center; }
+  .frame { min-block-size: 0; }
+  .context { padding: var(--ds-space-8); }
+  .work { grid-column: 5 / span 7; }
+}
+
+@media (max-width: 63.9375rem) {
+  .page { padding: 0; }
+  .frame { width: 100%; grid-template-columns: 1fr; }
+  .context { grid-column: 1; gap: var(--ds-space-4); padding: var(--ds-space-6) var(--ds-space-5); border-inline-end: 0; border-block-end: 1px solid var(--ds-border-default); }
+  .contextCopy { max-inline-size: 32rem; }
+  .step { margin-block-start: 0; }
+  .work { grid-column: 1; width: min(100%, 27.5rem); justify-self: center; padding: var(--ds-space-8) var(--ds-space-5) max(var(--ds-space-8), env(safe-area-inset-bottom)); }
+  .links { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 47.9375rem) {
+  .work { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .errorSummary, .fieldError { transition: none; }
+}

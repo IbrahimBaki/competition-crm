@@ -8,6 +8,7 @@ import { AuthProvider } from './auth/AuthProvider';
 import { LocaleProvider } from './i18n/LocaleProvider';
 import './i18n';
 import './index.css';
+import './design-system/foundations/v2-global.css';
 import { ToastProvider } from './components/ui';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);

@@ -1,0 +1,6 @@
+.root { width: 100%; min-height: 7rem; resize: vertical; border: 1px solid var(--ds-border-default); border-radius: var(--ds-radius-control); background: var(--ds-surface-base); color: var(--ds-text-primary); padding: var(--ds-space-3); font-size: var(--ds-font-size-body); line-height: var(--ds-line-body); }
+.root::placeholder { color: var(--ds-text-muted); opacity: 1; }
+.root:focus { border-color: var(--ds-border-focus); outline: none; box-shadow: 0 0 0 2px var(--ds-surface-base), 0 0 0 4px var(--ds-border-focus); }
+.root:disabled { cursor: not-allowed; background: var(--ds-surface-subtle); color: var(--ds-text-muted); }
+.root:read-only { background: var(--ds-surface-raised); }
+.invalid { border-color: var(--ds-semantic-danger-fg); }

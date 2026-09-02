@@ -1,0 +1,10 @@
+@import './tokens.css';
+@import './typography.css';
+@import './motion.css';
+
+[data-ui='v2'] { background: var(--ds-surface-canvas); color: var(--ds-text-primary); }
+[data-ui='v2'] *, [data-ui='v2'] *::before, [data-ui='v2'] *::after { box-sizing: border-box; }
+[data-ui='v2'] :focus-visible { outline: 2px solid var(--ds-border-focus); outline-offset: 2px; }
+[data-ui='v2'] ::selection { background: var(--ds-surface-selected); color: var(--ds-text-primary); }
+[data-ui='v2'] .ds-directional-icon { transform: scaleX(1); }
+[data-ui='v2'][dir='rtl'] .ds-directional-icon, [data-ui='v2'] [dir='rtl'] .ds-directional-icon { transform: scaleX(-1); }

@@ -5,7 +5,7 @@ import { httpClient } from '@/api/http/client';
 import { ensureCsrfCookie } from '@/api/http/csrf';
 import { unwrap } from '@/api/http/envelope';
 import { normaliseApiError } from '@/api/http/errors';
-import { setSession, on, User } from './session';
+import { expireSession, setSession, on, User } from './session';
 
 let bootstrapInFlight: Promise<User> | null = null;
 
@@ -149,8 +149,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
               const currentUser = unwrap<User>(response.data);
               setSession(currentUser);
               setUser(currentUser);
-            } catch {
-              // Session expired, will be caught by mutator and redirected
+            } catch (error) {
+              // This request intentionally bypasses the mutator to avoid a
+              // focus-triggered recovery loop. A genuine 401 must still use
+              // the same canonical expiry path as normal API requests.
+              if (normaliseApiError(error).kind === 'unauthenticated') {
+                expireSession();
+              }
             }
           })();
         }

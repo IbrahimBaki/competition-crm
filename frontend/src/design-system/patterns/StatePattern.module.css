@@ -1,0 +1,7 @@
+.region { display: grid; gap: var(--ds-space-2); max-width: 42rem; border-block: 1px solid var(--ds-border-subtle); padding-block: var(--ds-space-6); }
+.full { min-height: 12rem; align-content: center; padding: var(--ds-space-8); border: 1px solid var(--ds-border-subtle); border-radius: var(--ds-radius-overlay); background: var(--ds-surface-raised); }
+.title { margin: 0; color: var(--ds-text-primary); font-size: var(--ds-font-size-section); line-height: var(--ds-line-section); font-weight: 600; }
+.description { margin: 0; color: var(--ds-text-secondary); font-size: var(--ds-font-size-body); line-height: var(--ds-line-body); }
+.action { margin-block-start: var(--ds-space-2); }
+.danger { border-color: var(--ds-semantic-danger-border); }
+.forbidden { border-color: var(--ds-semantic-warning-border); }

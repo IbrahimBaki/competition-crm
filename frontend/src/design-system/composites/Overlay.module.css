@@ -1,0 +1,18 @@
+.overlay { position: fixed; z-index: var(--ds-z-dialog); inset: 0; background: var(--ds-surface-overlay); animation: fadeIn var(--ds-motion-dialog) var(--ds-ease-enter); }
+/* Physical centering is intentional: translateX is physical in both text directions. */
+.dialogContent { position: fixed; z-index: var(--ds-z-dialog); left: 50%; top: 50%; width: min(calc(100% - 2rem), 36rem); max-height: calc(100dvh - 2rem); overflow: auto; transform: translate(-50%, -50%); border: 1px solid var(--ds-border-default); border-radius: var(--ds-radius-overlay); background: var(--ds-surface-base); box-shadow: var(--ds-shadow-overlay); padding: var(--ds-space-6); animation: enterDialog var(--ds-motion-dialog) var(--ds-ease-enter); }
+.alertContent { composes: dialogContent; }
+.title { margin: 0; color: var(--ds-text-primary); font-size: var(--ds-font-size-section); line-height: var(--ds-line-section); font-weight: 600; }
+.description { margin: var(--ds-space-2) 0 0; color: var(--ds-text-secondary); font-size: var(--ds-font-size-body); line-height: var(--ds-line-body); }
+.menuContent, .popoverContent { z-index: var(--ds-z-popover); min-width: 12rem; border: 1px solid var(--ds-border-default); border-radius: var(--ds-radius-overlay); background: var(--ds-surface-raised); box-shadow: var(--ds-shadow-layer); padding: var(--ds-space-1); animation: enterSurface var(--ds-motion-menu) var(--ds-ease-enter); }
+.dropdownContent { z-index: var(--ds-z-dropdown); }
+.menuItem { display: flex; width: 100%; align-items: center; gap: var(--ds-space-2); border: 0; border-radius: var(--ds-radius-sm); background: transparent; color: var(--ds-text-primary); padding-block: var(--ds-space-2); padding-inline: var(--ds-space-3); font: inherit; font-size: var(--ds-font-size-body); line-height: var(--ds-line-body); text-align: start; }
+.menuItem[data-highlighted] { outline: none; background: var(--ds-surface-selected); }
+.tooltipContent { z-index: var(--ds-z-popover); max-width: 18rem; border-radius: var(--ds-radius-sm); background: var(--ds-text-primary); color: var(--ds-text-inverse); padding-block: var(--ds-space-1); padding-inline: var(--ds-space-2); font-size: var(--ds-font-size-meta); line-height: var(--ds-line-meta); box-shadow: var(--ds-shadow-layer); animation: enterSurface var(--ds-motion-menu) var(--ds-ease-enter); }
+.tabsList { display: flex; gap: var(--ds-space-1); border-block-end: 1px solid var(--ds-border-subtle); }
+.tabsTrigger { border: 0; border-block-end: 2px solid transparent; background: transparent; color: var(--ds-text-secondary); padding-block: var(--ds-space-2); padding-inline: var(--ds-space-3); font: inherit; font-size: var(--ds-font-size-body); font-weight: 500; line-height: var(--ds-line-body); }
+.tabsTrigger[data-state='active'] { border-block-end-color: var(--ds-brand-primary); color: var(--ds-text-primary); }
+.tabsContent { padding-block: var(--ds-space-4); }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes enterDialog { from { opacity: 0; transform: translate(-50%, calc(-50% + .5rem)); } to { opacity: 1; transform: translate(-50%, -50%); } }
+@keyframes enterSurface { from { opacity: 0; transform: translateY(.25rem); } to { opacity: 1; transform: translateY(0); } }

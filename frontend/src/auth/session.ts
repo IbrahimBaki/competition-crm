@@ -15,6 +15,7 @@ export interface User {
 
 let currentSession: User | null = null;
 let recoveryInFlight: Promise<boolean> | null = null;
+let sessionExpirySignalled = false;
 
 const eventListeners: Record<string, Set<(data?: any) => void>> = {
   'session:expired': new Set(),
@@ -28,11 +29,22 @@ export function getSession(): User | null {
 export function setSession(user: User | null): void {
   currentSession = user;
   if (user) {
-    const listeners = eventListeners['session:changed'];
-    if (listeners) {
-      listeners.forEach((cb) => cb(user));
-    }
+    // A new authenticated session starts a new expiry lifecycle.
+    sessionExpirySignalled = false;
+    emit('session:changed', user);
   }
+}
+
+/**
+ * Emits the one canonical staff-session expiry signal for the current
+ * authenticated session. AuthProvider owns the resulting cleanup/redirect.
+ */
+export function expireSession(): boolean {
+  if (sessionExpirySignalled) return false;
+
+  sessionExpirySignalled = true;
+  emit('session:expired');
+  return true;
 }
 
 export async function recoverSession(): Promise<boolean> {
@@ -72,7 +84,7 @@ export function on(
   };
 }
 
-export function emit(event: 'session:expired' | 'session:changed', data?: any): void {
+function emit(event: 'session:expired' | 'session:changed', data?: unknown): void {
   const listeners = eventListeners[event];
   if (listeners) {
     listeners.forEach((cb) => cb(data));

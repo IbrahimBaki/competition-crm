@@ -3,7 +3,7 @@ import { httpClient } from './client';
 import { normaliseApiError } from './errors';
 import { unwrap, unwrapPage, MalformedEnvelopeError } from './envelope';
 import { ensureCsrfCookie } from './csrf';
-import { recoverSession } from '@/auth/session';
+import { expireSession, recoverSession } from '@/auth/session';
 import { getPortalSession } from '@/portal/auth/portalSession';
 
 // Track in-flight recovery to deduplicate concurrent 401s
@@ -91,8 +91,9 @@ export const apiRequest = async <T>(
             recoveryInFlight = null;
           }
 
-          // Recovery failed, emit session:expired and reject
-          window.dispatchEvent(new Event('session:expired'));
+          // Recovery failed. AuthProvider owns cleanup and redirect after this
+          // typed, in-memory signal; expireSession is idempotent per session.
+          expireSession();
         }
       }
     }

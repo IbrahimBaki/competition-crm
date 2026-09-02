@@ -1,0 +1,5 @@
+.root { display: inline-flex; align-items: center; width: fit-content; min-height: 1.5rem; border: 1px solid transparent; border-radius: var(--ds-radius-sm); padding-inline: var(--ds-space-2); color: var(--ds-semantic-neutral-fg); background: var(--ds-semantic-neutral-bg); border-color: var(--ds-semantic-neutral-border); font-size: var(--ds-font-size-meta); font-weight: 500; line-height: var(--ds-line-meta); white-space: nowrap; }
+.info { color: var(--ds-semantic-info-fg); background: var(--ds-semantic-info-bg); border-color: var(--ds-semantic-info-border); }
+.success { color: var(--ds-semantic-success-fg); background: var(--ds-semantic-success-bg); border-color: var(--ds-semantic-success-border); }
+.warning { color: var(--ds-semantic-warning-fg); background: var(--ds-semantic-warning-bg); border-color: var(--ds-semantic-warning-border); }
+.danger { color: var(--ds-semantic-danger-fg); background: var(--ds-semantic-danger-bg); border-color: var(--ds-semantic-danger-border); }
