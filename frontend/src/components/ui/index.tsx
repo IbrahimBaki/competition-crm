@@ -108,7 +108,7 @@ export function FormErrorSummary({ title = 'Please correct the following', error
   );
 }
 
-export function Dialog({ open, title, description, children, onClose, footer }: { open: boolean; title: string; description?: string; children: ReactNode; onClose: () => void; footer?: ReactNode }) {
+export function Dialog({ open, title, description, children, onClose, footer, className }: { open: boolean; title: string; description?: string; children: ReactNode; onClose: () => void; footer?: ReactNode; className?: string }) {
   const titleId = useId();
   const descriptionId = useId();
   const panel = useRef<HTMLDivElement>(null);
@@ -133,7 +133,7 @@ export function Dialog({ open, title, description, children, onClose, footer }: 
   if (!open) return null;
   return (
     <div className="ui-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
-      <div ref={panel} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined} className="ui-dialog">
+      <div ref={panel} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} aria-describedby={description ? descriptionId : undefined} className={cn('ui-dialog', className)}>
         <div className="ui-dialog__header"><div><h2 id={titleId}>{title}</h2>{description && <p id={descriptionId}>{description}</p>}</div><Button variant="ghost" onClick={onClose} aria-label="Close dialog">×</Button></div>
         <div className="ui-dialog__content">{children}</div>
         {footer && <div className="ui-dialog__footer">{footer}</div>}

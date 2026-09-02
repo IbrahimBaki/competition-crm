@@ -43,6 +43,7 @@ import { ChannelsPage } from './pages/admin/ChannelsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { NotFoundState } from './shell/states/NotFoundState';
 import { AppLayout } from './shell/AppLayout';
+import { RouteFormModal } from './shell/RouteFormModal';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { RouteErrorBoundary } from './shell/RouteErrorBoundary';
 import { PERMISSIONS, TICKETS_VIEW_SCOPES, REPORTS_VIEW_SCOPES } from './auth/permissions';
@@ -84,7 +85,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: 'tickets/new', element: <ProtectedRoute permission={PERMISSIONS.TICKETS_CREATE}><NewTicketPage /></ProtectedRoute> },
+      { path: 'tickets/new', element: <ProtectedRoute permission={PERMISSIONS.TICKETS_CREATE}><RouteFormModal title="Create ticket" fallback="/tickets"><NewTicketPage /></RouteFormModal></ProtectedRoute> },
       {
         path: 'tickets/:ticketId',
         element: (
@@ -101,7 +102,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
-      { path: 'customers/new', element: <ProtectedRoute permission={PERMISSIONS.CUSTOMERS_CREATE}><NewCustomerPage /></ProtectedRoute> },
+      { path: 'customers/new', element: <ProtectedRoute permission={PERMISSIONS.CUSTOMERS_CREATE}><RouteFormModal title="Create customer" fallback="/customers"><NewCustomerPage /></RouteFormModal></ProtectedRoute> },
       {
         path: 'customers/:customerId',
         element: (
@@ -114,9 +115,9 @@ export const router = createBrowserRouter([
         path: 'knowledge',
         element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_VIEW}><KnowledgePage /></ProtectedRoute>,
       },
-      { path: 'knowledge/new', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_CREATE}><NewKnowledgeArticlePage /></ProtectedRoute> },
+      { path: 'knowledge/new', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_CREATE}><RouteFormModal title="New knowledge article" fallback="/knowledge"><NewKnowledgeArticlePage /></RouteFormModal></ProtectedRoute> },
       { path: 'knowledge/:articleId', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_VIEW}><KnowledgeArticlePage /></ProtectedRoute> },
-      { path: 'knowledge/:articleId/edit', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_UPDATE}><EditKnowledgeArticlePage /></ProtectedRoute> },
+      { path: 'knowledge/:articleId/edit', element: <ProtectedRoute permission={PERMISSIONS.KNOWLEDGE_ARTICLES_UPDATE}><RouteFormModal title="Edit knowledge article" fallback="/knowledge"><EditKnowledgeArticlePage /></RouteFormModal></ProtectedRoute> },
       { path: 'account', element: <StaffAccountPage /> },
       {
         path: 'reports',

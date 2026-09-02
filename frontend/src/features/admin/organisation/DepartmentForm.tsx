@@ -19,10 +19,9 @@ interface DepartmentFormProps {
 // stays required rather than being silently copied from the one value we do
 // have.
 export function DepartmentForm({ department }: DepartmentFormProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isEdit = Boolean(department);
-  const activeLocale = i18n.language.startsWith('ar') ? 'ar' : 'en';
 
   const branchesQuery = useGetBranches(
     { per_page: 100 },
@@ -31,8 +30,8 @@ export function DepartmentForm({ department }: DepartmentFormProps) {
   const branches = (branchesQuery.data?.items ?? []).map(toBranch).filter((b) => b.isActive);
 
   const [branchId, setBranchId] = useState('');
-  const [nameAr, setNameAr] = useState(activeLocale === 'ar' ? (department?.name ?? '') : '');
-  const [nameEn, setNameEn] = useState(activeLocale === 'en' ? (department?.name ?? '') : '');
+  const [nameAr, setNameAr] = useState(department?.nameAr ?? '');
+  const [nameEn, setNameEn] = useState(department?.nameEn ?? '');
   const [code, setCode] = useState(department?.code ?? '');
   const [error, setError] = useState<string | undefined>();
 
@@ -124,12 +123,14 @@ export function DepartmentForm({ department }: DepartmentFormProps) {
         <input
           id="department-code"
           value={code}
-          onChange={(event) => setCode(event.target.value)}
+          onChange={(event) => setCode(event.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
           required
           disabled={isEdit}
           pattern="[a-z0-9-]{2,32}"
+          aria-describedby="department-code-hint"
           className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm disabled:bg-gray-100"
         />
+        <p id="department-code-hint" className="mt-1 text-xs text-gray-500">{t('admin.organisation.code_hint')}</p>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

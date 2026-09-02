@@ -13,14 +13,13 @@ interface TeamFormProps {
 }
 
 export function TeamForm({ team }: TeamFormProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isEdit = Boolean(team);
-  const activeLocale = i18n.language.startsWith('ar') ? 'ar' : 'en';
 
   const [departmentId, setDepartmentId] = useState(team?.departmentId ?? '');
-  const [nameAr, setNameAr] = useState(activeLocale === 'ar' ? (team?.name ?? '') : '');
-  const [nameEn, setNameEn] = useState(activeLocale === 'en' ? (team?.name ?? '') : '');
+  const [nameAr, setNameAr] = useState(team?.nameAr ?? '');
+  const [nameEn, setNameEn] = useState(team?.nameEn ?? '');
   const [code, setCode] = useState(team?.code ?? '');
   const [error, setError] = useState<string | undefined>();
 

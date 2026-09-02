@@ -6,6 +6,7 @@ import { AsyncBoundary } from '@/shell/AsyncBoundary';
 import { ActionGuard } from '@/shell/ActionGuard';
 import { PERMISSIONS } from '@/auth/permissions';
 import { DepartmentForm } from '@/features/admin/organisation/DepartmentForm';
+import { RouteFormModal } from '@/shell/RouteFormModal';
 import { toDepartment } from '@/features/admin/api/wire';
 
 export function DepartmentDetailPage() {
@@ -19,12 +20,7 @@ export function DepartmentDetailPage() {
   }) as unknown as UseQueryResult<Record<string, unknown>, unknown>;
 
   if (isNew) {
-    return (
-      <div>
-        <h1 className="mb-6 text-3xl font-bold text-gray-900">{t('admin.organisation.department.create_title')}</h1>
-        <DepartmentForm />
-      </div>
-    );
+    return <RouteFormModal title={t('admin.organisation.department.create_title')} fallback="/admin/departments"><DepartmentForm /></RouteFormModal>;
   }
 
   return (

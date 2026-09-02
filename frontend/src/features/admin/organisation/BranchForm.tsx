@@ -17,13 +17,11 @@ interface BranchFormProps {
 // blank and stays required rather than being silently copied from the one
 // value we do have.
 export function BranchForm({ branch }: BranchFormProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isEdit = Boolean(branch);
-  const activeLocale = i18n.language.startsWith('ar') ? 'ar' : 'en';
-
-  const [nameAr, setNameAr] = useState(activeLocale === 'ar' ? (branch?.name ?? '') : '');
-  const [nameEn, setNameEn] = useState(activeLocale === 'en' ? (branch?.name ?? '') : '');
+  const [nameAr, setNameAr] = useState(branch?.nameAr ?? '');
+  const [nameEn, setNameEn] = useState(branch?.nameEn ?? '');
   const [code, setCode] = useState(branch?.code ?? '');
   const [timezone, setTimezone] = useState(branch?.timezone ?? '');
   const [is24x7, setIs24x7] = useState(branch?.is24x7 ?? false);

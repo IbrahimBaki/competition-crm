@@ -95,7 +95,13 @@ const JSON_HEADERS = { 'Content-Type': 'application/json' } as const;
 // --- Mappers (pure, no React) ------------------------------------------
 
 function str(value: unknown): string {
-  return typeof value === 'string' ? value : '';
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object') {
+    const bilingual = value as { ar?: unknown; en?: unknown };
+    if (typeof bilingual.ar === 'string' && bilingual.ar.trim()) return bilingual.ar;
+    if (typeof bilingual.en === 'string' && bilingual.en.trim()) return bilingual.en;
+  }
+  return '';
 }
 
 function strOrNull(value: unknown): string | null {
@@ -106,11 +112,20 @@ function num(value: unknown): number {
   return typeof value === 'number' ? value : Number(value ?? 0);
 }
 
+function bilingual(value: unknown): { ar: string; en: string } {
+  if (!value || typeof value !== 'object') return { ar: '', en: '' };
+  const data = value as { ar?: unknown; en?: unknown };
+  return { ar: typeof data.ar === 'string' ? data.ar : '', en: typeof data.en === 'string' ? data.en : '' };
+}
+
 export function toBranch(raw: unknown): Branch {
   const data = (raw ?? {}) as Record<string, unknown>;
+  const name = bilingual(data.name);
   return {
     id: str(data.id),
-    name: str(data.name),
+    name: name.ar || name.en,
+    nameAr: name.ar,
+    nameEn: name.en,
     code: str(data.code),
     timezone: str(data.timezone),
     is24x7: Boolean(data.is_24_7),
@@ -122,10 +137,13 @@ export function toBranch(raw: unknown): Branch {
 
 export function toDepartment(raw: unknown): Department {
   const data = (raw ?? {}) as Record<string, unknown>;
+  const name = bilingual(data.name);
   return {
     id: str(data.id),
     branchId: str(data.branch_id),
-    name: str(data.name),
+    name: name.ar || name.en,
+    nameAr: name.ar,
+    nameEn: name.en,
     code: str(data.code),
     isActive: Boolean(data.is_active),
     createdAt: strOrNull(data.created_at),
@@ -135,10 +153,13 @@ export function toDepartment(raw: unknown): Department {
 
 export function toTeam(raw: unknown): Team {
   const data = (raw ?? {}) as Record<string, unknown>;
+  const name = bilingual(data.name);
   return {
     id: str(data.id),
     departmentId: str(data.department_id),
-    name: str(data.name),
+    name: name.ar || name.en,
+    nameAr: name.ar,
+    nameEn: name.en,
     code: str(data.code),
     isActive: Boolean(data.is_active),
     createdAt: strOrNull(data.created_at),

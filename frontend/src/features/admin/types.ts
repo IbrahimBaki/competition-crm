@@ -26,6 +26,8 @@ export interface BilingualText {
 export interface Branch {
   id: string;
   name: string;
+  nameAr: string;
+  nameEn: string;
   code: string;
   timezone: string;
   is24x7: boolean;
@@ -38,6 +40,8 @@ export interface Department {
   id: string;
   branchId: string;
   name: string;
+  nameAr: string;
+  nameEn: string;
   code: string;
   isActive: boolean;
   createdAt: string | null;
@@ -48,6 +52,8 @@ export interface Team {
   id: string;
   departmentId: string;
   name: string;
+  nameAr: string;
+  nameEn: string;
   code: string;
   isActive: boolean;
   createdAt: string | null;

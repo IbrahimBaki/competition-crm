@@ -10,6 +10,7 @@ import { AsyncBoundary } from '@/shell/AsyncBoundary';
 import { ActionGuard } from '@/shell/ActionGuard';
 import { PERMISSIONS } from '@/auth/permissions';
 import { BranchForm } from '@/features/admin/organisation/BranchForm';
+import { RouteFormModal } from '@/shell/RouteFormModal';
 import { BranchWorkingHoursEditor } from '@/features/admin/organisation/calendar/BranchWorkingHoursEditor';
 import { BranchHolidaysPanel } from '@/features/admin/organisation/calendar/BranchHolidaysPanel';
 import { toBranch, toBranchWorkingHour, toBranchHoliday } from '@/features/admin/api/wire';
@@ -32,12 +33,7 @@ export function BranchDetailPage() {
   }) as unknown as UseQueryResult<{ items: Record<string, unknown>[] }, unknown>;
 
   if (isNew) {
-    return (
-      <div>
-        <h1 className="mb-6 text-3xl font-bold text-gray-900">{t('admin.organisation.branch.create_title')}</h1>
-        <BranchForm />
-      </div>
-    );
+    return <RouteFormModal title={t('admin.organisation.branch.create_title')} fallback="/admin/branches"><BranchForm /></RouteFormModal>;
   }
 
   return (
