@@ -1,0 +1,93 @@
+.copy { display: grid; gap: var(--ds-space-3); position: relative; z-index: 1; }
+
+.identity {
+  color: var(--ds-text-primary);
+  font-size: var(--ds-font-size-band);
+  font-weight: 600;
+  line-height: var(--ds-line-band);
+}
+
+.statement {
+  max-inline-size: 18rem;
+  margin: var(--ds-space-4) 0 0;
+  color: var(--ds-text-primary);
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.22;
+}
+
+[dir='rtl'] .statement { letter-spacing: normal; }
+
+.access {
+  margin: 0;
+  color: var(--ds-text-secondary);
+  font-size: var(--ds-font-size-label);
+  font-weight: 500;
+  line-height: var(--ds-line-label);
+}
+
+.network { position: relative; flex: 1 1 auto; min-block-size: 20.5rem; margin-block: var(--ds-space-8) var(--ds-space-2); }
+.network::before { content: ''; position: absolute; inset: 13% 13% 10%; border: 1px solid rgb(0 107 94 / .09); border-radius: 50%; box-shadow: 0 0 0 2.25rem rgb(0 107 94 / .025); animation: ambientOrbit 10s ease-in-out infinite; }
+
+.connections { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.route, .routeFaint { fill: none; stroke: var(--ds-border-strong); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.route { stroke: rgb(0 107 94 / .44); stroke-dasharray: 2 5; animation: routeFlow 10s linear infinite; }
+.routeFaint { stroke: rgb(0 107 94 / .2); }
+.signal, .signalSecondary { fill: var(--ds-brand-primary); }
+.signalSecondary { opacity: .68; }
+.centerNode { fill: var(--ds-surface-base); stroke: var(--ds-brand-primary); stroke-width: 2; animation: nodeGlow 4.8s ease-in-out infinite; }
+.centerRing { fill: none; stroke: var(--ds-brand-primary); stroke-width: 1; opacity: .34; transform-origin: 190px 154px; animation: nodePulse 4.8s ease-in-out infinite; }
+
+.fragment {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ds-space-2);
+  width: min(47%, 11.75rem);
+  min-block-size: 3.65rem;
+  padding: var(--ds-space-3);
+  border: 1px solid var(--ds-border-subtle);
+  border-radius: var(--ds-radius-overlay);
+  background: rgb(255 255 255 / .88);
+  color: var(--ds-text-primary);
+  box-shadow: 0 4px 10px rgb(22 34 31 / .055);
+}
+
+.fragment::before { content: ''; position: absolute; inset-inline-start: var(--ds-space-3); inset-block-start: var(--ds-space-3); inline-size: .375rem; block-size: .375rem; border-radius: 50%; background: var(--ds-brand-primary); opacity: .8; }
+.fragmentIcon { flex: 0 0 auto; width: 1rem; height: 1rem; margin-block-start: 1px; color: var(--ds-brand-primary); stroke-width: 1.8; }
+.fragment span, .fragment small { display: block; }
+.fragment span { color: var(--ds-text-primary); font-size: var(--ds-font-size-label); font-weight: 600; line-height: var(--ds-line-label); }
+.fragment small { margin-block-start: 1px; color: var(--ds-text-muted); font-size: var(--ds-font-size-meta); line-height: var(--ds-line-meta); }
+.ticket { inset-block-start: 6%; inset-inline-start: 0; animation: ticketFloat 4.8s ease-in-out infinite alternate; }
+.reply { inset-block-start: 9%; inset-inline-end: 0; animation: replyFloat 5.4s ease-in-out infinite alternate; }
+.team { inset-block-end: 12%; inset-inline-start: 0; animation: teamFloat 5.1s ease-in-out infinite alternate; }
+.sla { inset-block-end: 14%; inset-inline-end: 0; animation: slaFloat 5.8s ease-in-out infinite alternate; }
+
+.ledger { position: absolute; inset-inline: 28%; inset-block-end: 0; display: grid; gap: 5px; }
+.ledger span { display: block; block-size: 2px; background: var(--ds-border-subtle); }
+.ledger span:nth-child(2) { inline-size: 74%; justify-self: end; }
+.ledger span:nth-child(3) { inline-size: 88%; }
+.ledger span:nth-child(4) { inline-size: 57%; justify-self: end; background: var(--ds-border-strong); }
+
+@keyframes nodePulse { 0%, 100% { opacity: .22; transform: scale(.88); } 50% { opacity: .55; transform: scale(1); } }
+@keyframes nodeGlow { 0%, 100% { stroke-width: 2; } 50% { stroke-width: 2.8; } }
+@keyframes routeFlow { to { stroke-dashoffset: -35; } }
+@keyframes ambientOrbit { 0%, 100% { opacity: .55; transform: scale(.98); } 50% { opacity: 1; transform: scale(1.02); } }
+@keyframes ticketFloat { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+@keyframes replyFloat { from { transform: translateY(0); } to { transform: translateY(4px); } }
+@keyframes teamFloat { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+@keyframes slaFloat { from { transform: translateY(0); } to { transform: translateY(3px); } }
+
+@media (max-width: 63.9375rem) {
+  .copy { display: block; }
+  .identity { display: inline-block; }
+  .statement { display: inline; margin-inline-start: var(--ds-space-3); font-size: var(--ds-font-size-band); letter-spacing: 0; line-height: var(--ds-line-band); }
+  .access { display: inline; margin-inline-start: var(--ds-space-3); }
+  .network { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticket, .reply, .team, .sla, .centerRing, .centerNode, .network::before, .route { animation: none; }
+  .connections animateMotion { display: none; }
+}

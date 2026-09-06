@@ -29,6 +29,11 @@ describe('Staff authentication V2', () => {
     expect(screen.getByRole('heading', { name: 'Sign In' })).toBeVisible();
     expect(screen.getByRole('textbox', { name: /Email/ })).toHaveAttribute('autocomplete', 'username');
     expect(screen.getByLabelText(/Password/)).toHaveAttribute('autocomplete', 'current-password');
+    const passwordToggle = screen.getByRole('button', { name: 'Show password' });
+    expect(passwordToggle).toHaveAttribute('aria-pressed', 'false');
+    await userEvent.setup().click(passwordToggle);
+    expect(screen.getByLabelText(/Password/)).toHaveAttribute('type', 'text');
+    expect(screen.getByRole('button', { name: 'Hide password' })).toHaveAttribute('aria-pressed', 'true');
     expect(container.querySelector('[data-ui="v2"]')).toHaveAttribute('dir', 'ltr');
     expect((await axe(container)).violations).toEqual([]);
   });

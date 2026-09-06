@@ -5,6 +5,7 @@ import { acceptInvitation, requestPasswordReset, resetPassword } from '@/auth/ap
 import { normaliseApiError } from '@/api/http/errors';
 import { Button } from '@/design-system/primitives/Button';
 import { AuthErrorSummary, AuthField, AuthFrame, Input, styles } from './AuthFrame';
+import { LoginOperationsVisual } from './LoginOperationsVisual';
 
 type Errors = Record<string, string[]>;
 
@@ -20,7 +21,7 @@ export function ForgotPasswordPage() {
   const [sent, setSent] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const submit = async (event: FormEvent) => { event.preventDefault(); setBusy(true); setErrors({}); try { await requestPasswordReset(email); setSent(true); } catch (error) { setErrors(toErrors(error)); } finally { setBusy(false); } };
-  return <AuthFrame title={t('auth.forgot_title')} description={t('auth.forgot_description')} step={t('auth.recovery_step')}>
+  return <AuthFrame title={t('auth.forgot_title')} description={t('auth.forgot_description')} step={t('auth.recovery_step')} visual={<LoginOperationsVisual />}>
     {sent ? <p className={styles.successNotice} role="status">{t('auth.forgot_sent')}</p> : <form className={styles.form} onSubmit={submit}><AuthErrorSummary errors={errors} /><AuthField label={t('auth.work_email_label')} error={errors.email?.[0]} required>{({ id, describedBy, invalid }) => <Input id={id} aria-describedby={describedBy} invalid={invalid} type="email" inputMode="email" autoComplete="email" dir="ltr" value={email} onChange={(event) => setEmail(event.target.value)} required disabled={busy} />}</AuthField><Button type="submit" loading={busy} className={styles.action}>{t('auth.send_reset_link')}</Button></form>}
     <Link className={`${styles.link} ${styles.singleLink}`} to="/login">{t('auth.back_to_sign_in')}</Link>
   </AuthFrame>;

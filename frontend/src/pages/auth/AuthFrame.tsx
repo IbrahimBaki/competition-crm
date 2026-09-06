@@ -1,14 +1,15 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ShieldCheck } from 'lucide-react';
 import { V2PortalBoundary } from '@/design-system/foundations/V2PortalBoundary';
 import { Input } from '@/design-system/primitives/Input';
 import { Label } from '@/design-system/primitives/Label';
 import styles from './AuthFrame.module.css';
 
-export function AuthFrame({ title, description, step, children }: { title: string; description: string; step: string; children: ReactNode }) {
+export function AuthFrame({ title, description, step, children, visual }: { title: string; description: string; step: string; children: ReactNode; visual?: ReactNode }) {
   const { i18n, t } = useTranslation();
   const rtl = i18n.dir(i18n.language) === 'rtl';
-  return <V2PortalBoundary dir={rtl ? 'rtl' : 'ltr'} lang={rtl ? 'ar' : 'en'}><main className={styles.page}><div className={styles.frame}><aside className={styles.context}><div className={styles.identity}>{import.meta.env.VITE_APP_NAME}</div><p className={styles.contextCopy}>{t('auth.context')}</p><p className={styles.step}>{step}</p></aside><section className={styles.work} aria-labelledby="auth-page-title"><h1 id="auth-page-title" className={styles.heading}>{title}</h1><p className={styles.description}>{description}</p><div className={styles.body}>{children}</div></section></div></main></V2PortalBoundary>;
+  return <V2PortalBoundary dir={rtl ? 'rtl' : 'ltr'} lang={rtl ? 'ar' : 'en'}><main className={styles.page}><div className={`${styles.frame} ${visual ? styles.loginFrame : ''}`}><aside className={`${styles.context} ${visual ? styles.loginContext : ''}`} aria-label={visual ? t('auth.login_visual_region') : undefined}>{visual ?? <><div className={styles.identity}>{import.meta.env.VITE_APP_NAME}</div><p className={styles.contextCopy}>{t('auth.context')}</p><p className={styles.step}>{step}</p></>}</aside><section className={styles.work} aria-labelledby="auth-page-title"><div className={styles.headingGroup}><h1 id="auth-page-title" className={styles.heading}>{title}</h1><p className={styles.description}>{description}</p></div>{visual ? <div className={styles.assurance}><ShieldCheck aria-hidden="true" /><span>{t('auth.login_visual_access')}</span></div> : null}<div className={styles.body}>{children}</div></section></div></main></V2PortalBoundary>;
 }
 
 export function AuthField({ label, error, hint, required, children }: { label: string; error?: string; hint?: string; required?: boolean; children: (props: { id: string; describedBy?: string; invalid: boolean }) => ReactNode }) {
