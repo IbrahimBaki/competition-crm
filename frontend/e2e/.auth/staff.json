@@ -2,20 +2,20 @@
   "cookies": [
     {
       "name": "XSRF-TOKEN",
-      "value": "eyJpdiI6InBidXc3OFE5bUxGU3Q4TlpFVW92cXc9PSIsInZhbHVlIjoibzQ4MGVTeTR5MGliRWsyV1I4aVZuN3JwbmtRQWo5dzM3S2RGL2k5clVtR3k0VktLZ2xnWU1PeTZ1SFpLaTZkNllHejUyVjNGQXl1djBmazg0WDI5YW5qNTVZcHdZVUFNWHhQaHRDR2VSbGl2T09oUDdNVE51c1lpcmFKendab2kiLCJtYWMiOiJkZGY0MTNjNWJjYTUyNWIyMTdjMTAyMjk5OGE0ZmQ0YTIzMmJmMWEwZWJmODZkNDlhMzJlM2MxMWFlNTBmYmIwIiwidGFnIjoiIn0%3D",
+      "value": "eyJpdiI6IjFOdzVxaXo0Ti9vR25oQ3J3KzZZS3c9PSIsInZhbHVlIjoiNVNiL3ZFbVpmemYrcTJVczlXcHBTYXNsRlBDdCtyeGJRYUhSRkRPVFdTU3cwVHFnNGxIeGtiQ0JBdXVMMEZPbFRCMGhvcmRMVnNXL3lFSS9GWXB1VDNaZ1hSOW95V1JsVnluKzZvN3RkS1VZdHJsSkw1UGt5aFJ2QlJIUzIyby8iLCJtYWMiOiJkYTU1MjhhODgwYzE5N2RkMDg3NzVmOGVjYmFiY2I3MjQ4ZGE5ZWEwNThkMjMyZjAzNDkzYzk3YzQzYjE3M2FhIiwidGFnIjoiIn0%3D",
       "domain": ".competition-crm.azmsquad.localhost",
       "path": "/",
-      "expires": 1788054844.430768,
+      "expires": 1788389616.545194,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "support-crm-session",
-      "value": "eyJpdiI6Im1GNmg5NFJqMGNFanlaaTlLM3Ura0E9PSIsInZhbHVlIjoiMjJDMjVxK2pST3RJaG9XZ3NwTUFNNmRVUDBCVE45VHVNU1ZtZDNXbkh6clJCSktDZGVYSDdsc2VZS2ZENVhiUW11dlNPcktMR0RSemV6RkxkbTczeFkzZ0ZqUTRaVGp1bGorc0x3L1N1UVZydjVidnU4Y3J2N3Z2MzFUUGxpYTQiLCJtYWMiOiJkZDMyMTY4NzcwOGFkZGNlOThhYmVmZDBhMjI4NGRkZTE0N2ExY2Q2NjA4NTcxMDllZjFlODU4ODg0MGMwODRkIiwidGFnIjoiIn0%3D",
+      "value": "eyJpdiI6Ino0NWpuQ3dBSTFXQmF5ajhjbnNubUE9PSIsInZhbHVlIjoicEY5amxFRU1EV2R5Y1ZqcVg0Mnd3OFlabjE3aXdLdGVEaFFiK0t4blJpZW1yT05COUpvdFI2ZElHVHZ2SlpKZVNyY3A4WVV6b0JxUUxta2JEVnRpT2hvd2NKV3BTazdTa2tQbVdIOEIxc0JFcnRhclMxM1U3UjJUN0g1L1ExenQiLCJtYWMiOiI0NzY4OGQ1MjljNTczYjA2ODVmZjUyN2NmYjg0N2M2MzVlYWEyOWM2YjdjODFkODI4NDZmOGI3NGI5MDg4ZTRiIiwidGFnIjoiIn0%3D",
       "domain": ".competition-crm.azmsquad.localhost",
       "path": "/",
-      "expires": 1788054844.430895,
+      "expires": 1788389616.545385,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"

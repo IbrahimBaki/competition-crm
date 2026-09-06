@@ -5,6 +5,7 @@ import { useGetCustomerTimeline } from '@/api/generated/customers/customers';
 import type { GetCustomerTimelineParams } from '@/api/generated/model/getCustomerTimelineParams';
 import { toTimelineEntry } from '../api/wire';
 import type { TimelineEntry } from '../types';
+import styles from './CustomerRecordV2.module.css';
 
 const PAGE_SIZE = 25;
 
@@ -70,22 +71,22 @@ export function CustomerTimeline({ customerUuid }: CustomerTimelineProps) {
   };
 
   if (query.isLoading && entries.length === 0) {
-    return <p className="text-sm text-gray-400">{t('customers.timeline.loading')}</p>;
+    return <p className={styles.empty}>{t('customers.timeline.loading')}</p>;
   }
 
   if (query.isError && entries.length === 0) {
-    return <p className="text-sm text-red-600">{t('customers.timeline.error')}</p>;
+    return <p className={styles.error}>{t('customers.timeline.error')}</p>;
   }
 
   if (entries.length === 0) {
-    return <p className="text-sm text-gray-400">{t('customers.timeline.empty')}</p>;
+    return <p className={styles.empty}>{t('customers.timeline.empty')}</p>;
   }
 
   let lastDayKey: string | null = null;
 
   return (
     <div>
-      <ul className="flex flex-col gap-1">
+      <ul className={styles.list}>
         {entries.map((entry) => {
           const occurred = new Date(entry.occurredAt);
           const dayKey = occurred.toDateString();
@@ -104,28 +105,28 @@ export function CustomerTimeline({ customerUuid }: CustomerTimelineProps) {
           return (
             <li key={entry.id}>
               {showDaySeparator && (
-                <div className="mt-3 mb-1 text-xs font-semibold uppercase text-gray-400 first:mt-0">
+                <div className={styles.day}>
                   {dateFormatter.format(occurred)}
                 </div>
               )}
-              <div className="flex items-start gap-2 rounded border border-gray-100 px-3 py-2 text-sm">
-                <span className="mt-0.5 text-gray-400" aria-hidden="true">
+              <div className={`${styles.timelineItem} ${styles.row}`}>
+                <span className={styles.type} aria-hidden="true">
                   •
                 </span>
-                <div className="flex-1">
-                  <p className="text-gray-800">
+                <div className={styles.timelineContent}>
+                  <p className={styles.value}>
                     {label}
                     {ticketId && (
-                      <Link to={`/tickets/${ticketId}`} className="ms-2 text-xs text-blue-600 hover:underline">
+                      <Link to={`/tickets/${ticketId}`} className={styles.linkButton}>
                         {t('customers.timeline.view_ticket')}
                       </Link>
                     )}
                   </p>
                   {typeof entry.payload?.body === 'string' && (
-                    <p className="mt-0.5 truncate text-xs text-gray-500">{entry.payload.body}</p>
+                    <p className={styles.meta}>{entry.payload.body}</p>
                   )}
                 </div>
-                <span className="shrink-0 text-xs text-gray-400">{timeFormatter.format(occurred)}</span>
+                <time className={`${styles.time} ds-bidi-value`}>{timeFormatter.format(occurred)}</time>
               </div>
             </li>
           );
@@ -137,7 +138,7 @@ export function CustomerTimeline({ customerUuid }: CustomerTimelineProps) {
           type="button"
           onClick={loadMore}
           disabled={query.isFetching}
-          className="mt-3 w-full rounded border border-gray-300 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className={styles.button}
         >
           {query.isFetching ? t('customers.timeline.loading_more') : t('customers.timeline.load_more')}
         </button>

@@ -42,7 +42,7 @@ import { AutomationRulesPage } from './pages/admin/AutomationRulesPage';
 import { ChannelsPage } from './pages/admin/ChannelsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { NotFoundState } from './shell/states/NotFoundState';
-import { AppLayout } from './shell/AppLayout';
+import { StaffShell } from './app/shell/StaffShell';
 import { RouteFormModal } from './shell/RouteFormModal';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { RouteErrorBoundary } from './shell/RouteErrorBoundary';
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: (
       <ProtectedRoute>
-        <AppLayout />
+        <StaffShell />
       </ProtectedRoute>
     ),
     errorElement: <RouteErrorBoundary />,

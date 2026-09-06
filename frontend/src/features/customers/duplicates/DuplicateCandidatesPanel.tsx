@@ -14,6 +14,7 @@ import { normaliseApiError } from '@/api/http/errors';
 import { toDuplicateCandidate, useDismissDuplicateCandidate } from '../api/wire';
 import type { DuplicateCandidate } from '../types';
 import { MergePreviewDialog } from './MergePreviewDialog';
+import styles from '../detail/CustomerRecordV2.module.css';
 
 interface DuplicateCandidatesPanelProps {
   customerUuid: string;
@@ -51,10 +52,10 @@ export function DuplicateCandidatesPanel({ customerUuid }: DuplicateCandidatesPa
   });
 
   return (
-    <section className="rounded border border-gray-200 p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.duplicates_heading')}</h2>
+    <section className={styles.section}>
+      <h2 className={styles.heading}>{t('customers.detail.duplicates_heading')}</h2>
 
-      {error && <p className="mb-2 text-sm text-red-600">{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
 
       <AsyncBoundary
         query={query}
@@ -62,7 +63,7 @@ export function DuplicateCandidatesPanel({ customerUuid }: DuplicateCandidatesPa
           const all = page.items.map(toDuplicateCandidate);
           return !all.some((c) => c.customer.uuid === customerUuid || c.duplicateCustomer.uuid === customerUuid);
         }}
-        empty={<p className="text-sm text-gray-400">{t('customers.detail.no_duplicates')}</p>}
+        empty={<p className={styles.empty}>{t('customers.detail.no_duplicates')}</p>}
       >
         {(page) => {
           const candidates = page.items
@@ -70,22 +71,22 @@ export function DuplicateCandidatesPanel({ customerUuid }: DuplicateCandidatesPa
             .filter((c) => c.customer.uuid === customerUuid || c.duplicateCustomer.uuid === customerUuid);
 
           return (
-            <ul className="flex flex-col gap-2">
+            <ul className={styles.list}>
               {candidates.map((candidate) => {
                 const other =
                   candidate.customer.uuid === customerUuid ? candidate.duplicateCustomer : candidate.customer;
                 return (
                   <li
                     key={candidate.uuid}
-                    className="flex items-center justify-between rounded border border-gray-100 px-3 py-2 text-sm"
+                    className={`${styles.item} ${styles.row}`}
                   >
-                    <span className="text-gray-800">{other.name}</span>
-                    <div className="flex gap-2">
+                    <span className={styles.value}>{other.name}</span>
+                    <div className={styles.actions}>
                       <ActionGuard permission={PERMISSIONS.CUSTOMERS_MERGE}>
                         <button
                           type="button"
                           onClick={() => setMergeTarget(candidate)}
-                          className="rounded border border-blue-300 px-2 py-1 text-xs text-blue-700 hover:bg-blue-50"
+                          className={styles.buttonPrimary}
                         >
                           {t('customers.actions.review_merge')}
                         </button>
@@ -95,7 +96,7 @@ export function DuplicateCandidatesPanel({ customerUuid }: DuplicateCandidatesPa
                           type="button"
                           disabled={dismissMutation.isPending}
                           onClick={() => dismissMutation.mutate({ candidate: candidate.uuid })}
-                          className="rounded border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+                          className={styles.button}
                         >
                           {t('customers.actions.dismiss_duplicate')}
                         </button>

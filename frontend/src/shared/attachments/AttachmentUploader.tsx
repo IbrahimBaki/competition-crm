@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { postAttachments } from '@/api/generated/attachments/attachments';
 import { normaliseApiError } from '@/api/http/errors';
@@ -22,6 +22,8 @@ interface InFlightUpload {
 interface AttachmentUploaderProps {
   attachments: UploadedAttachment[];
   onChange: (updater: UploadedAttachment[] | ((prev: UploadedAttachment[]) => UploadedAttachment[])) => void;
+  /** Optional caller-owned trigger treatment; upload behavior remains shared. */
+  triggerClassName?: string;
 }
 
 // There is no JSON endpoint to re-check an attachment's scan_state after
@@ -33,10 +35,11 @@ interface AttachmentUploaderProps {
 // Shared between the ticket composer and the customer attachments panel:
 // both link a generically-uploaded attachment (this component's job) to
 // their own owner afterward via their own domain-specific endpoint.
-export function AttachmentUploader({ attachments, onChange }: AttachmentUploaderProps) {
+export function AttachmentUploader({ attachments, onChange, triggerClassName }: AttachmentUploaderProps) {
   const { t } = useTranslation();
   const inputRef = useRef<HTMLInputElement>(null);
   const [inFlight, setInFlight] = useState<InFlightUpload[]>([]);
+  const inputId = useId();
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -75,7 +78,14 @@ export function AttachmentUploader({ attachments, onChange }: AttachmentUploader
   return (
     <div className="mt-2">
       <ActionGuard permission={PERMISSIONS.ATTACHMENTS_UPLOAD}>
-        <input ref={inputRef} type="file" multiple onChange={(event) => handleFiles(event.target.files)} className="text-sm" />
+        {triggerClassName ? (
+          <>
+            <input ref={inputRef} id={inputId} type="file" multiple onChange={(event) => handleFiles(event.target.files)} className="sr-only" />
+            <label htmlFor={inputId} className={triggerClassName}>{t('attachments.uploader.choose_files')}</label>
+          </>
+        ) : (
+          <input ref={inputRef} type="file" multiple aria-label={t('attachments.uploader.choose_files')} onChange={(event) => handleFiles(event.target.files)} className="text-sm" />
+        )}
       </ActionGuard>
 
       {inFlight.map((item) => (

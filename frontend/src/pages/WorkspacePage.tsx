@@ -1,21 +1,14 @@
 import { useTranslation } from 'react-i18next';
-import { MyTicketsPanel } from '@/features/workspace/landing/MyTicketsPanel';
-import { DepartmentQueuePanel } from '@/features/workspace/landing/DepartmentQueuePanel';
-import { SlaRiskPanel } from '@/features/workspace/landing/SlaRiskPanel';
-import { OverdueTasksPanel } from '@/features/workspace/landing/OverdueTasksPanel';
+import { V2PortalBoundary } from '@/design-system/foundations/V2PortalBoundary';
+import { WorkspaceV2 } from '@/features/workspace/landing/WorkspaceV2';
 
 export function WorkspacePage() {
-  const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const rtl = i18n.dir(i18n.language) === 'rtl';
 
   return (
-    <div>
-      <h1 className="mb-6 text-3xl font-bold text-gray-900">{t('workspace.title')}</h1>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <MyTicketsPanel />
-        <DepartmentQueuePanel />
-        <SlaRiskPanel />
-        <OverdueTasksPanel />
-      </div>
-    </div>
+    <V2PortalBoundary dir={rtl ? 'rtl' : 'ltr'} lang={rtl ? 'ar' : 'en'}>
+      <WorkspaceV2 />
+    </V2PortalBoundary>
   );
 }

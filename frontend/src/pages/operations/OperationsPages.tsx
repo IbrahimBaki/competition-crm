@@ -14,21 +14,14 @@ import { FormErrorSummary, Dialog, Field, Input, useToast } from '@/components/u
 import { normaliseApiError } from '@/api/http/errors';
 import { ResourceField, ResourceFormDialog } from '@/features/operations/ResourceFormDialog';
 import { KnowledgeCategoriesPanel } from '@/features/knowledge/KnowledgeCategoriesPanel';
-
-function KnowledgeArticlesPage() {
-  const { can } = usePermissions();
-  const { t } = useTranslation();
-  const statusTone = (value: unknown) => value === 'published' ? 'success' : value === 'archived' ? 'neutral' : 'warning';
-  const titleForLocale = (value: unknown) => {
-    const title = value as Record<string, string> | string;
-    return typeof title === 'string' ? title : title?.[localStorage.getItem('locale') ?? 'en'] ?? title?.en ?? title?.ar ?? 'Untitled article';
-  };
-  return <CollectionPage eyebrow={t('pages.knowledge.content_operations')} title={t('pages.knowledge.title')} description={t('pages.knowledge.description')} endpoint="/knowledge/articles" searchEndpoint="/knowledge/articles/search" queryKey={['knowledge', 'articles']} sorts={[{value:'title',label:'Title A–Z'},{value:'-created_at',label:'Newest first'},{value:'created_at',label:'Oldest first'},{value:'state',label:t('pages.knowledge.state')}]} emptyTitle={t('pages.knowledge.empty_articles')} actions={can(PERMISSIONS.KNOWLEDGE_ARTICLES_CREATE) ? <Link className="ui-button ui-button--primary" to="/knowledge/new">{t('pages.knowledge.new_article')}</Link> : undefined} columns={[{ key: 'title', label: t('pages.knowledge.article'), render: (value, row) => <Link className="knowledge-article-link" to={`/knowledge/${String(row.uuid ?? row.id)}`}>{titleForLocale(value)}</Link> }, { key: 'state', label: t('pages.knowledge.state'), render: (value) => <Badge tone={statusTone(value)}>{String(value ?? 'draft').replace(/_/g, ' ')}</Badge> }, { key: 'visibility', label: t('pages.knowledge.audience'), render: (value) => <Badge tone={value === 'public' ? 'info' : 'neutral'}>{String(value ?? 'internal')}</Badge> }, { key: 'updated_at', label: t('pages.knowledge.updated'), render: (value) => value ? <time dateTime={String(value)}>{new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(String(value)))}</time> : <span className="text-slate-400">—</span> }]}/>;
-}
+import { KnowledgeListV2 } from '@/features/knowledge/KnowledgeListV2';
+import { V2PortalBoundary } from '@/design-system/foundations/V2PortalBoundary';
+import knowledgeStyles from '@/features/knowledge/KnowledgeV2.module.css';
 
 export function KnowledgePage() {
   const { can } = usePermissions();
-  return <div className="knowledge-page grid gap-6"><KnowledgeArticlesPage/>{can(PERMISSIONS.KNOWLEDGE_CATEGORIES_MANAGE) && <KnowledgeCategoriesPanel/>}</div>;
+  const { t, i18n } = useTranslation();
+  return <V2PortalBoundary dir={i18n.dir(i18n.language)==='rtl'?'rtl':'ltr'} lang={i18n.language==='ar'?'ar':'en'}><div className={knowledgeStyles.page}><header className={knowledgeStyles.header}><div><p className={knowledgeStyles.eyebrow}>{t('pages.knowledge.content_operations')}</p><h1 className={knowledgeStyles.title}>{t('pages.knowledge.title')}</h1><p className={knowledgeStyles.description}>{t('pages.knowledge.description')}</p></div>{can(PERMISSIONS.KNOWLEDGE_ARTICLES_CREATE)&&<Link className={knowledgeStyles.primary} to="/knowledge/new">{t('pages.knowledge.new_article')}</Link>}</header><KnowledgeListV2/>{can(PERMISSIONS.KNOWLEDGE_CATEGORIES_MANAGE) && <div className={knowledgeStyles.rule}><KnowledgeCategoriesPanel/></div>}</div></V2PortalBoundary>;
 }
 
 export function AuditLogPage() {

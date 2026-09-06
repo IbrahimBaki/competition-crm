@@ -1,0 +1,43 @@
+.trigger {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-control);
+  background: transparent;
+  color: var(--ds-text-secondary);
+  transition: background-color var(--ds-motion-hover) var(--ds-ease-standard), color var(--ds-motion-hover) var(--ds-ease-standard);
+}
+.trigger:hover { background: var(--ds-surface-subtle); color: var(--ds-text-primary); }
+.trigger svg { inline-size: 1.25rem; block-size: 1.25rem; }
+
+.badge { position: absolute; inset-block-start: 0.25rem; inset-inline-end: 0.25rem; min-width: 1.125rem; padding-inline: 0.25rem; }
+
+.content { width: min(90vw, 22rem); padding: 0; }
+
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--ds-space-2); padding: var(--ds-space-3) var(--ds-space-4); border-block-end: 1px solid var(--ds-border-subtle); }
+.heading { margin: 0; color: var(--ds-text-primary); font-size: var(--ds-font-size-body); font-weight: 600; line-height: var(--ds-line-body); }
+.markAll { border: 0; background: transparent; color: var(--ds-text-link); font-size: var(--ds-font-size-meta); font-weight: 600; line-height: var(--ds-line-meta); }
+.markAll:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+
+.state { display: flex; align-items: center; gap: var(--ds-space-2); margin: 0; padding: var(--ds-space-5) var(--ds-space-4); color: var(--ds-text-muted); font-size: var(--ds-font-size-body); line-height: var(--ds-line-body); }
+
+.list { max-block-size: 22rem; overflow-y: auto; margin: 0; padding: var(--ds-space-1); list-style: none; }
+.item {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: var(--ds-radius-control);
+  background: transparent;
+  padding: var(--ds-space-2) var(--ds-space-3);
+  color: var(--ds-text-muted);
+  font-size: var(--ds-font-size-body);
+  line-height: var(--ds-line-body);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.item:hover { background: var(--ds-surface-subtle); }
+.item.unread { color: var(--ds-text-primary); font-weight: 600; }

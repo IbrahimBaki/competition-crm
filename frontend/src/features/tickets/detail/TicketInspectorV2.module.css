@@ -1,0 +1,108 @@
+.stack {
+    display: grid;
+    gap: var(--ds-space-3);
+}
+.field {
+    display: grid;
+    gap: var(--ds-space-1);
+}
+.label,
+.muted {
+    color: var(--ds-text-secondary);
+    font-size: var(--ds-font-size-meta);
+}
+.control {
+    inline-size: 100%;
+    min-block-size: 2.5rem;
+    border: 1px solid var(--ds-border-default);
+    border-radius: var(--ds-radius-control);
+    background: var(--ds-surface-base);
+    padding-inline: var(--ds-space-2);
+    color: var(--ds-text-primary);
+    font: inherit;
+}
+.textarea {
+    padding-block: var(--ds-space-2);
+    resize: vertical;
+}
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--ds-space-2);
+}
+.button {
+    min-block-size: 2.25rem;
+    border: 1px solid var(--ds-border-default);
+    border-radius: var(--ds-radius-control);
+    background: var(--ds-surface-base);
+    padding-inline: var(--ds-space-3);
+    color: var(--ds-text-primary);
+    font: inherit;
+    font-size: var(--ds-font-size-label);
+}
+.button:hover {
+    background: var(--ds-surface-subtle);
+}
+.buttonPrimary {
+    border-color: var(--ds-brand-primary);
+    background: var(--ds-brand-primary);
+    color: var(--ds-text-inverse);
+}
+.button:disabled {
+    opacity: 0.55;
+}
+.ledger {
+    margin: 0;
+    display: grid;
+    gap: 0;
+}
+.ledgerRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+    gap: var(--ds-space-3);
+    border-block-start: 1px solid var(--ds-border-subtle);
+    padding-block: var(--ds-space-2);
+    font-size: var(--ds-font-size-meta);
+}
+.ledgerRow dt {
+    color: var(--ds-text-secondary);
+}
+.ledgerRow dd {
+    margin: 0;
+    color: var(--ds-text-primary);
+    overflow-wrap: anywhere;
+}
+.eventList {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.event {
+    border-block-start: 1px solid var(--ds-border-subtle);
+    padding-block: var(--ds-space-2);
+    color: var(--ds-text-primary);
+    font-size: var(--ds-font-size-meta);
+}
+.event time {
+    color: var(--ds-text-muted);
+}
+.empty {
+    margin: 0;
+    color: var(--ds-text-muted);
+    font-size: var(--ds-font-size-label);
+}
+.bidi {
+    direction: ltr;
+    unicode-bidi: isolate;
+}
+@media (max-width: 47.9375rem) {
+    .ledgerRow {
+        grid-template-columns: 1fr;
+        gap: var(--ds-space-1);
+    }
+    .actions > * {
+        flex: 1 1 auto;
+    }
+}

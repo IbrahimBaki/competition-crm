@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConfirmActionDialogProps {
@@ -14,6 +14,8 @@ interface ConfirmActionDialogProps {
   isSubmitting?: boolean;
   error?: string;
   destructive?: boolean;
+  /** Optional route-local skin; dialog behavior stays shared. */
+  presentationClassName?: string;
 }
 
 // Reusable confirmation dialog for destructive/consequential actions across
@@ -31,15 +33,26 @@ export function ConfirmActionDialog({
   isSubmitting = false,
   error,
   destructive = false,
+  presentationClassName,
 }: ConfirmActionDialogProps) {
   const { t } = useTranslation();
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.focus();
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 ${presentationClassName ?? ''}`}>
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="confirm-action-dialog-title"
+        tabIndex={-1}
+        onKeyDown={(event) => {
+          if (event.key === 'Escape' && !isSubmitting) onCancel();
+        }}
         className="w-full max-w-md rounded bg-white p-5 shadow-lg"
       >
         <h2 id="confirm-action-dialog-title" className="mb-3 text-lg font-semibold text-gray-900">

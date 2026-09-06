@@ -9,6 +9,7 @@ import { PERMISSIONS } from '@/auth/permissions';
 import { normaliseApiError } from '@/api/http/errors';
 import { useAddCustomerContact, useRemoveCustomerContact, toCustomerContact } from '../api/wire';
 import type { CustomerContact } from '../types';
+import styles from './CustomerRecordV2.module.css';
 
 // Mirrors app/Domains/Customers/Models/ContactType.php exactly.
 const CONTACT_TYPES = ['email', 'phone', 'whatsapp', 'sms', 'chat', 'portal_login', 'web_form'] as const;
@@ -65,25 +66,25 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
   };
 
   return (
-    <section className="rounded border border-gray-200 p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.identity_heading')}</h2>
+    <section className={styles.section}>
+      <h2 className={styles.heading}>{t('customers.detail.identity_heading')}</h2>
 
       <AsyncBoundary
         query={query}
         isEmpty={(page) => page.items.length === 0}
-        empty={<p className="text-sm text-gray-400">{t('customers.detail.no_contacts')}</p>}
+        empty={<p className={styles.empty}>{t('customers.detail.no_contacts')}</p>}
       >
         {(page) => {
           const contacts: CustomerContact[] = page.items.map(toCustomerContact);
           return (
-            <ul className="flex flex-col gap-2">
+            <ul className={styles.list}>
               {contacts.map((contact) => (
-                <li key={contact.uuid} className="flex items-center justify-between rounded border border-gray-100 px-3 py-2 text-sm">
-                  <div>
-                    <span className="font-medium text-gray-800">{t(`customers.contact_type.${contact.type}`, { defaultValue: contact.type })}</span>
-                    <span className="ms-2 text-gray-700">{contact.value}</span>
+                <li key={contact.uuid} className={`${styles.item} ${styles.row}`}>
+                  <div className={styles.value}>
+                    <span className={styles.type}>{t(`customers.contact_type.${contact.type}`, { defaultValue: contact.type })}</span>{' '}
+                    <span className="ds-bidi-value">{contact.value}</span>
                     {contact.isPrimary && (
-                      <span className="ms-2 rounded bg-blue-100 px-1.5 py-0.5 text-xs font-medium text-blue-700">
+                      <span className={styles.badge}>
                         {t('customers.detail.primary_contact')}
                       </span>
                     )}
@@ -93,7 +94,7 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
                       type="button"
                       disabled={removeMutation.isPending}
                       onClick={() => removeMutation.mutate({ customer: customerUuid, contact: contact.uuid })}
-                      className="text-xs text-red-600 hover:underline disabled:opacity-50"
+                      className={styles.linkButton}
                     >
                       {t('customers.actions.remove_contact')}
                     </button>
@@ -105,19 +106,20 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
         }}
       </AsyncBoundary>
 
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
 
       <ActionGuard permission={PERMISSIONS.CUSTOMERS_CONTACT_MANAGE}>
-        <div className="mt-4 flex flex-wrap items-end gap-2 border-t border-gray-100 pt-3">
-          <div className="flex flex-col">
-            <label htmlFor="contact-type" className="text-xs font-medium text-gray-600">
+        <div className={styles.form}>
+          <div className={styles.formRow}>
+          <div className={styles.field}>
+            <label htmlFor="contact-type" className={styles.label}>
               {t('customers.detail.contact_type_label')}
             </label>
             <select
               id="contact-type"
               value={type}
               onChange={(event) => setType(event.target.value as (typeof CONTACT_TYPES)[number])}
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className={styles.control}
             >
               {CONTACT_TYPES.map((option) => (
                 <option key={option} value={option}>
@@ -126,8 +128,8 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
               ))}
             </select>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="contact-value" className="text-xs font-medium text-gray-600">
+          <div className={styles.field}>
+            <label htmlFor="contact-value" className={styles.label}>
               {t('customers.detail.contact_value_label')}
             </label>
             <input
@@ -135,11 +137,11 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
               type="text"
               value={value}
               onChange={(event) => setValue(event.target.value)}
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className={`${styles.control} ds-bidi-value`}
             />
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="contact-label" className="text-xs font-medium text-gray-600">
+          <div className={styles.field}>
+            <label htmlFor="contact-label" className={styles.label}>
               {t('customers.detail.contact_label_label')}
             </label>
             <input
@@ -147,18 +149,19 @@ export function CustomerIdentityPanel({ customerUuid }: CustomerIdentityPanelPro
               type="text"
               value={label}
               onChange={(event) => setLabel(event.target.value)}
-              className="rounded border border-gray-300 px-2 py-1 text-sm"
+              className={styles.control}
             />
           </div>
-          <label className="flex items-center gap-1 pb-1.5 text-xs text-gray-600">
+          <label className={styles.label}>
             <input type="checkbox" checked={isPrimary} onChange={(event) => setIsPrimary(event.target.checked)} />
             {t('customers.detail.contact_primary_label')}
           </label>
+          </div>
           <button
             type="button"
             onClick={handleAdd}
             disabled={addMutation.isPending || !value.trim()}
-            className="rounded bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className={styles.buttonPrimary}
           >
             {t('customers.actions.add_contact')}
           </button>

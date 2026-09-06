@@ -13,6 +13,11 @@
 .tabsTrigger { border: 0; border-block-end: 2px solid transparent; background: transparent; color: var(--ds-text-secondary); padding-block: var(--ds-space-2); padding-inline: var(--ds-space-3); font: inherit; font-size: var(--ds-font-size-body); font-weight: 500; line-height: var(--ds-line-body); }
 .tabsTrigger[data-state='active'] { border-block-end-color: var(--ds-brand-primary); color: var(--ds-text-primary); }
 .tabsContent { padding-block: var(--ds-space-4); }
+.drawerContent { position: fixed; z-index: var(--ds-z-drawer); inset-block: 0; inset-inline-start: 0; width: min(85vw, 20rem); max-width: 20rem; display: flex; flex-direction: column; overflow-y: auto; background: var(--ds-surface-base); box-shadow: var(--ds-shadow-overlay); animation: enterDrawerLtr var(--ds-motion-drawer) var(--ds-ease-enter); }
+[data-ui='v2'][dir='rtl'] .drawerContent { animation-name: enterDrawerRtl; }
+.drawerTitle { margin: 0; border-block-end: 1px solid var(--ds-border-subtle); padding-block: var(--ds-space-4); padding-inline: var(--ds-space-5) var(--ds-space-12); color: var(--ds-text-primary); font-size: var(--ds-font-size-section); font-weight: 600; line-height: var(--ds-line-section); }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes enterDialog { from { opacity: 0; transform: translate(-50%, calc(-50% + .5rem)); } to { opacity: 1; transform: translate(-50%, -50%); } }
 @keyframes enterSurface { from { opacity: 0; transform: translateY(.25rem); } to { opacity: 1; transform: translateY(0); } }
+@keyframes enterDrawerLtr { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes enterDrawerRtl { from { transform: translateX(100%); } to { transform: translateX(0); } }

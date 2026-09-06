@@ -1,0 +1,56 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-space-2);
+  min-height: 2.75rem;
+  border: 1px solid transparent;
+  border-radius: var(--ds-radius-control);
+  background: transparent;
+  padding-inline: var(--ds-space-2);
+  color: var(--ds-text-primary);
+  transition: background-color var(--ds-motion-hover) var(--ds-ease-standard);
+}
+.trigger:hover { background: var(--ds-surface-subtle); }
+
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  flex: 0 0 auto;
+  border-radius: var(--ds-radius-full);
+  background: var(--ds-brand-primary);
+  color: var(--ds-text-inverse);
+  font-size: var(--ds-font-size-meta);
+  font-weight: 700;
+}
+
+.name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--ds-font-size-body); font-weight: 600; }
+
+@media (max-width: 30rem) {
+  .name { display: none; }
+}
+
+.header { padding: var(--ds-space-3); border-block-end: 1px solid var(--ds-border-subtle); }
+.headerName { margin: 0; color: var(--ds-text-primary); font-size: var(--ds-font-size-body); font-weight: 600; line-height: var(--ds-line-body); }
+.headerEmail { margin: var(--ds-space-1) 0 0; color: var(--ds-text-muted); font-size: var(--ds-font-size-meta); line-height: var(--ds-line-meta); overflow-wrap: anywhere; }
+
+.itemLink { display: flex; align-items: center; gap: var(--ds-space-2); text-decoration: none; }
+.itemIcon { inline-size: 1rem; block-size: 1rem; flex: 0 0 auto; }
+
+/*
+ * Visually separated from "My account" so a misclick can't end a session
+ * unnoticed. Overlay.module.css's shared `.menuItem[data-highlighted]` rule
+ * (in the Dropdown composite, a different CSS module) reads
+ * `var(--ds-surface-selected)` for its highlight background; redefining that
+ * custom property locally — rather than fighting its selector for
+ * specificity/source-order — makes the highlight resolve to the danger tone
+ * for this item only, robustly regardless of stylesheet load order.
+ */
+.itemDanger {
+  border-block-start: 1px solid var(--ds-border-subtle);
+  margin-block-start: var(--ds-space-1);
+  padding-block-start: calc(var(--ds-space-2) + var(--ds-space-1));
+  color: var(--ds-semantic-danger-fg);
+  --ds-surface-selected: var(--ds-semantic-danger-bg);
+}

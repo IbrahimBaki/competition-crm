@@ -2,20 +2,20 @@
   "cookies": [
     {
       "name": "XSRF-TOKEN",
-      "value": "eyJpdiI6IjE1dHdvN3JrTnEyT0RPd2hmL2RSU2c9PSIsInZhbHVlIjoiRDRYcDJsRmIxME05ZXVQV0VXSE9tZDVTYTN5enVLMDRBZDE3UTdCdlFBUFgremFEd2dtRkZSdThSRkU0MTlXYlhudUtacjBuVUN3aFp6WmpvZWNwZVl5eGxhaXFHM283OVpzSHI3K1JmOUhESDJxZXJvRVZzeDRBVFY2MzArYnoiLCJtYWMiOiIxZmUyMDFkMGVmZjZhZDQ2ZGIwZjcxOGY1MmQzM2IwY2Q5MzA1MjQwOTdjZTdkNTVjNmVjMGIzMDg3MTc0MzA2IiwidGFnIjoiIn0%3D",
+      "value": "eyJpdiI6IndMUU4yWmdJSm00Ulk4Z2ZFOGVJQWc9PSIsInZhbHVlIjoiZnpLMFc5VTBwM1hhUXRXTEdRRWk5SFNhUkIrZUswR20zYllVdlE1VEZkRFlpNXpUM21yNTVYalFuZk0rZ1h1ZmlaSFhyRm1wSE1ma244bmpNMDFVeTlOc3VSdlZrUVl0SE5FcXB0bEM3eS9Sbm4vc3NRNDBjeEVKK01pblJTMVYiLCJtYWMiOiI0MGNlMzg2NThiMDhhMzkwMGQ0ZGQzYTI0YWNmMjliNWEyY2RmYTZhYzBjZWZkNjFhZDIyYjRkNjMyMTZlZTczIiwidGFnIjoiIn0%3D",
       "domain": ".competition-crm.azmsquad.localhost",
       "path": "/",
-      "expires": 1788054845.804763,
+      "expires": 1788389618.910253,
       "httpOnly": false,
       "secure": false,
       "sameSite": "Lax"
     },
     {
       "name": "support-crm-session",
-      "value": "eyJpdiI6ImJlVHlIdldXL2VWT0d6NGlDOGIxL1E9PSIsInZhbHVlIjoiLzRjT29vK0R3dW4xaXNIVzVvd3k5bkx3ODk3b2dPQUM4S0FkZlE1Y0p2bWVPZTFPZk44a2t0WHBsQVd2R0FHUDlYc2x2WHBiTGU0THJvRFUxUlMwbHp4T2ROS1didVVuelNJaXg5R1llaHNEUWR0b0FOU1FUN2ZXUVF5VTJDQnYiLCJtYWMiOiI4Zjk4MWY5MzM3MTM1YjFjNDU2MWMxYzk3MzRkNmI4Y2JjY2ZhZmFiNjI0ZjQzMDE4YmJkNWZlNzE3MWQ1NDg4IiwidGFnIjoiIn0%3D",
+      "value": "eyJpdiI6IjRiSGhFTnkrYVMrUXgvazE1bFpGaWc9PSIsInZhbHVlIjoiQzQycjFVSWx4Nktlb2pMcmdvQ3RyRHJBMWNqUHg1RzJRcy94WEI2bXdXdDlXSVVRWTVqaXk1eUdzSExNdy96S2ZhdHhhcytNMmM1RmwvRlo5eFdSWjVHSDgxWTYrb2RtRmkrRXRNS0g1QjJzc1cwaHVkUURURE0xb1dSeldibUciLCJtYWMiOiJmMWQwMzAzYTZkOGE2Yzk1OGYwYjg0NGYzMGZiMDM5ZGEwOWU4Y2VlZjI4ZGNjYjc0YWQyMzIzNWU5MDExNjgwIiwidGFnIjoiIn0%3D",
       "domain": ".competition-crm.azmsquad.localhost",
       "path": "/",
-      "expires": 1788054845.804873,
+      "expires": 1788389618.910531,
       "httpOnly": true,
       "secure": false,
       "sameSite": "Lax"
@@ -35,7 +35,7 @@
         },
         {
           "name": "__portal_session__",
-          "value": "{\"token\":\"122|NU0LfpX3x5f8PAMHKKh8v6ER9FKL1QRzSNDXOuE51212ecb7\"}"
+          "value": "{\"token\":\"190|vpxqHTf5QPA39EMrjliVncPPnSbRpZbsMkTCNB6x64aa013e\"}"
         }
       ]
     }

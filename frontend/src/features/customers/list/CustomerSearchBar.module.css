@@ -1,0 +1,47 @@
+.root {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--ds-space-3);
+    border-block: 1px solid var(--ds-border-subtle);
+    padding-block: var(--ds-space-3);
+}
+.field {
+    display: grid;
+    gap: var(--ds-space-1);
+}
+.label {
+    color: var(--ds-text-secondary);
+    font-size: var(--ds-font-size-meta);
+    font-weight: 600;
+}
+.input,
+.select {
+    min-block-size: 2.5rem;
+    border: 1px solid var(--ds-border-default);
+    border-radius: var(--ds-radius-control);
+    background: var(--ds-surface-base);
+    padding-inline: var(--ds-space-2);
+    color: var(--ds-text-primary);
+    font: inherit;
+}
+.input {
+    min-inline-size: min(100%, 18rem);
+}
+.clear {
+    min-block-size: 2.5rem;
+    border: 1px solid var(--ds-border-default);
+    border-radius: var(--ds-radius-control);
+    background: var(--ds-surface-base);
+    padding-inline: var(--ds-space-3);
+    color: var(--ds-text-primary);
+    font: inherit;
+}
+@media (max-width: 47.9375rem) {
+    .root,
+    .field,
+    .input,
+    .select {
+        inline-size: 100%;
+    }
+}

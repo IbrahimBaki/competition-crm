@@ -1,0 +1,18 @@
+.rail {
+  display: flex;
+  flex-direction: column;
+  inline-size: 100%;
+  block-size: 100%;
+  overflow-y: auto;
+  background: var(--ds-surface-base);
+  border-inline-end: 1px solid var(--ds-border-subtle);
+}
+
+.brand {
+  padding: var(--ds-space-5) var(--ds-space-5) var(--ds-space-4);
+  border-block-end: 1px solid var(--ds-border-subtle);
+  color: var(--ds-text-primary);
+  font-size: var(--ds-font-size-band);
+  font-weight: 700;
+  line-height: var(--ds-line-band);
+}

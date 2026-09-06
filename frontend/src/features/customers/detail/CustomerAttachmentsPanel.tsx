@@ -10,6 +10,7 @@ import { normaliseApiError } from '@/api/http/errors';
 import { AttachmentUploader, type UploadedAttachment } from '@/shared/attachments/AttachmentUploader';
 import { useLinkCustomerAttachment, useRemoveCustomerAttachment, toCustomerAttachment } from '../api/wire';
 import type { CustomerAttachment } from '../types';
+import styles from './CustomerRecordV2.module.css';
 
 interface CustomerAttachmentsPanelProps {
   customerUuid: string;
@@ -69,54 +70,54 @@ export function CustomerAttachmentsPanel({ customerUuid }: CustomerAttachmentsPa
   };
 
   return (
-    <section className="rounded border border-gray-200 p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.attachments_heading')}</h2>
+    <section className={styles.section}>
+      <h2 className={styles.heading}>{t('customers.detail.attachments_heading')}</h2>
 
       <AsyncBoundary
         query={query}
         isEmpty={(page) => page.items.length === 0}
-        empty={<p className="text-sm text-gray-400">{t('customers.detail.no_attachments')}</p>}
+        empty={<p className={styles.empty}>{t('customers.detail.no_attachments')}</p>}
       >
         {(page) => {
           const attachments: CustomerAttachment[] = page.items.map(toCustomerAttachment);
           return (
-            <ul className="flex flex-col gap-2">
+            <ul className={styles.list}>
               {attachments.map((attachment) => {
                 const downloadable = attachment.scanState === 'clean';
                 return (
                   <li
                     key={attachment.uuid}
-                    className="flex items-center justify-between rounded border border-gray-100 px-3 py-2 text-sm"
+                    className={`${styles.item} ${styles.row}`}
                   >
                     <div>
-                      {downloadable ? (
+                      <div className={styles.value}>{downloadable ? (
                         <a
                           href={attachmentDownloadUrl(attachment.uuid)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-medium text-blue-600 hover:underline"
+                          className={`${styles.attachmentName} ds-bidi-value`}
                         >
                           {attachment.originalName}
                         </a>
                       ) : (
                         <span
-                          className="font-medium text-gray-400"
+                          className={`${styles.attachmentName} ds-bidi-value`}
                           title={t(`customers.attachment_scan_state.${attachment.scanState}_tooltip`)}
                         >
                           {attachment.originalName}
                         </span>
                       )}
-                      <span className="ms-2 text-xs text-gray-400">
+                      <span className={styles.meta}>
                         {t(`customers.attachment_scan_state.${attachment.scanState}`)} ·{' '}
                         {dateFormatter.format(new Date(attachment.createdAt))}
-                      </span>
+                      </span></div>
                     </div>
                     <ActionGuard permission={PERMISSIONS.CUSTOMERS_ATTACHMENT_MANAGE}>
                       <button
                         type="button"
                         disabled={removeMutation.isPending}
                         onClick={() => removeMutation.mutate({ customer: customerUuid, attachment: attachment.uuid })}
-                        className="text-xs text-red-600 hover:underline disabled:opacity-50"
+                        className={styles.linkButton}
                       >
                         {t('customers.actions.remove_attachment')}
                       </button>
@@ -129,11 +130,11 @@ export function CustomerAttachmentsPanel({ customerUuid }: CustomerAttachmentsPa
         }}
       </AsyncBoundary>
 
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      {error && <p className={styles.error}>{error}</p>}
 
       <ActionGuard permission={PERMISSIONS.CUSTOMERS_ATTACHMENT_MANAGE}>
-        <div className="mt-4 border-t border-gray-100 pt-3">
-          <AttachmentUploader attachments={pendingUploads} onChange={handleUploaderChange} />
+        <div className={`${styles.form} ${styles.uploader}`}>
+          <AttachmentUploader attachments={pendingUploads} onChange={handleUploaderChange} triggerClassName={styles.button} />
         </div>
       </ActionGuard>
     </section>

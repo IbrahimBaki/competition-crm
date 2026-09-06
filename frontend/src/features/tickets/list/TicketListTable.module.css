@@ -1,0 +1,150 @@
+.wrap {
+    width: 100%;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--ds-font-size-table);
+    line-height: var(--ds-line-table);
+}
+.table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border-block-end: 1px solid var(--ds-border-default);
+    background: var(--ds-surface-raised);
+    padding: var(--ds-space-2) var(--ds-space-3);
+    color: var(--ds-text-secondary);
+    font-weight: 600;
+    text-align: start;
+}
+.table td {
+    height: 2.5rem;
+    border-block-end: 1px solid var(--ds-border-subtle);
+    padding: var(--ds-space-2) var(--ds-space-3);
+    color: var(--ds-text-secondary);
+    vertical-align: middle;
+}
+.table tbody tr:hover {
+    background: var(--ds-surface-subtle);
+}
+.table tbody tr.selected {
+    background: var(--ds-surface-selected);
+}
+.selection {
+    width: 2.75rem;
+    text-align: center;
+}
+.selection input {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--ds-brand-primary);
+}
+.sortable button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+}
+.reference a,
+.subjectLink {
+    color: var(--ds-text-primary);
+    font-weight: 600;
+    text-decoration: none;
+}
+.reference a:hover,
+.subjectLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+.subject {
+    min-width: 16rem;
+}
+.department {
+    min-width: 9rem;
+}
+.updated {
+    white-space: nowrap;
+}
+.table td:first-child + td {
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 79.9375rem) {
+    .department,
+    .updated {
+        display: none;
+    }
+}
+
+@media (max-width: 48rem) {
+    .table,
+    .table tbody,
+    .table tr,
+    .table td {
+        display: block;
+        width: 100%;
+    }
+    .table thead {
+        display: none;
+    }
+    .table tr {
+        position: relative;
+        padding: var(--ds-space-4);
+        border-block-end: 1px solid var(--ds-border-subtle);
+    }
+    .table td {
+        height: auto;
+        border: 0;
+        padding: 0;
+    }
+    .table td::before {
+        content: attr(data-label);
+        color: var(--ds-text-muted);
+        font-size: var(--ds-font-size-meta);
+    }
+    .selection {
+        position: absolute;
+        inset-inline-end: var(--ds-space-3);
+        inset-block-start: var(--ds-space-3);
+        width: auto;
+    }
+    .reference {
+        padding-inline-end: var(--ds-space-8) !important;
+    }
+    .subject {
+        min-width: 0;
+        margin-block: var(--ds-space-2);
+        padding-inline-end: var(--ds-space-6) !important;
+    }
+    .subject::before {
+        display: none;
+    }
+    .subjectLink {
+        font-size: var(--ds-font-size-body);
+        line-height: var(--ds-line-body);
+    }
+    .department,
+    .updated {
+        display: flex !important;
+        justify-content: space-between;
+        gap: var(--ds-space-3);
+        margin-block-start: var(--ds-space-2);
+    }
+    .table
+        td:not(.selection):not(.reference):not(.subject):not(.department):not(
+            .updated
+        ) {
+        display: inline-flex;
+        width: auto;
+        gap: var(--ds-space-1);
+        margin-inline-end: var(--ds-space-2);
+    }
+    .table
+        td:not(.selection):not(.reference):not(.subject):not(.department):not(
+            .updated
+        )::before {
+        display: none;
+    }
+}

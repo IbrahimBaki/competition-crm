@@ -5,10 +5,10 @@ import type { ApiPage } from '@/api/http/envelope';
 import type { WorkspaceNotification } from '../types';
 import { mapNotification } from './wire';
 
-export function useNotificationsQuery(perPage = 10) {
+export function useNotificationsQuery(perPage = 10, enabled = true) {
   const rawQuery = useGetNotifications(
     { per_page: perPage } as never,
-    { query: { refetchInterval: 30000 } }
+    { query: { refetchInterval: 30000, enabled } }
   ) as unknown as UseQueryResult<ApiPage<unknown>, unknown>;
 
   const query = useMemo(() => {

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { apiRequest } from '@/api/http/mutator';
 import { normaliseApiError, type NormalisedApiError } from '@/api/http/errors';
+import styles from './CustomerRecordV2.module.css';
 
 interface ErpContext {
   legalName: string | null;
@@ -66,9 +67,9 @@ export function ErpContextPanel({ customerUuid }: ErpContextPanelProps) {
 
   if (query.isLoading) {
     return (
-      <section className="rounded border border-gray-200 p-4">
-        <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.erp_heading')}</h2>
-        <p className="text-sm text-gray-400">{t('customers.erp.loading')}</p>
+      <section className={styles.section}>
+        <h2 className={styles.heading}>{t('customers.detail.erp_heading')}</h2>
+        <p className={styles.empty}>{t('customers.erp.loading')}</p>
       </section>
     );
   }
@@ -84,9 +85,9 @@ export function ErpContextPanel({ customerUuid }: ErpContextPanelProps) {
     // 404 / not-found-shaped errors — no ERP record linked.
     if (error.status === 404) {
       return (
-        <section className="rounded border border-gray-200 p-4">
-          <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.erp_heading')}</h2>
-          <p className="text-sm text-gray-400">{t('customers.erp.no_record')}</p>
+        <section className={styles.section}>
+          <h2 className={styles.heading}>{t('customers.detail.erp_heading')}</h2>
+          <p className={styles.empty}>{t('customers.erp.no_record')}</p>
         </section>
       );
     }
@@ -94,13 +95,13 @@ export function ErpContextPanel({ customerUuid }: ErpContextPanelProps) {
     // Network error / 5xx / timeout — compact inline notice + retry. No
     // modal, no toast storm.
     return (
-      <section className="rounded border border-gray-200 p-4">
-        <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.erp_heading')}</h2>
-        <p className="text-sm text-amber-700">{t('customers.erp.unavailable')}</p>
+      <section className={styles.section}>
+        <h2 className={styles.heading}>{t('customers.detail.erp_heading')}</h2>
+        <p className={styles.error}>{t('customers.erp.unavailable')}</p>
         <button
           type="button"
           onClick={() => query.refetch()}
-          className="mt-2 rounded border border-gray-300 px-2 py-1 text-xs text-gray-700 hover:bg-gray-50"
+          className={styles.button}
         >
           {t('customers.erp.retry')}
         </button>
@@ -111,26 +112,26 @@ export function ErpContextPanel({ customerUuid }: ErpContextPanelProps) {
   const context = query.data?.context ?? null;
 
   return (
-    <section className="rounded border border-gray-200 p-4">
-      <h2 className="mb-3 text-sm font-semibold text-gray-700">{t('customers.detail.erp_heading')}</h2>
+    <section className={styles.section}>
+      <h2 className={styles.heading}>{t('customers.detail.erp_heading')}</h2>
       {!context ? (
-        <p className="text-sm text-gray-400">{t('customers.erp.no_record')}</p>
+        <p className={styles.empty}>{t('customers.erp.no_record')}</p>
       ) : (
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
-          <dt className="text-gray-500">{t('customers.erp.legal_name')}</dt>
-          <dd className="text-gray-800">{context.legalName ?? '—'}</dd>
-          <dt className="text-gray-500">{t('customers.erp.account_status')}</dt>
-          <dd className="text-gray-800">{context.accountStatus ?? '—'}</dd>
-          <dt className="text-gray-500">{t('customers.erp.credit_hold')}</dt>
-          <dd className="text-gray-800">
+        <dl className={styles.erp}>
+          <dt className={styles.erpLabel}>{t('customers.erp.legal_name')}</dt>
+          <dd className={styles.erpValue}>{context.legalName ?? '—'}</dd>
+          <dt className={styles.erpLabel}>{t('customers.erp.account_status')}</dt>
+          <dd className={styles.erpValue}>{context.accountStatus ?? '—'}</dd>
+          <dt className={styles.erpLabel}>{t('customers.erp.credit_hold')}</dt>
+          <dd className={styles.erpValue}>
             {context.creditHold === null ? '—' : context.creditHold ? t('customers.erp.yes') : t('customers.erp.no')}
           </dd>
-          <dt className="text-gray-500">{t('customers.erp.outstanding_balance')}</dt>
-          <dd className="text-gray-800">{context.outstandingBalance ?? '—'}</dd>
-          <dt className="text-gray-500">{t('customers.erp.service_tier')}</dt>
-          <dd className="text-gray-800">{context.serviceTier ?? '—'}</dd>
-          <dt className="text-gray-500">{t('customers.erp.contract_end_date')}</dt>
-          <dd className="text-gray-800">{context.contractEndDate ?? '—'}</dd>
+          <dt className={styles.erpLabel}>{t('customers.erp.outstanding_balance')}</dt>
+          <dd className={`${styles.erpValue} ds-bidi-value`}>{context.outstandingBalance ?? '—'}</dd>
+          <dt className={styles.erpLabel}>{t('customers.erp.service_tier')}</dt>
+          <dd className={styles.erpValue}>{context.serviceTier ?? '—'}</dd>
+          <dt className={styles.erpLabel}>{t('customers.erp.contract_end_date')}</dt>
+          <dd className={`${styles.erpValue} ds-bidi-value`}>{context.contractEndDate ?? '—'}</dd>
         </dl>
       )}
     </section>

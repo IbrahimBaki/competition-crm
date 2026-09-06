@@ -7,9 +7,10 @@ import { fetchAgentTasks, type AgentTaskListParams } from '../api/wire';
  * a ticket-scoped list (filter.ticket_id). See fetchAgentTasks/wire.ts for
  * the real filter contract (state/owner_id/ticket_id/due_before/due_after/overdue).
  */
-export function useAgentTaskListQuery(params: AgentTaskListParams) {
+export function useAgentTaskListQuery(params: AgentTaskListParams, enabled = true) {
   return useQuery({
     queryKey: [...getGetAgentTasksQueryKey(), params],
     queryFn: () => fetchAgentTasks(params),
+    enabled,
   });
 }

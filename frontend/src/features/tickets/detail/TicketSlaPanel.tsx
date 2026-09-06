@@ -1,17 +1,10 @@
-import { useTranslation } from 'react-i18next';
-import type { TicketSlaBlock, TicketSlaPosition, SlaClockState } from '../types';
+import { useTranslation } from "react-i18next";
+import type { TicketSlaBlock, TicketSlaPosition } from "../types";
+import styles from "./TicketInspectorV2.module.css";
 
 interface TicketSlaPanelProps {
-  sla: TicketSlaBlock | null;
+    sla: TicketSlaBlock | null;
 }
-
-const STATE_BADGE_CLASSES: Record<SlaClockState, string> = {
-  running: 'bg-blue-100 text-blue-800',
-  paused: 'bg-gray-200 text-gray-700',
-  met: 'bg-green-100 text-green-800',
-  breached: 'bg-red-100 text-red-800',
-  cancelled: 'bg-gray-100 text-gray-500',
-};
 
 // Display-only: every value here (state, target/elapsed/remaining minutes,
 // due_at) comes verbatim from the server. Formatting is allowed; computing a
@@ -20,53 +13,85 @@ const STATE_BADGE_CLASSES: Record<SlaClockState, string> = {
 // must never be mirrored in the browser). See the guard test
 // no-sla-recalculation.test.ts.
 export function TicketSlaPanel({ sla }: TicketSlaPanelProps) {
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  if (!sla || (!sla.first_response && !sla.resolution)) {
-    return <p className="text-sm text-gray-400">{t('tickets.sla.none')}</p>;
-  }
+    if (!sla || (!sla.first_response && !sla.resolution)) {
+        return <p className={styles.empty}>{t("tickets.sla.none")}</p>;
+    }
 
-  return (
-    <div className="flex flex-col gap-3">
-      {sla.first_response && <SlaRow labelKey="tickets.sla.first_response" position={sla.first_response} />}
-      {sla.resolution && <SlaRow labelKey="tickets.sla.resolution" position={sla.resolution} />}
-    </div>
-  );
+    return (
+        <div className={styles.stack}>
+            {sla.first_response && (
+                <SlaRow
+                    labelKey="tickets.sla.first_response"
+                    position={sla.first_response}
+                />
+            )}
+            {sla.resolution && (
+                <SlaRow
+                    labelKey="tickets.sla.resolution"
+                    position={sla.resolution}
+                />
+            )}
+        </div>
+    );
 }
 
-function SlaRow({ labelKey, position }: { labelKey: string; position: TicketSlaPosition }) {
-  const { t, i18n } = useTranslation();
-  const dueAt = position.due_at
-    ? new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium', timeStyle: 'short' }).format(
-        new Date(position.due_at)
-      )
-    : null;
+function SlaRow({
+    labelKey,
+    position,
+}: {
+    labelKey: string;
+    position: TicketSlaPosition;
+}) {
+    const { t, i18n } = useTranslation();
+    const dueAt = position.due_at
+        ? new Intl.DateTimeFormat(i18n.language, {
+              dateStyle: "medium",
+              timeStyle: "short",
+          }).format(new Date(position.due_at))
+        : null;
 
-  return (
-    <div className="rounded border border-gray-200 p-2 text-sm">
-      <div className="mb-1 flex items-center justify-between">
-        <span className="font-medium text-gray-700">{t(labelKey)}</span>
-        <span className={`rounded px-2 py-0.5 text-xs font-medium ${STATE_BADGE_CLASSES[position.state]}`}>
-          {t(`tickets.sla.state.${position.state}`)}
-        </span>
-      </div>
-      <dl className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-xs text-gray-600">
-        {dueAt && (
-          <>
-            <dt>{t('tickets.sla.due_at')}</dt>
-            <dd>{dueAt}</dd>
-          </>
-        )}
-        <dt>{t('tickets.sla.target')}</dt>
-        <dd>{t('tickets.sla.minutes', { count: position.target_minutes })}</dd>
-        <dt>{t('tickets.sla.elapsed')}</dt>
-        <dd>{t('tickets.sla.minutes', { count: position.elapsed_minutes })}</dd>
-        <dt>{t('tickets.sla.remaining')}</dt>
-        <dd>{t('tickets.sla.minutes', { count: position.remaining_minutes })}</dd>
-      </dl>
-      {position.warning_fired && (
-        <p className="mt-1 text-xs font-medium text-amber-700">{t('tickets.sla.warning_fired')}</p>
-      )}
-    </div>
-  );
+    return (
+        <div className={styles.field}>
+            <span className={styles.label}>
+                {t(labelKey)} · {t(`tickets.sla.state.${position.state}`)}
+            </span>
+            <dl className={styles.ledger}>
+                {dueAt && (
+                    <div className={styles.ledgerRow}>
+                        <dt>{t("tickets.sla.due_at")}</dt>
+                        <dd>{dueAt}</dd>
+                    </div>
+                )}
+                <div className={styles.ledgerRow}>
+                    <dt>{t("tickets.sla.target")}</dt>
+                    <dd>
+                        {t("tickets.sla.minutes", {
+                            count: position.target_minutes,
+                        })}
+                    </dd>
+                </div>
+                <div className={styles.ledgerRow}>
+                    <dt>{t("tickets.sla.elapsed")}</dt>
+                    <dd>
+                        {t("tickets.sla.minutes", {
+                            count: position.elapsed_minutes,
+                        })}
+                    </dd>
+                </div>
+                <div className={styles.ledgerRow}>
+                    <dt>{t("tickets.sla.remaining")}</dt>
+                    <dd>
+                        {t("tickets.sla.minutes", {
+                            count: position.remaining_minutes,
+                        })}
+                    </dd>
+                </div>
+            </dl>
+            {position.warning_fired && (
+                <p className={styles.label}>{t("tickets.sla.warning_fired")}</p>
+            )}
+        </div>
+    );
 }

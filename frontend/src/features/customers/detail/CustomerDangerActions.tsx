@@ -8,6 +8,7 @@ import { getGetCustomerQueryKey } from '@/api/generated/customers/customers';
 import { useBlockCustomer, useUnblockCustomer } from '../api/wire';
 import { ConfirmActionDialog } from '@/shared/confirm/ConfirmActionDialog';
 import type { CustomerDetail } from '../types';
+import styles from './CustomerRecordV2.module.css';
 
 interface CustomerDangerActionsProps {
   customer: CustomerDetail;
@@ -66,7 +67,7 @@ export function CustomerDangerActions({ customer }: CustomerDangerActionsProps) 
           <button
             type="button"
             onClick={() => openDialog('unblock')}
-            className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50"
+            className={styles.button}
           >
             {t('customers.actions.unblock')}
           </button>
@@ -74,7 +75,7 @@ export function CustomerDangerActions({ customer }: CustomerDangerActionsProps) 
           <button
             type="button"
             onClick={() => openDialog('block')}
-            className="rounded border border-red-300 px-3 py-1.5 text-sm text-red-700 hover:bg-red-50"
+            className={styles.buttonDanger}
           >
             {t('customers.actions.block')}
           </button>
@@ -92,8 +93,9 @@ export function CustomerDangerActions({ customer }: CustomerDangerActionsProps) 
           isSubmitting={blockMutation.isPending}
           error={error}
           destructive
+          presentationClassName={styles.dialog}
         >
-          <label htmlFor="block-reason" className="mb-1 block text-xs font-medium text-gray-600">
+          <label htmlFor="block-reason" className={styles.label}>
             {t('customers.actions.block_reason_label')}
           </label>
           <textarea
@@ -101,7 +103,7 @@ export function CustomerDangerActions({ customer }: CustomerDangerActionsProps) 
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             rows={3}
-            className="w-full rounded border border-gray-300 px-2 py-1 text-sm"
+            className={`${styles.control} ${styles.textarea}`}
           />
         </ConfirmActionDialog>
       )}
@@ -115,6 +117,7 @@ export function CustomerDangerActions({ customer }: CustomerDangerActionsProps) 
           onCancel={closeDialog}
           isSubmitting={unblockMutation.isPending}
           error={error}
+          presentationClassName={styles.dialog}
         />
       )}
     </>

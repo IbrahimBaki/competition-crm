@@ -1,0 +1,65 @@
+/*
+ * Deliberately outside the [data-ui="v2"] boundary: this is the neutral
+ * frame around V2 chrome (rail/topbar) and still-V1 route content. It must
+ * never carry V2 tokens/selectors, or V1 pages would inherit them (see
+ * V2PortalBoundary + design-system/foundations/v2-global.css, whose
+ * `[data-ui='v2'] *` / `[data-ui='v2'] :is(button,input,textarea)` rules
+ * apply to every descendant of a V2-scoped ancestor).
+ */
+.root {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.railBoundary {
+  flex: 0 0 15.5rem; /* 248px */
+  position: sticky;
+  inset-block-start: 0;
+  block-size: 100dvh;
+}
+
+@media (max-width: 48rem) {
+  .railBoundary { display: none; }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.topbarBoundary {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 20;
+}
+
+.main {
+  min-width: 0;
+}
+
+/*
+ * Only class in this file rendered *inside* a V2 boundary (its own
+ * dedicated one, see StaffShell.tsx) — var(--ds-*) tokens are safe here.
+ */
+.skipLink {
+  position: fixed;
+  z-index: var(--ds-z-toast);
+  inset-block-start: var(--ds-space-2);
+  inset-inline-start: var(--ds-space-2);
+  transform: translateY(-150%);
+  border-radius: var(--ds-radius-control);
+  background: var(--ds-text-primary);
+  color: var(--ds-text-inverse);
+  padding-block: var(--ds-space-2);
+  padding-inline: var(--ds-space-4);
+  font-size: var(--ds-font-size-body);
+  font-weight: 600;
+  transition: transform var(--ds-motion-hover) var(--ds-ease-standard);
+}
+
+.skipLink:focus-visible {
+  transform: translateY(0);
+}
+

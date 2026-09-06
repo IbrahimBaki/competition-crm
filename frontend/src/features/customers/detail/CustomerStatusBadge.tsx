@@ -5,6 +5,7 @@
 // two screens can keep their own i18n namespaces (`customers.status.*` vs
 // `tickets.customer_context.status.*`) while sharing the status -> color
 // mapping instead of duplicating it.
+import styles from './CustomerRecordV2.module.css';
 const STATUS_BADGE_CLASS: Record<string, string> = {
   active: 'bg-green-100 text-green-800',
   blocked: 'bg-red-100 text-red-800',
@@ -19,7 +20,7 @@ interface CustomerStatusBadgeProps {
 export function CustomerStatusBadge({ status, label }: CustomerStatusBadgeProps) {
   return (
     <span
-      className={`inline-block rounded px-2 py-0.5 text-xs font-medium ${STATUS_BADGE_CLASS[status] ?? 'bg-gray-100 text-gray-700'}`}
+      className={`${styles.badge} ${status === 'active' ? styles.statusActive : status === 'blocked' ? styles.statusBlocked : ''} ${STATUS_BADGE_CLASS[status] ?? 'bg-gray-100 text-gray-700'}`}
     >
       {label}
     </span>
