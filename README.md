@@ -1,231 +1,70 @@
 # Support CRM
 
-A Laravel-based customer support management system with a React SPA frontend, supporting multilingual (AR/EN) content and role-based access control.
+Support CRM is a bilingual customer-support platform with a Laravel 12 API and a React 18 single-page application. It provides staff operations, customer and ticket management, SLA and automation workflows, knowledge management, reporting, configurable integrations, and a customer portal/public intake experience.
+
+This repository is organised as an evaluator-facing engineering package. Start with [evaluation evidence](docs/EVALUATION_EVIDENCE.md), [requirements traceability](docs/REQUIREMENTS_TRACEABILITY.md), and the [verification report](docs/VERIFICATION_REPORT.md).
+
+## Implemented product surfaces
+
+- Staff authentication, invitation, password recovery, configurable 2FA, RBAC, permission scopes, audit logs, and data-protection operations.
+- Organisation hierarchy (branches, departments, teams, staff placement), customer 360 profiles, contacts, notes, attachments, timeline, duplicate resolution and merge controls.
+- Ticket queues, saved views, lifecycle/status transitions, assignment and transfer, messages and internal notes, watchers, links, merge/split, delivery tracking, optimistic-version conflict handling, and SLA clocks.
+- SLA policy administration, breach handling, automation rules and executions, escalations, agent tasks, quick replies, and notifications.
+- Email, web-form, WhatsApp/SMS provider, and live-chat channels; knowledge base publishing, visibility, search, versioning, feedback, and AI-assisted ticket workflows.
+- Management reports, export and scheduled report delivery; webhook subscriptions/deliveries, API tokens, ERP context, and bulk import runs.
+- Customer portal registration/verification/login, customer-scoped tickets and attachments, guest tracking, public knowledge, public forms, and public chat.
 
 ## Architecture
 
-- **Backend**: Laravel 12 API (`/api/v1/...`) served at `competition-crm.azmsquad.localhost`
-- **Frontend**: React 18 SPA served at `app.competition-crm.azmsquad.localhost`
-- **Authentication**: Sanctum cookie-based (stateful)
-- **Database**: MySQL in Docker
-- **API Client**: Generated from OpenAPI spec with orval
+The backend is a domain-oriented Laravel application under `app/Domains/` with 14 areas: AI, automation, channels, customer portal, customers, integrations, knowledge, notifications, organisation, portal, reporting, security, SLA, ticketing, and workspace. Controllers and form requests expose the versioned API in [routes/api.php](routes/api.php); policies, permission keys, scope filters, jobs, events, migrations, and tests keep business rules close to each domain.
 
-## Prerequisites
+The React SPA in `frontend/` uses React Router, TanStack Query, i18next, TypeScript strict mode, generated API types, and an application design system. [frontend/src/router.tsx](frontend/src/router.tsx) declares staff, portal, and public routes. The UI follows [design-system/MASTER.md](design-system/MASTER.md), including responsive behaviour, keyboard focus, contrast, motion, and RTL expectations.
 
-- Docker + Docker Compose
-- Node.js 18+ (for frontend development)
-- Make (for convenience commands)
+The API contract is [docs/api/openapi.yaml](docs/api/openapi.yaml). It contains 162 documented path entries and is paired with an additive v1 freeze at [docs/contracts/api-contract-freeze.md](docs/contracts/api-contract-freeze.md). The frontend API client is generated through `npm run api:generate` in `frontend/`.
 
-## Local Development Setup
+## Data, workflow, and operations
 
-### 1. Backend Setup
+The schema is captured in 104 Laravel migrations: tickets, messages, statuses, categories, SLA clocks and breaches; customer identity and activity; organisation placement; knowledge versioning; notification delivery; portal accounts; channel ingress; integrations; and audit/idempotency records. UUID model identifiers are used throughout the domain model.
+
+Scheduled operational work is declared in [routes/console.php](routes/console.php): backup and verification, retention purge, automatic close, SLA sweep, task reminders, inbound-email re-sweep, chat session sweep, automation sweep, and report schedule sweep. Queue-backed jobs handle provider messaging, inbound email, webhook delivery, imports, and report exports.
+
+## Security engineering
+
+Staff endpoints are protected by Sanctum and portal denial middleware; portal endpoints use a separate portal guard. Permission keys and scoped policies enforce RBAC without hard-coding role names. The application also includes request validation, CSRF/session rotation, 2FA enrolment/challenge/recovery, password rules, rate limiting and bot/public-endpoint protection, immutable audit records, idempotency keys, attachment type/size restrictions, signed outbound webhooks, API-token controls, configuration-based secret handling, and retention/backup processes. Full evidence is in [docs/EVALUATION_EVIDENCE.md](docs/EVALUATION_EVIDENCE.md#security-controls).
+
+## Arabic, English, RTL, accessibility, and responsive design
+
+The frontend loads Arabic and English translations from `frontend/src/i18n/`, persists the selected locale, and sets the document `lang` and `dir` (`rtl` for Arabic). Shared design-system components use accessible names, visible focus, Radix keyboard/dialog primitives, error association, and semantic navigation; relevant tests include `frontend/src/design-system/__tests__/components.test.tsx`. Responsive Playwright specifications cover core routes at multiple viewports in `frontend/e2e/`.
+
+## Local development and delivery
+
+Prerequisites: Docker/Docker Compose, Node.js 18+, and Make. The canonical local setup uses the API at `competition-crm.azmsquad.localhost` and the SPA at `app.competition-crm.azmsquad.localhost`.
 
 ```bash
-# Install dependencies
 make install
-# or: docker exec -w /var/www/html/competition-crm azm-php82 composer install
-
-# Generate app key (if needed)
-make key-generate
-
-# Setup database
 make migrate
 make seed
 
-# Run tests
-make test
-make lint
-```
-
-### 2. Frontend Setup
-
-```bash
 cd frontend
-
-# Install dependencies
 npm ci
-
-# Generate API client from OpenAPI spec
 npm run api:generate
-
-# Start dev server (port 5174)
 npm run dev
-
-# Run tests, typecheck, and lint
-npm run test && npm run typecheck && npm run lint
 ```
 
-### 3. Local Hostnames
+The split-host cookie, Sanctum, and CORS configuration is documented in [docker/env-additions.txt](docker/env-additions.txt); [docker/vhost-competition-crm.conf](docker/vhost-competition-crm.conf) serves Laravel from `public/` and the SPA from `frontend/dist/` with history fallback.
 
-Add to `/etc/hosts`:
-```
-127.0.0.1  competition-crm.azmsquad.localhost app.competition-crm.azmsquad.localhost
-```
-
-Then open:
-- **Frontend (SPA)**: http://app.competition-crm.azmsquad.localhost
-- **Vite development**: http://app.competition-crm.azmsquad.localhost:5174
-- **API**: http://competition-crm.azmsquad.localhost/api/v1/
-- **Mailpit (email preview)**: http://localhost:8025
-
-## API Contract
-
-### Success Response
-```json
-{
-  "data": { /* resource or array of resources */ },
-  "meta": {
-    "request_id": "uuid",
-    "page": 1,
-    "per_page": 25,
-    "total": 150,
-    "total_pages": 6
-  },
-  "links": {
-    "self": "...",
-    "first": "...",
-    "last": "...",
-    "prev": "...",
-    "next": "..."
-  }
-}
-```
-
-### Error Response
-```json
-{
-  "error": {
-    "code": "VALIDATION_FAILED",
-    "message": "The given data was invalid.",
-    "request_id": "uuid",
-    "field_errors": {
-      "email": ["Email is required", "Email must be unique"]
-    }
-  }
-}
-```
-
-### List Endpoints
-- `?page=N` - page number (default 1)
-- `?per_page=M` - items per page (default 25, max 100)
-- `?sort=field1,-field2` - sorting (comma-separated, `-` for descending)
-- `?filter[status]=open&filter[q]=search` - filtering
-- `?include=related_entity` - eager-load relationships
-
-## Domain Split Configuration
-
-For cookie-based authentication across the domain split:
-
-- `SESSION_DOMAIN`: `.competition-crm.azmsquad.localhost` (shared parent domain with leading dot)
-- `SANCTUM_STATEFUL_DOMAINS`: `app.competition-crm.azmsquad.localhost,app.competition-crm.azmsquad.localhost:5174`
-- `CORS_ALLOWED_ORIGINS`: `http://app.competition-crm.azmsquad.localhost,http://app.competition-crm.azmsquad.localhost:5174`
-
-**Important**: Deploy backend config **before** publishing SPA vhost, or users will see login loop.
-
-## Frontend API Client Generation
-
-The frontend uses **orval** to generate a TypeScript client from `docs/api/openapi.yaml`:
+Production delivery builds the SPA, migrates the API, and caches Laravel configuration:
 
 ```bash
-cd frontend
-npm run api:generate
-```
-
-**Critical**: `frontend/src/api/generated/` is produced by orval and committed to Git. Never edit by hand. Re-run after any contract change and commit the diff.
-
-## Conventions
-
-See `.claude/skills/` for detailed guidelines:
-- `permission-scope`: Permissions are keys like `tickets.view.department`, never role names
-- `api-contract`: Unified envelope and error shape across all endpoints
-- `bilingual-i18n`: Admin-created fields are `{ar, en}` objects, never hardcoded text
-- `audit-trail`: Sensitive changes logged to audit table
-- `upload-security`: Allowlist + virus scan + storage outside web root
-- `working-time-sla`: Use `WorkingTimeService`, never `now()->diffInMinutes()`
-
-## Make Targets
-
-### Backend
-```bash
-make install         # composer install
-make key-generate    # php artisan key:generate
-make migrate         # php artisan migrate
-make seed            # php artisan db:seed
-make test            # vendor/bin/pest
-make lint            # vendor/bin/phpstan analyse
-```
-
-### Frontend
-```bash
-make fe-install      # cd frontend && npm ci
-make fe-generate     # cd frontend && npm run api:generate
-make fe-test         # cd frontend && npm run test
-make fe-build        # cd frontend && npm run build
-make fe-dev          # cd frontend && npm run dev
-```
-
-## Troubleshooting
-
-### Login immediately bounces to login page
-- Check `SESSION_DOMAIN` matches `.competition-crm.azmsquad.localhost`
-- Check `SANCTUM_STATEFUL_DOMAINS` includes the active SPA origin
-- Check CORS `exposed_headers` includes `X-Request-Id`
-- Check vhost serves from `frontend/dist` for SPA (not `public/`)
-
-### Generated API client is missing types
-- Run `npm run api:generate` from `frontend/` directory
-- Check `docs/api/openapi.yaml` is valid (no OpenAPI 3.1-only constructs)
-- Check `orval.config.ts` path aliases match
-
-### Environment variables not loading
-- For Docker: add to `docker/env-additions.txt` and rebuild containers
-- For local: copy `.env.example` to `.env` and edit
-- For vhost/CORS config: restart Apache after env changes
-
-## Deployment
-
-### Frontend Build
-```bash
-cd frontend
-npm run build
-# Output: frontend/dist/
-```
-
-Deploy `frontend/dist/` to the SPA vhost at `app.<subdomain>`.
-
-### Backend
-```bash
+cd frontend && npm run build
 php artisan migrate --force
-php artisan cache:clear
 php artisan config:cache
 ```
 
-Ensure:
-- `SESSION_DOMAIN`, `SANCTUM_STATEFUL_DOMAINS`, `CORS_ALLOWED_ORIGINS` are set for production
-- Session cookie is `secure: true` in production
-- Frontend origin is whitelisted in CORS
+Run quality checks with `make lint`, `make test`, `make api-lint`, `make fe-test`, `make fe-build`, and `cd frontend && npm run test:e2e`. See the verification report for the exact documentation-pass results and test inventory.
 
-## Testing
+## Planning, specification, and maintainability
 
-### Backend
-```bash
-make test           # Run test suite
-make lint           # Run static analysis
-```
+The UI specification and task breakdown are in [docs/ui/00-overview.md](docs/ui/00-overview.md) and module documents `01` through `13`; execution planning is in [FRONTEND_REBUILD_EXECUTION.md](FRONTEND_REBUILD_EXECUTION.md). Shared conventions cover API envelopes, bilingual content, automation rules, AI assistance, localisation, audit trails, uploads, and working-time SLA calculations. Git history records staged frontend delivery milestones.
 
-### Frontend
-```bash
-cd frontend
-npm run test        # Unit + integration tests (vitest)
-npm run typecheck   # TypeScript strict mode
-npm run lint        # ESLint + no-role-names rule
-npm run build       # Verify build succeeds
-```
-
-## Resources
-
-- Backend: `docs/contracts/conventions-digest.md`
-- API: `docs/api/openapi.yaml` + `docs/api/openapi.v1.frozen.yaml`
-- UI: `docs/ui/00-overview.md` and module-specific files
-- Permissions: `app/Domains/Security/Permissions/PermissionKey.php`
-- Example requests: `docs/api/collections/support-crm-v1.http`
+AI usage is bounded by feature gates, provider configuration, payload sanitisation, budget controls, usage records, review/approval states, and explicit approval before AI-generated customer content is sent. Human verification remains part of delivery through the documented test, build, API-contract, and E2E commands.
